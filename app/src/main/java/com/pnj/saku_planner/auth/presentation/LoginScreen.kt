@@ -1,5 +1,3 @@
-@file:JvmName("LoginScreenKt")
-
 package com.pnj.saku_planner.auth.presentation
 
 import androidx.compose.foundation.background
@@ -28,11 +26,11 @@ fun LoginScreen() {
         modifier = Modifier
             .padding(vertical = 32.dp, horizontal = 24.dp)
             .fillMaxSize()
-            .background(AppColor.PrimaryForeground),
+            .background(AppColor.Background),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Column(Modifier.padding(bottom = 16.dp)) {
                 Text(
@@ -58,7 +56,6 @@ fun LoginScreen() {
                 OutlinedTextField(
                     value = "",
                     onValueChange = {},
-
                     label = { Text("Password") },
                     modifier = Modifier.fillMaxWidth(),
                 )
