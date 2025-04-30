@@ -47,6 +47,7 @@ reflect on your spending habits and make better financial decisions.
 
 ## OTHERS TODOS
 
+- [ ] Create ViewModel and Data Layer
 - [ ] Create Room Local Database
 - [ ] Create DataStore for User Preferences
 - [ ] Create Syncing Logic for data to Backend
