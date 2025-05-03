@@ -15,6 +15,7 @@ private val LightColorScheme = lightColorScheme(
     onSurface = AppColor.CardForeground,
     error = AppColor.Destructive,
     onError = AppColor.DestructiveForeground,
+    outline = AppColor.Border
 )
 
 
