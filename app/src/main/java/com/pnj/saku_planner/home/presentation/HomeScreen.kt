@@ -7,11 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.home.domain.enums.TransactionType
+import com.pnj.saku_planner.home.domain.enum.TransactionType
 import com.pnj.saku_planner.home.presentation.components.TransactionDateDivider
 import com.pnj.saku_planner.home.presentation.components.TransactionListItem
 import com.pnj.saku_planner.ui.components.Card
@@ -33,14 +29,7 @@ import java.time.LocalDate
 @Composable
 fun HomeScreen() {
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                containerColor = AppColor.Muted,
-                onClick = {},
-            ) {
-                Icon(Icons.Default.Add, "Add")
-            }
-        }
+
 
     ) { paddingValues ->
         Column(

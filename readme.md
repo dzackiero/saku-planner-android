@@ -12,26 +12,30 @@ reflect on your spending habits and make better financial decisions.
 ### Home
 
 - [x] Home Screen
-- [ ] Create Transaction Form
-- [ ] Detail/Edit Transaction Form
+- [x] Create Transaction Form
+- [x] Detail/Edit Transaction Form
+- [x] Add ViewModel and UI Model
 
 ### Account
 
 - [x] Account Screen
 - [ ] Add Account Form
 - [ ] Detail/Edit Account Form
+- [ ] Add ViewModel and UI Model
 
 ### Target
 
 - [x] Target Screen
 - [ ] Saving Target Form
 - [ ] Detail/Edit Target Form
+- [ ] Add ViewModel and UI Model
 
 ### Budget
 
 - [x] Budget Screen
 - [ ] Create Budget Form
 - [ ] Detail/Edit Budget Form
+- [ ] Add ViewModel and UI Model
 
 ### Report
 
@@ -47,8 +51,10 @@ reflect on your spending habits and make better financial decisions.
 
 ## OTHERS TODOS
 
-- [ ] Create ViewModel and Data Layer
+- [x] Implement Navigation
+- [x] Create Hilt for Dependency Injection
 - [ ] Create Room Local Database
+- [ ] Create Repository Layer
 - [ ] Create DataStore for User Preferences
 - [ ] Create Syncing Logic for data to Backend
 - [ ] Create Infinity Scrolling for list of data

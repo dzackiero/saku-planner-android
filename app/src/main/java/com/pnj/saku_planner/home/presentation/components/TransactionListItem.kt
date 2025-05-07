@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pnj.saku_planner.home.domain.enums.TransactionType
+import com.pnj.saku_planner.home.domain.enum.TransactionType
 import com.pnj.saku_planner.ui.theme.AppColor
 import com.pnj.saku_planner.ui.theme.Typography
 import java.util.Locale
@@ -29,6 +29,7 @@ fun TransactionListItem(
     val color = when (type) {
         TransactionType.INCOME -> AppColor.Success
         TransactionType.EXPENSE -> AppColor.Warning
+        TransactionType.TRANSFER -> AppColor.MutedForeground
     }
 
     val displayedAmount = when (type) {
@@ -39,6 +40,9 @@ fun TransactionListItem(
         TransactionType.EXPENSE -> "-${
             NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(amount)
         }"
+
+        TransactionType.TRANSFER -> NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+            .format(amount)
     }
 
     Row(
