@@ -6,7 +6,18 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "transactions")
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val walletId: Int,
+    val toWalletId: Int? = null,
+    val categoryId: Int,
+
+    val type: String,
+    val kakeiboCategory: String,
+
     val amount: Double,
     val description: String,
-    val date: Long
+
+    val transactionAt: Long,
+
+    val createdAt: Long,
+    val updatedAt: Long,
 )

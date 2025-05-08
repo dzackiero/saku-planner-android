@@ -5,9 +5,8 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.transaction.presentation.models.KakiboCategoryStyle
 
 enum class KakeiboCategory {
     NEEDS,
@@ -48,9 +47,4 @@ enum class KakeiboCategory {
     }
 }
 
-data class KakiboCategoryStyle(
-    val icon: ImageVector,
-    val text: String,
-    val subtext: String,
-    val color: Color,
-)
+

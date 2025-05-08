@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.transaction.domain.model
 
 import androidx.compose.ui.graphics.Color
+import com.pnj.saku_planner.transaction.domain.enum.CategoryType
 import com.pnj.saku_planner.transaction.presentation.models.CategoryUi
 
 data class Category(
@@ -20,8 +21,3 @@ fun Category.toUi() = CategoryUi(
     color = Color(color.removePrefix("0x").toLong(16) or 0xFF000000),
     budget = defaultBudget,
 )
-
-enum class CategoryType {
-    INCOME,
-    EXPENSE,
-}
