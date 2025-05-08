@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.account.presentation.components.CategoryBudgetCard
-import com.pnj.saku_planner.ui.components.PrimaryButton
-import com.pnj.saku_planner.ui.theme.AppColor
-import com.pnj.saku_planner.ui.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.ui.components.PrimaryButton
+import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.account.presentation.components.MonthlyBudgetCard
 
 

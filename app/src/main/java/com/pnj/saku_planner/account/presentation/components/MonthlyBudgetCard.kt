@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.ui.components.Card
-import com.pnj.saku_planner.ui.components.SecondaryButton
-import com.pnj.saku_planner.ui.theme.AppColor
-import com.pnj.saku_planner.ui.theme.Typography
+import com.pnj.saku_planner.core.ui.components.Card
+import com.pnj.saku_planner.core.ui.components.SecondaryButton
+import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.core.ui.theme.Typography
 import java.util.Locale
 
 @Composable
@@ -58,7 +58,7 @@ fun MonthlyBudgetCard(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .height(6.dp)
                         .fillMaxWidth(),

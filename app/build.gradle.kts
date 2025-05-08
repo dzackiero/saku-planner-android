@@ -57,6 +57,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.dagger.hilt)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+
+    ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)

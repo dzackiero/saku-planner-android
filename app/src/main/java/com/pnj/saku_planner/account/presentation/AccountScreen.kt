@@ -15,12 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.account.presentation.components.AccountCard
-import com.pnj.saku_planner.ui.components.Card
-import com.pnj.saku_planner.ui.components.PrimaryButton
-import com.pnj.saku_planner.ui.theme.AppColor
-import com.pnj.saku_planner.ui.theme.AppColor.MutedForeground
-import com.pnj.saku_planner.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.ui.theme.Typography
+import com.pnj.saku_planner.core.ui.components.Card
+import com.pnj.saku_planner.core.ui.components.PrimaryButton
+import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.core.ui.theme.AppColor.MutedForeground
+import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.ui.theme.Typography
 
 @Composable
 fun AccountScreen() {

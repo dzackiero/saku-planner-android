@@ -7,21 +7,32 @@ reflect on your spending habits and make better financial decisions.
 
 # Development Todos
 
+## BACKEND TODOS
+
+- [x] Create Backend API
+- [x] Implement Room Database Setup
+- [x] Implement Dagger Hilt for Dependency Injection
+- [ ] Implement DataStore for User Preferences
+
 ## UI TODOS
 
-### Home
+- [x] Implement Navigation
+
+### Home (Transaction)
 
 - [x] Home Screen
 - [x] Create Transaction Form
 - [x] Detail/Edit Transaction Form
 - [x] Add ViewModel and UI Model
+- [x] Implement Repository and Entity
 
 ### Account
 
 - [x] Account Screen
-- [ ] Add Account Form
-- [ ] Detail/Edit Account Form
+- [x] Add Account Form
+- [x] Detail/Edit Account Form
 - [ ] Add ViewModel and UI Model
+- [ ] Implement Repository and Entity
 
 ### Target
 
@@ -29,6 +40,7 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Saving Target Form
 - [ ] Detail/Edit Target Form
 - [ ] Add ViewModel and UI Model
+- [ ] Implement Repository and Entity
 
 ### Budget
 
@@ -36,27 +48,25 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Create Budget Form
 - [ ] Detail/Edit Budget Form
 - [ ] Add ViewModel and UI Model
+- [ ] Implement Repository and Entity
 
 ### Report
 
 - [ ] Report Financial Screen (Dashboard and Charts)
 - [x] Report Transaction Screen (List and Filters)
 - [x] Reflection Screen (Kakeibo Reflection)
+- [ ] Add ViewModel and UI Model
+- [ ] Implement Repository and Entity
 
 ### Settings
 
 - [ ] Settings Screen
 - [ ] Profile Settings Form
 - [ ] Create Expense/Income Category Form
+- [ ] Implement Repository and Entity
 
 ## OTHERS TODOS
 
-- [x] Implement Navigation
-- [x] Create Hilt for Dependency Injection
-- [ ] Create Room Local Database
-- [ ] Create Repository Layer
-- [ ] Create DataStore for User Preferences
 - [ ] Create Syncing Logic for data to Backend
 - [ ] Create Infinity Scrolling for list of data
-- [ ] Repositories (Account, Budget, Target, Category, Transaction, Report)
 
