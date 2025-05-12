@@ -25,14 +25,16 @@ reflect on your spending habits and make better financial decisions.
 - [x] Detail/Edit Transaction Form
 - [x] Add ViewModel and UI Model
 - [x] Implement Repository and Entity
+- [ ] Finished Offline Implementation
 
 ### Account
 
 - [x] Account Screen
 - [x] Add Account Form
 - [x] Detail/Edit Account Form
-- [ ] Add ViewModel and UI Model
+- [x] Add ViewModel and UI Model
 - [ ] Implement Repository and Entity
+- [ ] Finished Offline Implementation
 
 ### Target
 
@@ -41,6 +43,7 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Detail/Edit Target Form
 - [ ] Add ViewModel and UI Model
 - [ ] Implement Repository and Entity
+- [ ] Finished Offline Implementation
 
 ### Budget
 
@@ -49,6 +52,7 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Detail/Edit Budget Form
 - [ ] Add ViewModel and UI Model
 - [ ] Implement Repository and Entity
+- [ ] Finished Offline Implementation
 
 ### Report
 
@@ -64,6 +68,7 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Profile Settings Form
 - [ ] Create Expense/Income Category Form
 - [ ] Implement Repository and Entity
+- [ ] Finished Offline Implementation
 
 ## OTHERS TODOS
 

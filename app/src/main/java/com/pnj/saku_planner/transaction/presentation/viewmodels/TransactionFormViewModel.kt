@@ -1,18 +1,23 @@
 package com.pnj.saku_planner.transaction.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.pnj.saku_planner.transaction.data.local.entity.TransactionEntity
+import com.pnj.saku_planner.transaction.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.transaction.presentation.states.TransactionFormCallbacks
 import com.pnj.saku_planner.transaction.presentation.states.TransactionFormState
 import com.pnj.saku_planner.transaction.presentation.models.CategoryUi
 import com.pnj.saku_planner.transaction.domain.enum.KakeiboCategory
 import com.pnj.saku_planner.transaction.domain.enum.TransactionType
+import com.pnj.saku_planner.transaction.domain.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionFormViewModel @Inject constructor() : ViewModel() {
+class TransactionFormViewModel @Inject constructor(
+    private val transactionRepository: TransactionRepository
+) : ViewModel() {
     private val _transactionFormState = MutableStateFlow(TransactionFormState())
     val transactionFormState: StateFlow<TransactionFormState> = _transactionFormState
 

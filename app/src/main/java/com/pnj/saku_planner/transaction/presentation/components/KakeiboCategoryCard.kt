@@ -39,7 +39,7 @@ fun KakeiboCard(
                 Icon(
                     imageVector = style.icon,
                     contentDescription = style.text,
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(36.dp),
                     tint = style.color,
                 )
                 Text(

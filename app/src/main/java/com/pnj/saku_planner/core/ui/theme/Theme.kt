@@ -29,6 +29,8 @@ private val LightColorScheme = lightColorScheme(
     onTertiaryContainer = AppColor.CardForeground,
     tertiaryContainer = AppColor.Card,
 
+    onSurfaceVariant = AppColor.MutedForeground,
+
     outline = AppColor.Border
 )
 

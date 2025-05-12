@@ -9,18 +9,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.components.BottomSheetField
+import com.pnj.saku_planner.account.presentation.states.AccountFormCallback
+import com.pnj.saku_planner.account.presentation.states.AccountFormState
 import com.pnj.saku_planner.core.ui.components.DefaultForm
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 
 @Composable
 fun AccountFormScreen(
+    state: AccountFormState,
+    callbacks: AccountFormCallback,
+    title: String,
     modifier: Modifier = Modifier
 ) {
-    DefaultForm(title = "Account") {
+    DefaultForm(title = title) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -34,28 +42,39 @@ fun AccountFormScreen(
             ) {
 
                 OutlinedTextField(
-                    value = "Main Checking",
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = {
-                        //TODO("Handle text change")
+                    value = state.accountName,
+                    label = {
+                        Text("Account Name")
                     },
+                    placeholder = {
+                        Text("e.g., Main Checking")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = callbacks.onAccountNameChange,
                 )
 
                 OutlinedTextField(
-                    value = "Current Balance",
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = {
-                        //TODO("Handle text change")
+                    value = state.currentBalance.toString(),
+                    placeholder = {
+                        Text("0.0")
                     },
+                    label = {
+                        Text("Current Balance")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = callbacks.onCurrentBalanceChange,
                 )
 
-                BottomSheetField(
-                    options = listOf<String>(),
-                    label = { Text("Account Type") },
-                    itemContent = {
-                        Text(it)
+                OutlinedTextField(
+                    value = state.description,
+                    label = {
+                        Text("Description")
                     },
-                    itemLabel = { it },
+                    placeholder = {
+                        Text("e.g., account for groceries")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = callbacks.onDescriptionChange,
                 )
             }
         }
@@ -66,6 +85,16 @@ fun AccountFormScreen(
 @Composable
 fun AccountFormScreenPreview() {
     SakuPlannerTheme {
-        AccountFormScreen()
+        var state by remember { mutableStateOf(AccountFormState()) }
+        AccountFormScreen(
+            title = "New Account",
+            state = state,
+            callbacks = AccountFormCallback(
+                onAccountNameChange = { state = state.copy(accountName = it) },
+                onDescriptionChange = { state = state.copy(description = it) },
+                onCurrentBalanceChange = { state = state.copy(currentBalance = it.toDouble()) },
+                onSubmit = {}
+            )
+        )
     }
 }
