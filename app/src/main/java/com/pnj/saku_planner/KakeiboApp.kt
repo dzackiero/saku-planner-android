@@ -2,7 +2,6 @@ package com.pnj.saku_planner
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -32,16 +31,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.pnj.saku_planner.account.presentation.AccountFormScreen
-import com.pnj.saku_planner.account.presentation.AccountSavingScreen
-import com.pnj.saku_planner.account.presentation.viewmodels.AccountFormViewModel
-import com.pnj.saku_planner.transaction.presentation.HomeScreen
-import com.pnj.saku_planner.transaction.presentation.TransactionFormScreen
-import com.pnj.saku_planner.transaction.presentation.viewmodels.TransactionFormViewModel
-import com.pnj.saku_planner.report.presentation.ReflectionScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountFormScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountPagerScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormViewModel
+import com.pnj.saku_planner.kakeibo.presentation.screens.home.HomeScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.home.TransactionFormScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -113,12 +113,13 @@ fun KakeiboApp() {
             ) {
                 val viewModel = hiltViewModel<TransactionFormViewModel>()
                 val state by viewModel.transactionFormState.collectAsStateWithLifecycle()
+                val categories by viewModel.categories.collectAsStateWithLifecycle()
                 val callbacks = viewModel.callbacks
 
                 TransactionFormScreen(
                     formState = state,
                     callbacks = callbacks,
-                    categories = viewModel.categories,
+                    categories = categories,
                     accounts = viewModel.accounts,
                     onNavigateBack = {
                         navController.popBackStack()
@@ -128,7 +129,18 @@ fun KakeiboApp() {
 
             // Account & Savings
             composable<Account> {
-                AccountSavingScreen()
+                val callbacks = AccountCallbacks(
+                    onCreateNewAccount = {
+                        navController.navigate(AccountForm())
+                    },
+                    onEditAccount = {
+                        navController.navigate(AccountForm())
+                    },
+                    onDeleteAccount = {
+                        navController.navigate(AccountForm())
+                    }
+                )
+                AccountPagerScreen(callbacks)
             }
             composable<AccountForm> {
                 val viewModel = hiltViewModel<AccountFormViewModel>()

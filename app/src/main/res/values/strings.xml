@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">saku-planner</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="select_account">Select Account</string>
+    <string name="kakeibo_category">Kakeibo Category</string>
+    <string name="monthly_balance">Monthly Balance</string>
+    <string name="income_expenses">Income - Expenses</string>
+    <string name="income">Income</string>
+    <string name="this_month">This Month</string>
+    <string name="expenses">Expenses</string>
+    <string name="transactions">Transactions</string>
 </resources>

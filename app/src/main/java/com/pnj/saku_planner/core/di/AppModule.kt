@@ -3,9 +3,13 @@ package com.pnj.saku_planner.core.di
 import android.content.Context
 import androidx.room.Room
 import com.pnj.saku_planner.core.database.AppDatabase
-import com.pnj.saku_planner.transaction.data.local.dao.TransactionDao
-import com.pnj.saku_planner.transaction.data.repository.TransactionRepositoryImpl
-import com.pnj.saku_planner.transaction.domain.repository.TransactionRepository
+import com.pnj.saku_planner.core.database.dao.AccountDao
+import com.pnj.saku_planner.core.database.dao.CategoryDao
+import com.pnj.saku_planner.core.database.dao.TransactionDao
+import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
+import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
+import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,14 +21,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-@Provides
-@Singleton
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
             "app_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides
@@ -33,7 +39,22 @@ object AppModule {
     }
 
     @Provides
+    fun provideCategoryDao(appDatabase: AppDatabase): CategoryDao {
+        return appDatabase.categoryDao()
+    }
+
+    @Provides
+    fun provideAccountDao(appDatabase: AppDatabase): AccountDao {
+        return appDatabase.accountDao()
+    }
+
+    @Provides
     fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
         return TransactionRepositoryImpl(transactionDao)
+    }
+
+    @Provides
+    fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
+        return CategoryRepositoryImpl(categoryDao)
     }
 }

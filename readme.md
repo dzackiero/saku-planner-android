@@ -12,7 +12,6 @@ reflect on your spending habits and make better financial decisions.
 - [x] Create Backend API
 - [x] Implement Room Database Setup
 - [x] Implement Dagger Hilt for Dependency Injection
-- [ ] Implement DataStore for User Preferences
 
 ## UI TODOS
 
@@ -69,6 +68,7 @@ reflect on your spending habits and make better financial decisions.
 - [ ] Create Expense/Income Category Form
 - [ ] Implement Repository and Entity
 - [ ] Finished Offline Implementation
+- - [ ] Implement DataStore for User Preferences
 
 ## OTHERS TODOS
 
