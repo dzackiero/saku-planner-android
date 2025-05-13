@@ -8,10 +8,9 @@ data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    val walletId: Int,
-    val toWalletId: Int? = null,
-
-    val categoryId: Int,
+    val accountId: Int,
+    val toAccountId: Int? = null,
+    val categoryId: Int? = null,
 
     val type: String,
     val kakeiboCategory: String,

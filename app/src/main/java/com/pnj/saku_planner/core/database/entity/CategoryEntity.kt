@@ -2,7 +2,7 @@ package com.pnj.saku_planner.core.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.pnj.saku_planner.kakeibo.domain.enum.CategoryType
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 
 @Entity(tableName = "categories")
@@ -21,5 +21,5 @@ fun CategoryEntity.toUi() = CategoryUi(
     id = id,
     name = name,
     icon = icon,
-    categoryType = CategoryType.valueOf(categoryType),
+    categoryType = TransactionType.valueOf(categoryType),
 )

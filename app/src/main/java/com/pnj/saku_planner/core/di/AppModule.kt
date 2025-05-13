@@ -6,8 +6,10 @@ import com.pnj.saku_planner.core.database.AppDatabase
 import com.pnj.saku_planner.core.database.dao.AccountDao
 import com.pnj.saku_planner.core.database.dao.CategoryDao
 import com.pnj.saku_planner.core.database.dao.TransactionDao
+import com.pnj.saku_planner.kakeibo.data.repository.AccountRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
+import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
@@ -28,8 +30,7 @@ object AppModule {
             context.applicationContext,
             AppDatabase::class.java,
             "app_database"
-        )
-            .fallbackToDestructiveMigration(dropAllTables = true)
+        ).fallbackToDestructiveMigration(true)
             .build()
     }
 
@@ -56,5 +57,10 @@ object AppModule {
     @Provides
     fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
         return CategoryRepositoryImpl(categoryDao)
+    }
+
+    @Provides
+    fun provideAccountRepository(accountDao: AccountDao): AccountRepository {
+        return AccountRepositoryImpl(accountDao)
     }
 }

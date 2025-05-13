@@ -32,6 +32,7 @@ import java.util.Locale
 @Composable
 fun DateTimePickerField(
     state: DateTimePickerState,
+    onDateTimeChange: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -66,12 +67,21 @@ fun DateTimePickerField(
 
     if (state.showDateDialog) {
         DatePickerDialog(
-            onDismissRequest = { state.onShowDateDialogChange(false) },
+            onDismissRequest = {
+                onDateTimeChange(state.getDateTimeMilis())
+                state.onShowDateDialogChange(false)
+            },
             confirmButton = {
-                TextButton(onClick = { state.onShowDateDialogChange(false) }) { Text("Confirm") }
+                TextButton(onClick = {
+                    onDateTimeChange(state.getDateTimeMilis())
+                    state.onShowDateDialogChange(false)
+                }) { Text("Confirm") }
             },
             dismissButton = {
-                TextButton(onClick = { state.onShowDateDialogChange(false) }) { Text("Cancel") }
+                TextButton(onClick = {
+                    onDateTimeChange(state.getDateTimeMilis())
+                    state.onShowDateDialogChange(false)
+                }) { Text("Cancel") }
             }
         ) {
             DatePicker(
@@ -119,7 +129,10 @@ fun TimePickerDialog(
 fun DatePickerPreview() {
     SakuPlannerTheme {
         Box(modifier = Modifier.padding(16.dp)) {
-            DateTimePickerField(rememberDateTimePickerState())
+            DateTimePickerField(
+                rememberDateTimePickerState(),
+                {}
+            )
         }
     }
 }

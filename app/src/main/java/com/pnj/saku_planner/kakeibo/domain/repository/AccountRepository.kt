@@ -7,7 +7,7 @@ interface AccountRepository {
 
     suspend fun getAccountById(id: Int): AccountEntity?
 
-    suspend fun getAllCategories(): List<AccountEntity>
+    suspend fun getAllAccounts(): List<AccountEntity>
 
     suspend fun deleteAccount(id: Int)
 }

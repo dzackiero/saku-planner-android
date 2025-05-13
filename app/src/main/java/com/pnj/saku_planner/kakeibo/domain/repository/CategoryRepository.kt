@@ -5,7 +5,7 @@ import com.pnj.saku_planner.core.database.entity.CategoryEntity
 
 interface CategoryRepository {
 
-    suspend fun insertCategory(transactionEntity: CategoryEntity)
+    suspend fun insertCategory(categoryEntity: CategoryEntity)
 
     suspend fun getCategoryById(id: Int): CategoryEntity?
 

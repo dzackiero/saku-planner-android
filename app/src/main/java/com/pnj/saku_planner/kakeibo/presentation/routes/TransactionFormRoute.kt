@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.kakeibo.presentation.routes
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -9,9 +10,16 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.home.TransactionFormScr
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 
 @Composable
-fun TransactionFormRoute(navController: NavController) {
+fun TransactionFormRoute(navController: NavController, transactionId: Int? = null) {
     val viewModel = hiltViewModel<TransactionFormViewModel>()
     val state by viewModel.transactionFormState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(transactionId) {
+        if (transactionId != null) {
+            viewModel.loadTransaction(transactionId)
+        }
+    }
+
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val accounts by viewModel.accounts.collectAsStateWithLifecycle()
     val callbacks = viewModel.callbacks

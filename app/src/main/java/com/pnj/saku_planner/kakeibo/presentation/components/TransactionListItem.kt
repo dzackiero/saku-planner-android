@@ -18,9 +18,10 @@ import com.pnj.saku_planner.core.ui.theme.Typography
 @Composable
 fun TransactionListItem(
     modifier: Modifier = Modifier,
-    icon: String,
+    icon: String? = "",
     description: String,
-    wallet: String,
+    account: String,
+    toAccount: String? = null,
     type: TransactionType,
     amount: Number,
     onClick: () -> Unit,
@@ -37,6 +38,12 @@ fun TransactionListItem(
         TransactionType.TRANSFER -> formatToCurrency(amount)
     }
 
+    val accountDisplay = if (type == TransactionType.TRANSFER) {
+        "$account → $toAccount"
+    } else {
+        account
+    }
+
     Row(
         modifier = modifier
             .clickable {
@@ -47,7 +54,7 @@ fun TransactionListItem(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = icon,
+                text = icon ?: "💸",
                 fontSize = 24.sp,
                 modifier = Modifier.padding(end = 8.dp)
             )
@@ -57,7 +64,7 @@ fun TransactionListItem(
                     style = Typography.bodyMedium
                 )
                 Text(
-                    text = wallet,
+                    text = accountDisplay,
                     color = AppColor.MutedForeground,
                     style = Typography.labelSmall,
                 )

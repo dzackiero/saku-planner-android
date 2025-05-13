@@ -13,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.res.stringResource
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import androidx.compose.ui.tooling.preview.Preview
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.ui.components.Card
 import com.pnj.saku_planner.core.ui.theme.Typography
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
@@ -65,12 +67,12 @@ fun AccountScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Your Accounts",
+                text = stringResource(R.string.your_accounts),
                 style = Typography.displaySmall,
                 fontWeight = FontWeight.Bold,
             )
             PrimaryButton(onClick = callbacks.onCreateNewAccount) {
-                Text("Add Account")
+                Text(stringResource(R.string.add_account))
             }
         }
 

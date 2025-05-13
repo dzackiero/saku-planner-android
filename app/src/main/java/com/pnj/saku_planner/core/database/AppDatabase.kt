@@ -14,7 +14,7 @@ import com.pnj.saku_planner.core.database.entity.TransactionEntity
         TransactionEntity::class,
         CategoryEntity::class,
         AccountEntity::class,
-    ], version = 1
+    ], version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao

@@ -8,8 +8,8 @@ import javax.inject.Inject
 class CategoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {
-    override suspend fun insertCategory(category: CategoryEntity) {
-        categoryDao.insertCategory(category)
+    override suspend fun insertCategory(categoryEntity: CategoryEntity) {
+        categoryDao.insertCategory(categoryEntity)
     }
 
     override suspend fun getCategoryById(id: Int): CategoryEntity? {

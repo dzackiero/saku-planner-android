@@ -16,7 +16,7 @@ class AccountRepositoryImpl @Inject constructor(
         return accountRepository.getAccountById(id)
     }
 
-    override suspend fun getAllCategories(): List<AccountEntity> {
+    override suspend fun getAllAccounts(): List<AccountEntity> {
         return accountRepository.getAllAccounts()
     }
 

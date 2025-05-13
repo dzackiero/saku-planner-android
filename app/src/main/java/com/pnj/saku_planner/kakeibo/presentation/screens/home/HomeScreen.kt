@@ -16,83 +16,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
-import com.pnj.saku_planner.kakeibo.presentation.components.TransactionDateDivider
-import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
 import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.components.PrimaryButton
 import com.pnj.saku_planner.core.ui.formatToCurrency
 import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.AppColor.MutedForeground
-import com.pnj.saku_planner.core.ui.theme.AppColor.Success
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.HomeViewModel
-import java.time.LocalDate
-
-private data class Transaction(
-    val id: Int,
-    val date: LocalDate,
-    val icon: String,
-    val description: String,
-    val wallet: String,
-    val type: TransactionType,
-    val amount: Long
-)
+import com.pnj.saku_planner.kakeibo.presentation.components.TransactionDateDivider
+import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
+import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
+import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.HomeState
 
 @Composable
-fun HomeScreen() {
-    val viewModel = hiltViewModel<HomeViewModel>()
-
-    val transactions = listOf(
-        Transaction(
-            1,
-            LocalDate.of(2024, 10, 10),
-            "😁",
-            "Gaji Bulanan",
-            "Dompet Utama",
-            TransactionType.INCOME,
-            1_000_000
-        ),
-        Transaction(
-            2,
-            LocalDate.of(2024, 10, 10),
-            "🛒",
-            "Belanja Bulanan",
-            "Dompet Utama",
-            TransactionType.EXPENSE,
-            250_000
-        ),
-        Transaction(
-            3,
-            LocalDate.of(2024, 10, 9),
-            "🚕",
-            "Ojek Online",
-            "Dompet Utama",
-            TransactionType.EXPENSE,
-            50_000
-        ),
-        Transaction(
-            4,
-            LocalDate.of(2024, 10, 8),
-            "🍽️",
-            "Makan Siang",
-            "Dompet Utama",
-            TransactionType.EXPENSE,
-            75_000
-        ),
-    )
-    val groupedTransactions = transactions
+fun HomeScreen(
+    state: HomeState = HomeState(),
+    onTransactionClicked: (TransactionUi) -> Unit = {},
+) {
+    val groupedTransactions = state.transactions
         .groupBy { it.date }
         .toSortedMap(compareByDescending { it })
 
     val scrollState = rememberScrollState()
+
+    val balance = state.income - state.expense
 
     Column(
         modifier = Modifier
@@ -116,13 +66,17 @@ fun HomeScreen() {
                 )
                 Text(
                     text = stringResource(R.string.income_expenses),
-                    color = MutedForeground,
+                    color = AppColor.MutedForeground,
                     style = Typography.labelSmall
                 )
                 Text(
-                    text = formatToCurrency(100_000_000),
+                    text = formatToCurrency(balance),
                     style = Typography.displayMedium,
-                    color = Success
+                    color = when {
+                        (balance > 0) -> AppColor.Success
+                        (balance < 0) -> AppColor.Destructive
+                        else -> Color.Unspecified
+                    },
                 )
             }
         }
@@ -150,14 +104,16 @@ fun HomeScreen() {
                     Text(text = stringResource(R.string.income), style = Typography.titleMedium)
                     Text(
                         text = stringResource(R.string.this_month),
-                        color = MutedForeground,
+                        color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )
                     Text(
-                        text = formatToCurrency(1_000_000),
+                        text = formatToCurrency(state.income),
                         style = Typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                        color = AppColor.Success,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -179,13 +135,15 @@ fun HomeScreen() {
                     Text(text = stringResource(R.string.expenses), style = Typography.titleMedium)
                     Text(
                         text = stringResource(R.string.this_month),
-                        color = MutedForeground,
+                        color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )
                     Text(
-                        text = formatToCurrency(1_000_000),
+                        text = formatToCurrency(state.expense),
                         style = Typography.titleMedium,
                         maxLines = 1,
+                        color = AppColor.Destructive,
+                        textAlign = TextAlign.Center,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -212,28 +170,15 @@ fun HomeScreen() {
                         TransactionListItem(
                             icon = tx.icon,
                             description = tx.description,
-                            wallet = tx.wallet,
+                            account = tx.account,
+                            toAccount = tx.toAccount,
                             type = tx.type,
                             amount = tx.amount,
-                            onClick = {}
+                            onClick = { onTransactionClicked(tx) }
                         )
                     }
                 }
             }
         }
-
-        Row {
-            PrimaryButton(onClick = {
-                viewModel.resetDatabase()
-            }) {
-                Text("Seed Database")
-            }
-        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    SakuPlannerTheme { HomeScreen() }
 }

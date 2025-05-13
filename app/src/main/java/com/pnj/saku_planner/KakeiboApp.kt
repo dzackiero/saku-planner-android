@@ -6,7 +6,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,14 +31,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.settings.CategoryScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -43,9 +49,10 @@ fun KakeiboApp() {
     val navController = rememberNavController()
 
     val items = listOf(
-        BottomNavItem(Home, Icons.Default.Person),
-        BottomNavItem(Account, Icons.Default.Person),
-        BottomNavItem(Report, Icons.Default.Person),
+        BottomNavItem(Home, Icons.Outlined.Home),
+        BottomNavItem(Account, Icons.Outlined.Wallet),
+        BottomNavItem(Report, Icons.Outlined.Analytics),
+        BottomNavItem(Settings, Icons.Outlined.Settings),
     )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentSimpleRoute = currentRoute?.substringAfterLast('.')
@@ -88,8 +95,8 @@ fun KakeiboApp() {
             modifier = contentModifier
         ) {
             // Home
-            composable<Home> {
-                HomeTabRoute(navController)
+            composable<Home> { backStackEntry ->
+                HomeTabRoute(navController, backStackEntry)
             }
 
             composable<TransactionForm>(
@@ -106,7 +113,9 @@ fun KakeiboApp() {
                     )
                 },
             ) {
-                TransactionFormRoute(navController)
+                val transactionId = it.toRoute<TransactionForm>().transactionId
+
+                TransactionFormRoute(navController, transactionId)
             }
 
             // Account & Savings
@@ -116,10 +125,21 @@ fun KakeiboApp() {
             composable<AccountForm> {
                 AccountFormRoute(navController)
             }
+
+            // Report
             composable<Report> {
                 ReflectionScreen()
             }
 
+            // Settings
+            composable<Settings> {
+                SettingsRoute(navController)
+            }
+
+            // Category
+            composable<Category> {
+                 CategoryScreen()
+            }
         }
     }
 }
@@ -139,8 +159,10 @@ fun BottomNavigationBar(
             items.forEach { item ->
                 NavigationBarItem(
                     icon = { Icon(item.icon, item.route.toString()) },
-                    selected = currentRoute == item.route,
-                    onClick = { navController.navigate(item.route) },
+                    selected = currentRoute == item.route.toString(),
+                    onClick = {
+                        navController.navigate(item.route)
+                    },
                     label = { Text(item.route.toString()) })
             }
         }
@@ -190,7 +212,7 @@ data object Home
 
 @Serializable
 data class TransactionForm(
-    val transactionId: String? = null,
+    val transactionId: Int? = null,
 )
 
 @Serializable
@@ -206,6 +228,9 @@ data object Report
 
 @Serializable
 data object Settings
+
+@Serializable
+data object Category
 
 @Preview
 @Composable

@@ -24,7 +24,7 @@ reflect on your spending habits and make better financial decisions.
 - [x] Detail/Edit Transaction Form
 - [x] Add ViewModel and UI Model
 - [x] Implement Repository and Entity
-- [ ] Finished Offline Implementation
+- [x] Finished Offline Implementation
 
 ### Account
 
@@ -63,15 +63,14 @@ reflect on your spending habits and make better financial decisions.
 
 ### Settings
 
-- [ ] Settings Screen
-- [ ] Profile Settings Form
+- [x] Settings Screen
+- [x] Categories Screen
 - [ ] Create Expense/Income Category Form
 - [ ] Implement Repository and Entity
 - [ ] Finished Offline Implementation
-- - [ ] Implement DataStore for User Preferences
+- [ ] Implement DataStore for User Preferences
 
 ## OTHERS TODOS
 
 - [ ] Create Syncing Logic for data to Backend
-- [ ] Create Infinity Scrolling for list of data
 

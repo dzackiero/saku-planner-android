@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.InputChip
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,12 +34,12 @@ import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
 import com.pnj.saku_planner.core.ui.components.BottomSheetField
 import com.pnj.saku_planner.core.ui.components.DateTimePickerField
 import com.pnj.saku_planner.core.ui.components.DefaultForm
+import com.pnj.saku_planner.core.ui.components.PrimaryButton
 import com.pnj.saku_planner.core.ui.formatToCurrency
 import com.pnj.saku_planner.core.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
-import com.pnj.saku_planner.kakeibo.domain.enum.CategoryType
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -75,7 +77,6 @@ fun TransactionFormScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 // Transaction types
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -97,26 +98,42 @@ fun TransactionFormScreen(
                     }
                 }
 
-                DateTimePickerField(dateTimePickerState)
+                DateTimePickerField(
+                    dateTimePickerState,
+                    onDateTimeChange = {
+                        callbacks.onTransactionAtChange(it)
+                    }
+                )
 
                 OutlinedTextField(
                     value = formState.amount.toString(),
-                    onValueChange = { callbacks.onAmountChange(it.toDouble()) },
+                    onValueChange = {
+                        val amount = it.toDoubleOrNull()
+                        if (amount != null) {
+                            callbacks.onAmountChange(amount)
+                        }
+                    },
                     label = { Text(stringResource(R.string.amount)) },
                     modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
 
-                BottomSheetField(
-                    options = categories,
-                    label = {
-                        Text(stringResource(R.string.category))
-                    },
-                    selectedItem = formState.selectedCategory,
-                    onItemSelected = { callbacks.onCategoryChange(it) },
-                    itemContent = {
-                        Text(it.name)
-                    },
-                    itemLabel = { it: CategoryUi -> it.name })
+                if (formState.transactionType != TransactionType.TRANSFER) {
+                    BottomSheetField(
+                        options = categories.filter { it.categoryType == formState.transactionType },
+                        label = {
+                            Text(stringResource(R.string.category))
+                        },
+                        selectedItem = formState.selectedCategory,
+                        onItemSelected = { callbacks.onCategoryChange(it) },
+                        itemContent = {
+                            Text(it.name)
+                        },
+                        itemLabel = { it: CategoryUi -> it.name }
+                    )
+                }
 
                 OutlinedTextField(
                     value = formState.description,
@@ -126,6 +143,7 @@ fun TransactionFormScreen(
                 )
             }
 
+            // Account And Kakeibo categories
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 // Account chips
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -162,7 +180,7 @@ fun TransactionFormScreen(
                                             style = Typography.labelMedium,
                                         )
                                         Text(
-                                            text = formatToCurrency(51_125_000),
+                                            text = formatToCurrency(account.balance),
                                             maxLines = 1,
                                             color = AppColor.Primary,
                                             textAlign = TextAlign.End,
@@ -172,6 +190,57 @@ fun TransactionFormScreen(
                                         )
                                     }
                                 })
+                        }
+                    }
+                }
+
+                // to account chips
+                if (formState.transactionType == TransactionType.TRANSFER) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.select_target_account),
+                                style = Typography.titleMedium
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            for (account in accounts) {
+                                FilterChip(
+                                    selected = formState.selectedToAccount == account,
+                                    onClick = { callbacks.onToAccountChange(account) },
+                                    modifier = Modifier.width(150.dp),
+                                    label = {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(vertical = 8.dp),
+                                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                                        ) {
+                                            Text(
+                                                text = account.name,
+                                                style = Typography.labelMedium,
+                                            )
+                                            Text(
+                                                text = formatToCurrency(account.balance),
+                                                maxLines = 1,
+                                                color = AppColor.Primary,
+                                                textAlign = TextAlign.End,
+                                                style = Typography.titleSmall,
+                                                overflow = TextOverflow.Ellipsis,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
+                                    })
+                            }
                         }
                     }
                 }
@@ -204,6 +273,23 @@ fun TransactionFormScreen(
                         }
                     }
                 }
+
+                // Submit button
+                PrimaryButton(
+                    onClick = {
+                        callbacks.onSubmit()
+                        onNavigateBack()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp, bottom = 16.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.submit),
+                        style = Typography.titleMedium,
+                    )
+                }
             }
         }
     }
@@ -218,19 +304,22 @@ fun PreviewNewTransactionForm() {
 
         val callbacks = TransactionFormCallbacks(
             onTransactionTypeChange = {
-            state = state.copy(transactionType = it)
-        },
+                state = state.copy(transactionType = it)
+            },
             onCategoryChange = { state = state.copy(selectedCategory = it) },
             onAccountChange = { state = state.copy(selectedAccount = it) },
             onKakeiboChange = { state = state.copy(selectedKakeibo = it) },
             onAmountChange = { state = state.copy(amount = it) },
             onDescriptionChange = { state = state.copy(description = it) },
-            onSubmit = { /* Submit logic */ })
+            onTransactionAtChange = { state = state.copy(transactionAt = it) },
+            onToAccountChange = { state = state.copy(selectedToAccount = it) },
+            onSubmit = {},
+        )
 
         val categories = listOf(
-            CategoryUi(1, "Food and Drink", CategoryType.Income),
-            CategoryUi(2, "Transport", CategoryType.Expense),
-            CategoryUi(3, "Entertainment", CategoryType.Income),
+            CategoryUi(1, "Food and Drink", TransactionType.INCOME),
+            CategoryUi(2, "Transport", TransactionType.EXPENSE),
+            CategoryUi(3, "Entertainment", TransactionType.INCOME),
         )
 
         val accounts = listOf(
