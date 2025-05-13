@@ -29,7 +29,6 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
-import com.pnj.saku_planner.transaction.presentation.models.CategoryUi
 import com.pnj.saku_planner.core.ui.components.BottomSheetField
 import com.pnj.saku_planner.core.ui.components.DateTimePickerField
 import com.pnj.saku_planner.core.ui.components.DefaultForm
@@ -38,6 +37,9 @@ import com.pnj.saku_planner.core.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.domain.enum.CategoryType
+import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
+import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormState
 
@@ -46,7 +48,7 @@ fun TransactionFormScreen(
     formState: TransactionFormState,
     callbacks: TransactionFormCallbacks,
     categories: List<CategoryUi>,
-    accounts: List<String>,
+    accounts: List<AccountUi>,
     modifier: Modifier = Modifier,
     formTitle: String = "New Transaction",
     onNavigateBack: () -> Unit = {},
@@ -60,8 +62,7 @@ fun TransactionFormScreen(
     )
 
     DefaultForm(
-        title = formTitle,
-        onNavigateBack = onNavigateBack
+        title = formTitle, onNavigateBack = onNavigateBack
     ) {
         Column(
             modifier = modifier
@@ -92,8 +93,7 @@ fun TransactionFormScreen(
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier.fillMaxWidth()
                                 )
-                            }
-                        )
+                            })
                     }
                 }
 
@@ -116,8 +116,7 @@ fun TransactionFormScreen(
                     itemContent = {
                         Text(it.name)
                     },
-                    itemLabel = { it: CategoryUi -> it.name }
-                )
+                    itemLabel = { it: CategoryUi -> it.name })
 
                 OutlinedTextField(
                     value = formState.description,
@@ -159,7 +158,7 @@ fun TransactionFormScreen(
                                         verticalArrangement = Arrangement.spacedBy(24.dp)
                                     ) {
                                         Text(
-                                            text = account,
+                                            text = account.name,
                                             style = Typography.labelMedium,
                                         )
                                         Text(
@@ -172,8 +171,7 @@ fun TransactionFormScreen(
                                             modifier = Modifier.fillMaxWidth()
                                         )
                                     }
-                                }
-                            )
+                                })
                         }
                     }
                 }
@@ -219,25 +217,26 @@ fun PreviewNewTransactionForm() {
         var state by remember { mutableStateOf(TransactionFormState()) }
 
         val callbacks = TransactionFormCallbacks(
-            onTransactionTypeChange = { state = state.copy(transactionType = it) },
+            onTransactionTypeChange = {
+            state = state.copy(transactionType = it)
+        },
             onCategoryChange = { state = state.copy(selectedCategory = it) },
             onAccountChange = { state = state.copy(selectedAccount = it) },
             onKakeiboChange = { state = state.copy(selectedKakeibo = it) },
             onAmountChange = { state = state.copy(amount = it) },
             onDescriptionChange = { state = state.copy(description = it) },
-            onSubmit = { /* Submit logic */ }
-        )
+            onSubmit = { /* Submit logic */ })
 
         val categories = listOf(
-            CategoryUi(1, "Food and Drink"),
-            CategoryUi(2, "Transport"),
-            CategoryUi(3, "Entertainment"),
+            CategoryUi(1, "Food and Drink", CategoryType.Income),
+            CategoryUi(2, "Transport", CategoryType.Expense),
+            CategoryUi(3, "Entertainment", CategoryType.Income),
         )
 
         val accounts = listOf(
-            "Cash",
-            "Bank",
-            "Credit Card",
+            AccountUi(1, "Wallet", 100_000),
+            AccountUi(2, "Bank", 500_000),
+            AccountUi(3, "Cash", 200_000),
         )
 
 

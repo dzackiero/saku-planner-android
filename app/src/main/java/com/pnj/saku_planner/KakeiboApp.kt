@@ -17,30 +17,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountFormScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountPagerScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormViewModel
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.HomeScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.TransactionFormScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 import com.pnj.saku_planner.core.ui.theme.AppColor
 import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
 import kotlinx.serialization.Serializable
 
@@ -95,8 +89,9 @@ fun KakeiboApp() {
         ) {
             // Home
             composable<Home> {
-                HomeScreen()
+                HomeTabRoute(navController)
             }
+
             composable<TransactionForm>(
                 enterTransition = {
                     slideIntoContainer(
@@ -111,48 +106,16 @@ fun KakeiboApp() {
                     )
                 },
             ) {
-                val viewModel = hiltViewModel<TransactionFormViewModel>()
-                val state by viewModel.transactionFormState.collectAsStateWithLifecycle()
-                val categories by viewModel.categories.collectAsStateWithLifecycle()
-                val callbacks = viewModel.callbacks
-
-                TransactionFormScreen(
-                    formState = state,
-                    callbacks = callbacks,
-                    categories = categories,
-                    accounts = viewModel.accounts,
-                    onNavigateBack = {
-                        navController.popBackStack()
-                    }
-                )
+                TransactionFormRoute(navController)
             }
 
             // Account & Savings
             composable<Account> {
-                val callbacks = AccountCallbacks(
-                    onCreateNewAccount = {
-                        navController.navigate(AccountForm())
-                    },
-                    onEditAccount = {
-                        navController.navigate(AccountForm())
-                    },
-                    onDeleteAccount = {
-                        navController.navigate(AccountForm())
-                    }
-                )
-                AccountPagerScreen(callbacks)
+                AccountTabRoute(navController)
             }
             composable<AccountForm> {
-                val viewModel = hiltViewModel<AccountFormViewModel>()
-                val state by viewModel.formState.collectAsStateWithLifecycle()
-                AccountFormScreen(
-                    state = state,
-                    title = "New Account",
-                    callbacks = viewModel.callbacks
-                )
+                AccountFormRoute(navController)
             }
-
-
             composable<Report> {
                 ReflectionScreen()
             }

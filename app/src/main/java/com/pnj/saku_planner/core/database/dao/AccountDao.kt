@@ -18,5 +18,5 @@ interface AccountDao {
     suspend fun getAllAccounts(): List<AccountEntity>
 
     @Delete
-    suspend fun deleteAccount(account: AccountEntity)
+    suspend fun deleteAccount(id: Int)
 }
