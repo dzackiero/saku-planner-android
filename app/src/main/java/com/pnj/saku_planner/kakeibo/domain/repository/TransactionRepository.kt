@@ -13,8 +13,6 @@ interface TransactionRepository {
 
     suspend fun getTransactionById(id: Int): TransactionDetail?
 
-    suspend fun getTotalTransaction(type: TransactionType): Double
-
     suspend fun getAllTransactions(): List<TransactionDetail>
 
     suspend fun deleteTransaction(id: Int)
