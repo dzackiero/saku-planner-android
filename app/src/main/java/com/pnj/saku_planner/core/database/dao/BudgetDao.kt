@@ -8,7 +8,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.BudgetDetail
-import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 
 @Dao
 interface BudgetDao {

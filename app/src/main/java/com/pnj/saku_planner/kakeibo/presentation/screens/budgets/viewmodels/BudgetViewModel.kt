@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.BudgetUi
