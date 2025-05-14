@@ -9,7 +9,7 @@ class AccountEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val balance: Double,
+    val balance: Double = 0.0,
     val description: String? = null,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),

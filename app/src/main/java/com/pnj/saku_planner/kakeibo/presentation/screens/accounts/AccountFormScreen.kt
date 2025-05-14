@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,11 +34,22 @@ fun AccountFormScreen(
     state: AccountFormState,
     callbacks: AccountFormCallback,
     modifier: Modifier = Modifier,
+    onDeleteAccount: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
 ) {
     DefaultForm(
         title = title,
-        modifier = modifier.fillMaxSize()
+        onNavigateBack = onNavigateBack,
+        modifier = modifier.fillMaxSize(),
+        actions = {
+            if (state.accountId != null) {
+                IconButton(onClick = {
+                    onDeleteAccount()
+                }) {
+                    Icon(Icons.Outlined.Delete, "delete account")
+                }
+            }
+        },
     ) {
         Column(
             modifier = Modifier

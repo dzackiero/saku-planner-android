@@ -18,6 +18,10 @@ class CategoryViewModel @Inject constructor(
     private val _categories: MutableStateFlow<List<CategoryUi>> = MutableStateFlow(emptyList())
     val categories: StateFlow<List<CategoryUi>> = _categories
 
+    init {
+        loadCategories()
+    }
+
     fun loadCategories() {
         viewModelScope.launch {
             _categories.value = categoryRepository.getAllCategories().map { it.toUi() }

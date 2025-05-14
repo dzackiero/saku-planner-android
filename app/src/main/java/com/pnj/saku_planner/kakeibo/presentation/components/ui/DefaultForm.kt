@@ -2,6 +2,7 @@ package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -26,6 +27,7 @@ import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 fun DefaultForm(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
     title: String,
     content: @Composable () -> Unit,
 ) {
@@ -43,6 +45,7 @@ fun DefaultForm(
                         Icon(Icons.Default.Close, "Close")
                     }
                 },
+                actions = actions,
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = AppColor.PrimaryForeground),
                 modifier = Modifier
                     .border(1.dp, AppColor.Border)

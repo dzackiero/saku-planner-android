@@ -23,9 +23,16 @@ fun CategoryFormRoute(
         }
     }
 
+    val title = if (categoryId == null) "Add" else "Edit"
+
     CategoryFormScreen(
+        title = "$title Category",
         state = state,
         callbacks = viewModel.callbacks,
+        onDelete = {
+            viewModel.deleteCategory()
+            navController.popBackStack()
+        },
         onNavigateBack = {
             navController.popBackStack()
         },

@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -33,14 +35,25 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.Cat
 
 @Composable
 fun CategoryFormScreen(
+    title: String,
     modifier: Modifier = Modifier,
     state: CategoryFormState = CategoryFormState(),
     callbacks: CategoryFormCallbacks = CategoryFormCallbacks(),
     onNavigateBack: () -> Unit = {},
+    onDelete: () -> Unit = {},
 ) {
     DefaultForm(
-        title = "Create Category",
+        title = title,
         onNavigateBack = onNavigateBack,
+        actions = {
+            if (state.categoryId != null) {
+                IconButton(onClick = {
+                    onDelete()
+                }) {
+                    Icon(Icons.Outlined.Delete, "delete account")
+                }
+            }
+        },
         modifier = modifier
     ) {
         Column(
@@ -152,6 +165,6 @@ fun CategoryFormScreen(
 @Composable
 fun CategoryFormPreview() {
     SakuPlannerTheme {
-        CategoryFormScreen()
+        CategoryFormScreen("New Category")
     }
 }

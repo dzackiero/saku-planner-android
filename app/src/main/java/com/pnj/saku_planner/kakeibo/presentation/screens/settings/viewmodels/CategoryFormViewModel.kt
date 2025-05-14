@@ -46,6 +46,15 @@ class CategoryFormViewModel @Inject constructor(
         }
     }
 
+    fun deleteCategory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val category = _state.value
+            if (category.categoryId != null) {
+                categoryRepository.deleteCategory(category.categoryId)
+            }
+        }
+    }
+
     private fun submit() {
         val category = _state.value
         val categoryEntity = CategoryEntity(

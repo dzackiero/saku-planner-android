@@ -98,6 +98,15 @@ class TransactionFormViewModel @Inject constructor(
         }
     }
 
+    fun deleteTransaction() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val transactionId = _transactionFormState.value.transactionId
+            if (transactionId != null) {
+                transactionRepository.deleteTransaction(transactionId)
+            }
+        }
+    }
+
     private fun submitTransaction() {
         val state = _transactionFormState.value
 

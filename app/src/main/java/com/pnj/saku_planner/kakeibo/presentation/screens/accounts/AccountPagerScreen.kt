@@ -21,10 +21,17 @@ import kotlinx.coroutines.launch
 fun AccountPagerScreen(
     modifier: Modifier = Modifier,
     accounts: List<AccountUi> = emptyList(),
+    onAccountClicked: (AccountUi) -> Unit = {},
     accountCallbacks: AccountCallbacks = AccountCallbacks(),
 ) {
     val tabs = listOf(
-        TabItem("Account") { AccountScreen(accounts, accountCallbacks) },
+        TabItem("Account") {
+            AccountScreen(
+                accounts = accounts,
+                callbacks = accountCallbacks,
+                onAccountClicked = onAccountClicked,
+            )
+        },
         TabItem("Budget") { BudgetScreen() },
         TabItem("Target") { TargetScreen() }
     )

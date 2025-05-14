@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -53,6 +57,7 @@ fun TransactionFormScreen(
     modifier: Modifier = Modifier,
     formTitle: String = "New Transaction",
     onNavigateBack: () -> Unit = {},
+    onDelete: () -> Unit = {},
 ) {
     // Date/time picker state
     val dateTimePickerState = rememberDateTimePickerState()
@@ -63,7 +68,17 @@ fun TransactionFormScreen(
     )
 
     DefaultForm(
-        title = formTitle, onNavigateBack = onNavigateBack
+        title = formTitle,
+        actions = {
+            if (formState.transactionId != null) {
+                IconButton(onClick = {
+                    onDelete()
+                }) {
+                    Icon(Icons.Outlined.Delete, "delete account")
+                }
+            }
+        },
+        onNavigateBack = onNavigateBack
     ) {
         Column(
             modifier = modifier

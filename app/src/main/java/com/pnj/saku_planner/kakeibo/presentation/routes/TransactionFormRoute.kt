@@ -29,6 +29,10 @@ fun TransactionFormRoute(navController: NavController, transactionId: Int? = nul
         callbacks = callbacks,
         categories = categories,
         accounts = accounts,
+        onDelete = {
+            viewModel.deleteTransaction()
+            navController.popBackStack()
+        },
         onNavigateBack = {
             navController.popBackStack()
         }

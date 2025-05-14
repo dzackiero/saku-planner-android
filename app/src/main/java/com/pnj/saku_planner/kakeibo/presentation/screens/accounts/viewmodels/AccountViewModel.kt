@@ -24,7 +24,7 @@ class AccountViewModel @Inject constructor(
         loadAccounts()
     }
 
-    private fun loadAccounts() {
+    fun loadAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
             _accounts.value = accountRepository.getAllAccounts().map { it.toUi() }
         }

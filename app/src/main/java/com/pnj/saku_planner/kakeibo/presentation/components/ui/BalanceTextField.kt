@@ -26,6 +26,14 @@ fun BalanceTextField(
     var text by rememberSaveable { mutableStateOf(value?.toString() ?: "") }
     var isFocused by remember { mutableStateOf(false) }
 
+    // 🔁 Keep text in sync when not focused and value changes
+    if (!isFocused) {
+        val formatted = value?.let { formatToCurrency(it, locale) } ?: ""
+        if (formatted != text) {
+            text = formatted
+        }
+    }
+
     OutlinedTextField(
         value = text,
         onValueChange = { newText ->

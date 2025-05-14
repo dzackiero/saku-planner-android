@@ -44,6 +44,13 @@ class AccountFormViewModel @Inject constructor(
         }
     }
 
+    fun deleteAccount() {
+        val accountId = _formState.value.accountId ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            accountRepository.deleteAccount(accountId)
+        }
+    }
+
     private fun submit() {
         val values = _formState.value
 

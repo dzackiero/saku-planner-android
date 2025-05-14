@@ -121,7 +121,7 @@ fun KakeiboApp() {
 
             // Account & Savings
             composable<Account> {
-                AccountTabRoute(navController)
+                AccountTabRoute(navController, it)
             }
             composable<AccountForm>(
                 enterTransition = {
@@ -137,7 +137,8 @@ fun KakeiboApp() {
                     )
                 },
             ) {
-                AccountFormRoute(navController)
+                val accountId = it.toRoute<AccountForm>().accountId
+                AccountFormRoute(navController, accountId)
             }
 
             // Report

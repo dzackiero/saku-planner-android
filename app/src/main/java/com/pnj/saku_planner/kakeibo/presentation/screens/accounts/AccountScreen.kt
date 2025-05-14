@@ -30,7 +30,8 @@ import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 @Composable
 fun AccountScreen(
     accounts: List<AccountUi> = emptyList(),
-    callbacks: AccountCallbacks
+    onAccountClicked: (AccountUi) -> Unit = {},
+    callbacks: AccountCallbacks = AccountCallbacks()
 ) {
 
     val totalBalance = accounts.sumOf { it.balance }
@@ -88,8 +89,7 @@ fun AccountScreen(
                 AccountCard(
                     accountName = account.name,
                     accountBalance = account.balance,
-                    onEditClick = { callbacks.onEditAccount(account.id) },
-                    onDeleteClick = { callbacks.onDeleteAccount(account.id) },
+                    onClick = {onAccountClicked(account) },
                 )
             }
         }
@@ -100,7 +100,7 @@ fun AccountScreen(
 @Composable
 fun HomeScreenPreview() {
     SakuPlannerTheme {
-//        AccountScreen()
+        AccountScreen()
     }
 }
 
