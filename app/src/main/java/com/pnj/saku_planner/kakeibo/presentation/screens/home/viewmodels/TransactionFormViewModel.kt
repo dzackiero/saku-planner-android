@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
@@ -115,7 +114,7 @@ class TransactionFormViewModel @Inject constructor(
                 toAccountId = state.selectedToAccount?.id,
                 categoryId = categoryId,
                 type = state.transactionType.toString().lowercase(),
-                amount = state.amount,
+                amount = state.amount ?: 0.0,
                 description = state.description,
                 kakeiboCategory = state.selectedKakeibo!!.toString().lowercase(),
                 transactionAt = state.transactionAt,
@@ -139,7 +138,7 @@ data class TransactionFormState(
     val selectedAccount: AccountUi? = null,
     val selectedToAccount: AccountUi? = null,
     val transactionAt: Long = System.currentTimeMillis(),
-    val amount: Double = 0.0,
+    val amount: Double? = null,
     val description: String = ""
 )
 
@@ -151,7 +150,7 @@ data class TransactionFormCallbacks(
     val onAccountChange: (AccountUi) -> Unit,
     val onToAccountChange: (AccountUi) -> Unit,
     val onKakeiboChange: (KakeiboCategoryType) -> Unit,
-    val onAmountChange: (Double) -> Unit,
+    val onAmountChange: (Double?) -> Unit,
     val onDescriptionChange: (String) -> Unit,
     val onSubmit: () -> Unit
 )

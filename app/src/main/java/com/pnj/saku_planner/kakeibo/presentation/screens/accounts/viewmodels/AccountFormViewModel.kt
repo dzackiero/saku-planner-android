@@ -21,7 +21,7 @@ class AccountFormViewModel @Inject constructor() : ViewModel() {
             _formState.value = _formState.value.copy(description = it)
         },
         onCurrentBalanceChange = {
-            _formState.value = _formState.value.copy(currentBalance = it.toDouble())
+            _formState.value = _formState.value.copy(currentBalance = it)
         },
         onSubmit = {}
     )

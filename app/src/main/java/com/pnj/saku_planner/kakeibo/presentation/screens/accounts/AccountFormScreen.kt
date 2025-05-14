@@ -14,8 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.ui.components.BalanceTextField
 import com.pnj.saku_planner.kakeibo.presentation.states.AccountFormCallback
 import com.pnj.saku_planner.kakeibo.presentation.states.AccountFormState
 import com.pnj.saku_planner.core.ui.components.DefaultForm
@@ -44,7 +47,7 @@ fun AccountFormScreen(
                 OutlinedTextField(
                     value = state.accountName,
                     label = {
-                        Text("Account Name")
+                        Text(stringResource(R.string.account_name))
                     },
                     placeholder = {
                         Text("e.g., Main Checking")
@@ -53,22 +56,18 @@ fun AccountFormScreen(
                     onValueChange = callbacks.onAccountNameChange,
                 )
 
-                OutlinedTextField(
-                    value = state.currentBalance.toString(),
-                    placeholder = {
-                        Text("0.0")
-                    },
-                    label = {
-                        Text("Current Balance")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
+                BalanceTextField(
+                    value = state.currentBalance,
+                    placeholder = "0.0",
+                    label = stringResource(R.string.current_balance),
                     onValueChange = callbacks.onCurrentBalanceChange,
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 OutlinedTextField(
                     value = state.description,
                     label = {
-                        Text("Description")
+                        Text(stringResource(R.string.description))
                     },
                     placeholder = {
                         Text("e.g., account for groceries")
@@ -92,7 +91,7 @@ fun AccountFormScreenPreview() {
             callbacks = AccountFormCallback(
                 onAccountNameChange = { state = state.copy(accountName = it) },
                 onDescriptionChange = { state = state.copy(description = it) },
-                onCurrentBalanceChange = { state = state.copy(currentBalance = it.toDouble()) },
+                onCurrentBalanceChange = { state = state.copy(currentBalance = it) },
                 onSubmit = {}
             )
         )

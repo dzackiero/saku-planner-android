@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.ui.components.BalanceTextField
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
@@ -105,19 +106,12 @@ fun TransactionFormScreen(
                     }
                 )
 
-                OutlinedTextField(
-                    value = formState.amount.toString(),
-                    onValueChange = {
-                        val amount = it.toDoubleOrNull()
-                        if (amount != null) {
-                            callbacks.onAmountChange(amount)
-                        }
-                    },
-                    label = { Text(stringResource(R.string.amount)) },
+                BalanceTextField(
+                    value = formState.amount,
+                    placeholder = "0.0",
+                    label = stringResource(R.string.current_balance),
+                    onValueChange = callbacks.onAmountChange,
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    )
                 )
 
                 if (formState.transactionType != TransactionType.TRANSFER) {
