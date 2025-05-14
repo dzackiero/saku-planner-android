@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.theme.AppColor.MutedForeground
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.core.theme.AppColor.MutedForeground
+import com.pnj.saku_planner.core.theme.Typography
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 import java.util.Locale

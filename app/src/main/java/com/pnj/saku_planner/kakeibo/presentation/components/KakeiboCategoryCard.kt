@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.Typography
 
 @Composable
 fun KakeiboCard(

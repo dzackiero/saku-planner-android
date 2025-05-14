@@ -21,5 +21,5 @@ fun CategoryEntity.toUi() = CategoryUi(
     id = id,
     name = name,
     icon = icon,
-    categoryType = TransactionType.valueOf(categoryType),
+    categoryType = TransactionType.valueOf(categoryType.uppercase()),
 )

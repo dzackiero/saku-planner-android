@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,72 +23,80 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
-import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.components.DefaultForm
-import com.pnj.saku_planner.core.ui.components.PrimaryButton
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.TopAppBar
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 
 @Composable
-fun CategoryScreen() {
-    val categories = listOf(
-        CategoryUi(
-            id = 1,
-            name = "Food",
-            icon = "🍇",
-            categoryType = TransactionType.EXPENSE,
-        ), CategoryUi(
-            id = 2,
-            name = "Fiking",
-            icon = "🍇",
-            categoryType = TransactionType.INCOME,
-        )
-    )
-
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-            .background(AppColor.PrimaryForeground),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Categories",
-                style = Typography.displaySmall,
-                fontWeight = FontWeight.Bold,
-            )
-            PrimaryButton(onClick = { }) {
-                Text("Add Category")
-            }
+fun CategoryScreen(
+    categories: List<CategoryUi> = emptyList(),
+    onAddCategoryClicked: () -> Unit = {},
+    onCategoryItemClicked: (CategoryUi) -> Unit = {},
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar()
         }
-
-        Card(
-            modifier = Modifier.fillMaxWidth()
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .padding(paddingValues)
+                .fillMaxSize()
+                .background(AppColor.PrimaryForeground),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column {
-                categories.forEachIndexed { index, category ->
-                    CategoryItem(
-                        category = category,
-                        onClick = { }
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Categories",
+                    style = Typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                PrimaryButton(onClick = onAddCategoryClicked) {
+                    Text("Add Category")
+                }
+            }
 
-                    if (categories.lastIndex != index) {
-                        HorizontalDivider(color = AppColor.Border)
+            if (categories.isEmpty()) {
+                Text(
+                    text = "No categories available",
+                    style = Typography.headlineMedium,
+                    color = AppColor.MutedForeground,
+                    modifier = Modifier.padding(16.dp)
+                )
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column {
+                        categories.forEachIndexed { index, category ->
+                            CategoryItem(
+                                category = category,
+                                onClick = {
+                                    onCategoryItemClicked(category)
+                                }
+                            )
+
+                            if (categories.lastIndex != index) {
+                                HorizontalDivider(color = AppColor.Border)
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 @Composable

@@ -10,6 +10,7 @@ class AccountEntity(
     val id: Int = 0,
     val name: String,
     val balance: Double,
+    val description: String? = null,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),

@@ -2,10 +2,9 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.accounts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,40 +17,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.ui.components.BalanceTextField
-import com.pnj.saku_planner.kakeibo.presentation.states.AccountFormCallback
-import com.pnj.saku_planner.kakeibo.presentation.states.AccountFormState
-import com.pnj.saku_planner.core.ui.components.DefaultForm
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormCallback
+import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormState
 
 @Composable
 fun AccountFormScreen(
+    title: String,
     state: AccountFormState,
     callbacks: AccountFormCallback,
-    title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {},
 ) {
-    DefaultForm(title = title) {
+    DefaultForm(
+        title = title,
+        modifier = modifier.fillMaxSize()
+    ) {
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 OutlinedTextField(
                     value = state.accountName,
-                    label = {
-                        Text(stringResource(R.string.account_name))
-                    },
-                    placeholder = {
-                        Text("e.g., Main Checking")
-                    },
+                    label = { Text(stringResource(R.string.account_name)) },
+                    placeholder = { Text("e.g., Main Checking") },
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = callbacks.onAccountNameChange,
                 )
@@ -66,19 +63,26 @@ fun AccountFormScreen(
 
                 OutlinedTextField(
                     value = state.description,
-                    label = {
-                        Text(stringResource(R.string.description))
-                    },
-                    placeholder = {
-                        Text("e.g., account for groceries")
-                    },
+                    label = { Text(stringResource(R.string.description)) },
+                    placeholder = { Text("e.g., account for groceries") },
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = callbacks.onDescriptionChange,
                 )
             }
+
+            PrimaryButton(
+                onClick = {
+                    callbacks.onSubmit()
+                    onNavigateBack()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Submit")
+            }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

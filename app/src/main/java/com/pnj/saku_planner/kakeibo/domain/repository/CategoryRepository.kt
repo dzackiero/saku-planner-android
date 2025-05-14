@@ -7,6 +7,8 @@ interface CategoryRepository {
 
     suspend fun insertCategory(categoryEntity: CategoryEntity)
 
+    suspend fun updateCategory(categoryEntity: CategoryEntity)
+
     suspend fun getCategoryById(id: Int): CategoryEntity?
 
     suspend fun getAllCategories(): List<CategoryEntity>

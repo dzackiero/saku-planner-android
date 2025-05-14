@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.core.ui.components
+package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
-import com.pnj.saku_planner.core.ui.formatToCurrency
 import java.util.Locale
 
 @Composable

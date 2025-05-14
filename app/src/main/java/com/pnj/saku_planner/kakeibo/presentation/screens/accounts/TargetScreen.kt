@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.kakeibo.presentation.components.TargetCard
-import com.pnj.saku_planner.core.ui.components.PrimaryButton
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 
 @Composable
 fun TargetScreen() {

@@ -32,16 +32,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.settings.CategoryScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -122,7 +123,20 @@ fun KakeiboApp() {
             composable<Account> {
                 AccountTabRoute(navController)
             }
-            composable<AccountForm> {
+            composable<AccountForm>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
                 AccountFormRoute(navController)
             }
 
@@ -137,8 +151,40 @@ fun KakeiboApp() {
             }
 
             // Category
-            composable<Category> {
-                 CategoryScreen()
+            composable<Category>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) { navBackStackEntry ->
+                CategoryRoute(navController, navBackStackEntry)
+            }
+
+            // Category Form
+            composable<CategoryForm>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
+                val categoryId = it.toRoute<CategoryForm>().categoryId
+                CategoryFormRoute(navController, categoryId)
             }
         }
     }
@@ -220,7 +266,7 @@ data object Account
 
 @Serializable
 data class AccountForm(
-    val accountId: String? = null,
+    val accountId: Int? = null,
 )
 
 @Serializable
@@ -231,6 +277,11 @@ data object Settings
 
 @Serializable
 data object Category
+
+@Serializable
+data class CategoryForm(
+    val categoryId: Int? = null,
+)
 
 @Preview
 @Composable

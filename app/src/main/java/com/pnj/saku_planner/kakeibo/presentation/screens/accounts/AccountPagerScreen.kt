@@ -12,17 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 import kotlinx.coroutines.launch
 
 @Composable
 fun AccountPagerScreen(
-    accountCallbacks: AccountCallbacks,
     modifier: Modifier = Modifier,
+    accounts: List<AccountUi> = emptyList(),
+    accountCallbacks: AccountCallbacks = AccountCallbacks(),
 ) {
     val tabs = listOf(
-        TabItem("Account") { AccountScreen(accountCallbacks) },
+        TabItem("Account") { AccountScreen(accounts, accountCallbacks) },
         TabItem("Budget") { BudgetScreen() },
         TabItem("Target") { TargetScreen() }
     )
@@ -67,6 +69,6 @@ data class TabItem(
 @Composable
 fun AccountSavingScreenPreview() {
     SakuPlannerTheme {
-        AccountPagerScreen(AccountCallbacks())
+        AccountPagerScreen()
     }
 }

@@ -16,6 +16,10 @@ class AccountRepositoryImpl @Inject constructor(
         return accountRepository.getAccountById(id)
     }
 
+    override suspend fun updateAccount(account: AccountEntity) {
+        accountRepository.updateAccount(account)
+    }
+
     override suspend fun getAllAccounts(): List<AccountEntity> {
         return accountRepository.getAllAccounts()
     }

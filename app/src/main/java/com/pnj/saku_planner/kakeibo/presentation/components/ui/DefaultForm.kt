@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.core.ui.components
+package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -18,8 +18,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

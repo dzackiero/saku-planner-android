@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pnj.saku_planner.core.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.Typography
 
 @Composable
 fun TransactionListItem(

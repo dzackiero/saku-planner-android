@@ -22,10 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.formatToCurrency
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionDateDivider
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
@@ -162,6 +162,18 @@ fun HomeScreen(
                     text = stringResource(R.string.transactions),
                     style = Typography.headlineMedium
                 )
+
+                if(state.transactions.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.you_don_t_have_any_transactions_yet),
+                        style = Typography.bodyMedium,
+                        color = AppColor.MutedForeground,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
 
                 // List of transactions
                 groupedTransactions.forEach { (date, txList) ->

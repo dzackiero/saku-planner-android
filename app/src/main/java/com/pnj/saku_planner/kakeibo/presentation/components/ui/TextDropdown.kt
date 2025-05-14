@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.core.ui.components
+package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

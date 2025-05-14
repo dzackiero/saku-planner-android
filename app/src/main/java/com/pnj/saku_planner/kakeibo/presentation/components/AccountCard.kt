@@ -10,10 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.components.SecondaryButton
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 import java.util.Locale
 
 @Composable

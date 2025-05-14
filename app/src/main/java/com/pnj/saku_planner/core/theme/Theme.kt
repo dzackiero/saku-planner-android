@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.core.ui.theme
+package com.pnj.saku_planner.core.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme

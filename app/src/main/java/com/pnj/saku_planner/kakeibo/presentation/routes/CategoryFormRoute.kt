@@ -6,26 +6,25 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountFormScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormViewModel
+import com.pnj.saku_planner.kakeibo.presentation.screens.settings.CategoryFormScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryFormViewModel
 
 @Composable
-fun AccountFormRoute(
+fun CategoryFormRoute(
     navController: NavController,
-    accountId: Int? = null,
+    categoryId: Int? = null,
 ) {
-    val viewModel = hiltViewModel<AccountFormViewModel>()
+    val viewModel = hiltViewModel<CategoryFormViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(accountId) {
-        if (accountId != null) {
-            viewModel.loadAccount(accountId)
+    LaunchedEffect(categoryId) {
+        if (categoryId != null) {
+            viewModel.loadCategory(categoryId)
         }
     }
 
-    val state by viewModel.formState.collectAsStateWithLifecycle()
-    AccountFormScreen(
+    CategoryFormScreen(
         state = state,
-        title = "New Account",
         callbacks = viewModel.callbacks,
         onNavigateBack = {
             navController.popBackStack()

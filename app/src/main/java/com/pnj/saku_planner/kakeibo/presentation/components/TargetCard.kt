@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.Typography
 import java.util.Locale
 
 @Composable

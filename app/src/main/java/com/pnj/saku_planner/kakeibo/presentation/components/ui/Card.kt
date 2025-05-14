@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.core.ui.components
+package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.core.theme.AppColor
 
 @Composable
 fun Card(

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.InputChip
@@ -22,25 +21,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.ui.components.BalanceTextField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
-import com.pnj.saku_planner.core.ui.components.BottomSheetField
-import com.pnj.saku_planner.core.ui.components.DateTimePickerField
-import com.pnj.saku_planner.core.ui.components.DefaultForm
-import com.pnj.saku_planner.core.ui.components.PrimaryButton
-import com.pnj.saku_planner.core.ui.formatToCurrency
-import com.pnj.saku_planner.core.ui.states.rememberDateTimePickerState
-import com.pnj.saku_planner.core.ui.theme.AppColor
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.DateTimePickerField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDateTimePickerState
+import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -317,9 +315,9 @@ fun PreviewNewTransactionForm() {
         )
 
         val accounts = listOf(
-            AccountUi(1, "Wallet", 100_000),
-            AccountUi(2, "Bank", 500_000),
-            AccountUi(3, "Cash", 200_000),
+            AccountUi(1, "Wallet", 100_000.0),
+            AccountUi(2, "Bank", 500_000.0),
+            AccountUi(3, "Cash", 200_000.0),
         )
 
 

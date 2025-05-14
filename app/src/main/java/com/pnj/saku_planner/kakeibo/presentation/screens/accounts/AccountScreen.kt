@@ -14,21 +14,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.res.stringResource
-import com.pnj.saku_planner.core.ui.theme.AppColor
+import com.pnj.saku_planner.core.theme.AppColor
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.ui.components.Card
-import com.pnj.saku_planner.core.ui.theme.Typography
-import com.pnj.saku_planner.core.ui.theme.SakuPlannerTheme
-import com.pnj.saku_planner.core.ui.components.PrimaryButton
-import com.pnj.saku_planner.core.ui.theme.AppColor.MutedForeground
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.theme.AppColor.MutedForeground
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountCard
+import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 
 @Composable
 fun AccountScreen(
+    accounts: List<AccountUi> = emptyList(),
     callbacks: AccountCallbacks
 ) {
+
+    val totalBalance = accounts.sumOf { it.balance }
 
     Column(
         modifier = Modifier
@@ -46,16 +51,16 @@ fun AccountScreen(
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Text(
-                    text = "Total Balance",
+                    text = stringResource(R.string.total_balance),
                     style = Typography.titleMedium,
                 )
                 Text(
-                    text = "Accross all accounts",
+                    text = stringResource(R.string.accross_all_accounts),
                     color = MutedForeground,
                     style = Typography.labelSmall
                 )
                 Text(
-                    text = "Rp1.000.000",
+                    text = formatToCurrency(totalBalance),
                     style = Typography.displayMedium,
                 )
             }
@@ -79,18 +84,14 @@ fun AccountScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            AccountCard(
-                accountName = "Wallet",
-                accountBalance = 1_000_000,
-                onEditClick = { callbacks.onEditAccount("Wallet") },
-                onDeleteClick = { callbacks.onDeleteAccount("Wallet") },
-            )
-            AccountCard(
-                accountName = "BCA",
-                accountBalance = 500_000,
-                onEditClick = { callbacks.onEditAccount("BCA") },
-                onDeleteClick = { callbacks.onDeleteAccount("BCA") },
-            )
+            accounts.forEach { account ->
+                AccountCard(
+                    accountName = account.name,
+                    accountBalance = account.balance,
+                    onEditClick = { callbacks.onEditAccount(account.id) },
+                    onDeleteClick = { callbacks.onDeleteAccount(account.id) },
+                )
+            }
         }
     }
 }
