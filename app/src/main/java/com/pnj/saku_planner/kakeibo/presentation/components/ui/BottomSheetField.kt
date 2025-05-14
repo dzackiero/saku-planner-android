@@ -15,9 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,20 +54,33 @@ fun <T> BottomSheetField(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            HorizontalDivider()
-            options.forEach { item ->
-                Box(
+            if (options.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.no_options_available),
+                    color = AppColor.MutedForeground,
+                    style = Typography.titleMedium,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            onItemSelected(item)
-                            showBottomSheet = false
-                        }
-                        .padding(16.dp)
-                ) {
-                    itemContent(item)
+                        .padding(16.dp),
+                )
+            } else {
+                options.forEachIndexed { index, item ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onItemSelected(item)
+                                showBottomSheet = false
+                            }
+                            .padding(16.dp)
+                    ) {
+                        itemContent(item)
+                    }
+                    if (index != options.lastIndex) {
+                        HorizontalDivider()
+                    }
                 }
-                HorizontalDivider()
             }
         }
     }

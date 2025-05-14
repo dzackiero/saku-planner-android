@@ -12,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.CategoryBudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
@@ -26,7 +29,10 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.Budg
 
 
 @Composable
-fun BudgetScreen() {
+fun BudgetScreen(
+    onAddBudgetClicked: () -> Unit,
+    onBudgetClicked: (BudgetUi) -> Unit
+) {
     val viewModel = hiltViewModel<BudgetViewModel>()
     val budgets by viewModel.budgets.collectAsStateWithLifecycle()
 
@@ -49,18 +55,20 @@ fun BudgetScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Category Budgets",
+                text = stringResource(R.string.category_budgets),
                 style = Typography.displaySmall,
             )
-            PrimaryButton(onClick = {}) {
-                Text(text = "Add Budget")
+            PrimaryButton(onClick = onAddBudgetClicked) {
+                Text(text = stringResource(R.string.add_budget))
             }
         }
 
         budgets.forEach { budget ->
             CategoryBudgetCard(
                 budget = budget,
-                onEditClick = {}
+                onEditClick = {
+                    onBudgetClicked(budget)
+                }
             )
         }
     }
@@ -70,7 +78,6 @@ fun BudgetScreen() {
 @Composable
 fun PreviewBudgetScreen() {
     SakuPlannerTheme {
-        BudgetScreen()
     }
 }
 

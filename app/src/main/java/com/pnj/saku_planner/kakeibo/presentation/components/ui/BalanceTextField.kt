@@ -19,7 +19,7 @@ fun BalanceTextField(
     value: Double?,
     modifier: Modifier = Modifier,
     onValueChange: (Double?) -> Unit,
-    label: String = "Current Balance",
+    label: String = "Balance",
     placeholder: String = "0.0",
     locale: Locale = Locale("id", "ID")
 ) {

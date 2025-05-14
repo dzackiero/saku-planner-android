@@ -2,6 +2,8 @@ package com.pnj.saku_planner
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,6 +46,8 @@ import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetDetailRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
@@ -113,6 +117,8 @@ fun KakeiboApp() {
         NavHost(
             startDestination = Home,
             navController = navController,
+            enterTransition = { fadeIn(animationSpec = tween(0)) },
+            exitTransition = { fadeOut(animationSpec = tween(0)) },
             modifier = contentModifier
         ) {
             // Home
@@ -124,13 +130,13 @@ fun KakeiboApp() {
                 enterTransition = {
                     slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Up,
-                        animationSpec = tween(300)
+                        animationSpec = tween(300, easing = EaseIn)
                     )
                 },
                 exitTransition = {
                     slideOutOfContainer(
                         AnimatedContentTransitionScope.SlideDirection.Down,
-                        animationSpec = tween(300)
+                        animationSpec = tween(300, easing = EaseOut)
                     )
                 },
             ) {
@@ -159,6 +165,28 @@ fun KakeiboApp() {
             ) {
                 val accountId = it.toRoute<AccountForm>().accountId
                 AccountFormRoute(navController, accountId)
+            }
+            composable<BudgetForm>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
+                val budgetId = it.toRoute<BudgetForm>().budgetId
+                BudgetFormRoute(navController, budgetId)
+            }
+
+            composable<BudgetDetail> {
+                val budgetId = it.toRoute<BudgetDetail>().budgetId
+                BudgetDetailRoute(navController, it, budgetId)
             }
 
             // Report
@@ -298,6 +326,18 @@ data object Account
 @Serializable
 data class AccountForm(
     val accountId: Int? = null,
+)
+
+
+@Serializable
+data class BudgetForm(
+    val budgetId: Int? = null,
+)
+
+
+@Serializable
+data class BudgetDetail(
+    val budgetId: Int,
 )
 
 @Serializable

@@ -79,7 +79,10 @@ object AppModule {
     }
 
     @Provides
-    fun provideBudgetRepository(budgetDao: BudgetDao): BudgetRepository {
-        return BudgetRepositoryImpl(budgetDao)
+    fun provideBudgetRepository(
+        budgetDao: BudgetDao,
+        monthBudgetDao: MonthBudgetDao
+    ): BudgetRepository {
+        return BudgetRepositoryImpl(budgetDao, monthBudgetDao)
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
@@ -24,6 +25,9 @@ fun AccountPagerScreen(
     accounts: List<AccountUi> = emptyList(),
     onAccountClicked: (AccountUi) -> Unit = {},
     accountCallbacks: AccountCallbacks = AccountCallbacks(),
+
+    onAddBudgetClicked: () -> Unit = {},
+    onBudgetClicked: (BudgetUi) -> Unit = {},
 ) {
     val tabs = listOf(
         TabItem("Account") {
@@ -33,7 +37,12 @@ fun AccountPagerScreen(
                 onAccountClicked = onAccountClicked,
             )
         },
-        TabItem("Budget") { BudgetScreen() },
+        TabItem("Budget") {
+            BudgetScreen(
+                onAddBudgetClicked,
+                onBudgetClicked
+            )
+        },
         TabItem("Target") { TargetScreen() }
     )
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }

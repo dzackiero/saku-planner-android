@@ -72,7 +72,7 @@ fun AccountFormScreen(
                 BalanceTextField(
                     value = state.currentBalance,
                     placeholder = "0.0",
-                    label = stringResource(R.string.current_balance),
+                    label = stringResource(R.string.balance),
                     onValueChange = callbacks.onCurrentBalanceChange,
                     modifier = Modifier.fillMaxWidth(),
                 )

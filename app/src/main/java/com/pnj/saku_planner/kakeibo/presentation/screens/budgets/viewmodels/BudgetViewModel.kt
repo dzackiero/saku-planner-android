@@ -28,7 +28,7 @@ class BudgetViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val currentYearMonth = YearMonth.now()
             _budgets.value =
-                budgetRepository.getBudgetByYearMonth(currentYearMonth).map { it.toUi() }
+                budgetRepository.getBudgetsByYearMonth(currentYearMonth).map { it.toUi() }
         }
     }
 }

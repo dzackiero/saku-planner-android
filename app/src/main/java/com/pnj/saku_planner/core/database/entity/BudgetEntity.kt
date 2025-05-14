@@ -31,6 +31,7 @@ data class BudgetEntity(
 data class BudgetDetail(
     val id: Int = 0,
     val categoryId: Int? = null,
+    val categoryIcon: String? = "💵",
     val categoryName: String? = null,
     val amount: Double = 0.0,
     val currentAmount: Double = 0.0,
@@ -43,6 +44,7 @@ data class BudgetDetail(
 data class BudgetUi(
     val id: Int,
     val category: String,
+    val categoryIcon: String = "💵",
     val amount: Double,
     val currentAmount: Double = 0.0,
 )

@@ -11,6 +11,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.pnj.saku_planner.AccountForm
+import com.pnj.saku_planner.BudgetDetail
+import com.pnj.saku_planner.BudgetForm
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountPagerScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountViewModel
@@ -50,5 +52,10 @@ fun AccountTabRoute(navController: NavController, navBackStackEntry: NavBackStac
         accounts = accounts,
         accountCallbacks = accountCallbacks,
         onAccountClicked = { navController.navigate(AccountForm(it.id)) },
+
+        onAddBudgetClicked = {
+            navController.navigate(BudgetForm())
+        },
+        onBudgetClicked = { navController.navigate(BudgetDetail(it.id)) }
     )
 }

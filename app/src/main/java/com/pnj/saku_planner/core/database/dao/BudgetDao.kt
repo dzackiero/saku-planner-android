@@ -17,6 +17,9 @@ interface BudgetDao {
     @Query("SELECT * FROM budgets")
     suspend fun getAllBudgets(): List<BudgetEntity>
 
+    @Query("SELECT * FROM budgets WHERE id = :id")
+    suspend fun getBudgetById(id: Int): BudgetEntity?
+
     @Transaction
     @Query(
         """
@@ -24,6 +27,7 @@ interface BudgetDao {
             b.id,
             c.id   AS categoryId,
             c.name AS categoryName,
+            c.icon AS categoryIcon,
             COALESCE(mb.amount, b.amount) AS amount,
             b.initialAmount,
             b.syncedAt,
@@ -46,8 +50,34 @@ interface BudgetDao {
     suspend fun getAllBudgetsUsingMonth(month: Int, year: Int): List<BudgetDetail>
 
 
-    @Query("SELECT * FROM budgets WHERE id = :id")
-    suspend fun getBudgetById(id: Int): BudgetEntity?
+    @Transaction
+    @Query(
+        """
+          SELECT
+            b.id,
+            c.id   AS categoryId,
+            c.name AS categoryName,
+            c.icon AS categoryIcon,
+            COALESCE(mb.amount, b.amount) AS amount,
+            b.initialAmount,
+            b.syncedAt,
+            b.createdAt,
+            b.updatedAt,
+            IFNULL( SUM(
+              CASE
+                WHEN strftime('%m', datetime(t.transactionAt/1000,'unixepoch')) = printf('%02d', :month)
+                 AND strftime('%Y', datetime(t.transactionAt/1000,'unixepoch')) = :year
+                THEN t.amount ELSE 0 END
+              ), 0 ) AS currentAmount
+          FROM budgets b
+          LEFT JOIN categories c     ON c.id = b.categoryId
+          LEFT JOIN month_budgets mb   ON mb.budgetId = b.id AND mb.month = :month AND mb.year = :year
+          LEFT JOIN transactions t     ON t.categoryId = c.id
+          WHERE c.categoryType = 'expense' AND b.id = :id
+          GROUP BY b.id, c.id
+    """
+    )
+    suspend fun getBudgetById(id: Int, month: Int, year: Int): BudgetDetail?
 
     @Update
     suspend fun updateBudget(budget: BudgetEntity)

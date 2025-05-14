@@ -21,6 +21,13 @@ interface CategoryDao {
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<CategoryEntity>
 
+    @Query("""
+        SELECT categories.* FROM categories 
+        LEFT JOIN budgets ON budgets.categoryId = categories.id  
+        WHERE categoryType = 'expense' AND budgets.id IS NULL
+    """)
+    suspend fun getAllCategoriesWithoutBudget(): List<CategoryEntity>
+
     @Delete
     suspend fun deleteCategory(categoryEntity: CategoryEntity)
 }

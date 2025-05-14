@@ -123,7 +123,7 @@ fun TransactionFormScreen(
                 BalanceTextField(
                     value = formState.amount,
                     placeholder = "0.0",
-                    label = stringResource(R.string.current_balance),
+                    label = stringResource(R.string.amount),
                     onValueChange = callbacks.onAmountChange,
                     modifier = Modifier.fillMaxWidth(),
                 )

@@ -24,6 +24,10 @@ class CategoryRepositoryImpl @Inject constructor(
         return categoryDao.getAllCategories()
     }
 
+    override suspend fun getAllCategoriesWithoutBudget(): List<CategoryEntity> {
+        return categoryDao.getAllCategoriesWithoutBudget()
+    }
+
     override suspend fun deleteCategory(id: Int) {
         val category = categoryDao.getCategoryById(id) ?: return
         categoryDao.deleteCategory(category)
