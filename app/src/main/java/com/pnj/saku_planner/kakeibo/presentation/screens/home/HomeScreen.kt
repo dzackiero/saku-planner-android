@@ -14,6 +14,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,23 +30,36 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.presentation.components.MonthSelector
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionDateDivider
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.HomeState
+import java.time.YearMonth
 
 @Composable
 fun HomeScreen(
     state: HomeState = HomeState(),
     onTransactionClicked: (TransactionUi) -> Unit = {},
 ) {
-    val groupedTransactions = state.transactions
+    val scrollState = rememberScrollState()
+    var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
+
+    val filteredTransactions = state.transactions.filter {
+        it.date.month == selectedMonth.month && it.date.year == selectedMonth.year
+    }
+    val groupedTransactions = filteredTransactions
         .groupBy { it.date }
         .toSortedMap(compareByDescending { it })
-
-    val scrollState = rememberScrollState()
-
-    val balance = state.income - state.expense
+    val income = filteredTransactions
+        .filter { it.type == TransactionType.INCOME }
+        .sumOf { it.amount }
+    val expense = filteredTransactions
+        .filter { it.type == TransactionType.EXPENSE }
+        .sumOf { it.amount }
+    val balance = income - expense
 
     Column(
         modifier = Modifier
@@ -103,12 +120,12 @@ fun HomeScreen(
                 ) {
                     Text(text = stringResource(R.string.income), style = Typography.titleMedium)
                     Text(
-                        text = stringResource(R.string.this_month),
+                        text = yearMonthToShortString(selectedMonth),
                         color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )
                     Text(
-                        text = formatToCurrency(state.income),
+                        text = formatToCurrency(income),
                         style = Typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -134,12 +151,12 @@ fun HomeScreen(
                 ) {
                     Text(text = stringResource(R.string.expenses), style = Typography.titleMedium)
                     Text(
-                        text = stringResource(R.string.this_month),
+                        text = yearMonthToShortString(selectedMonth),
                         color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )
                     Text(
-                        text = formatToCurrency(state.expense),
+                        text = formatToCurrency(expense),
                         style = Typography.titleMedium,
                         maxLines = 1,
                         color = AppColor.Destructive,
@@ -158,12 +175,21 @@ fun HomeScreen(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.transactions),
-                    style = Typography.headlineMedium
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.transactions),
+                        style = Typography.headlineMedium
+                    )
+                    MonthSelector(selectedMonth) {
+                        selectedMonth = it
+                    }
+                }
 
-                if(state.transactions.isEmpty()) {
+                if (groupedTransactions.isEmpty()) {
                     Text(
                         text = stringResource(R.string.you_don_t_have_any_transactions_yet),
                         style = Typography.bodyMedium,

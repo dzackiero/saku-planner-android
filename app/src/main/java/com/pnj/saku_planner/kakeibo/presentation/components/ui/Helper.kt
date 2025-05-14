@@ -3,8 +3,10 @@ package com.pnj.saku_planner.kakeibo.presentation.components.ui
 import android.icu.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.YearMonth
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
 
@@ -22,6 +24,15 @@ fun convertMillisToTimestamp(millis: Long): String {
 
 fun convertDateTimeToMillis(dateTime: String): Long {
     return Instant.parse(dateTime).toEpochMilli()
+}
+
+fun yearMonthToShortString(yearMonth: YearMonth): String {
+    return "${
+        yearMonth.month.getDisplayName(
+            TextStyle.SHORT,
+            Locale.getDefault()
+        )
+    } ${yearMonth.year}"
 }
 
 fun formatToCurrency(

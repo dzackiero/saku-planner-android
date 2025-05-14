@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,8 +33,6 @@ class HomeViewModel @Inject constructor(
             _homeState.value =
                 _homeState.value.copy(
                     transactions = transactionRepository.getAllTransactions().map { it.toUi() },
-                    income = transactionRepository.getTotalTransaction(TransactionType.INCOME),
-                    expense = transactionRepository.getTotalTransaction(TransactionType.EXPENSE),
                 )
         }
     }
@@ -47,6 +46,4 @@ class HomeViewModel @Inject constructor(
 
 data class HomeState(
     val transactions: List<TransactionUi> = emptyList(),
-    val income: Double = 0.0,
-    val expense: Double = 0.0,
 )
