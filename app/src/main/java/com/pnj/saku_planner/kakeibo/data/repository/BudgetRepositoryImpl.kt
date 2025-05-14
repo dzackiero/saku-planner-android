@@ -24,7 +24,10 @@ class BudgetRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBudgetsByYearMonth(yearMonth: YearMonth): List<BudgetDetail> {
-        return budgetDao.getAllBudgetsUsingMonth(yearMonth.monthValue, yearMonth.year)
+        return budgetDao.getAllBudgetsUsingMonth(
+            yearMonth.monthValue.toString(),
+            yearMonth.year.toString()
+        )
     }
 
     override suspend fun getMonthlyBudgetsByYear(id: Int, year: Int): List<MonthBudgetDetail> {

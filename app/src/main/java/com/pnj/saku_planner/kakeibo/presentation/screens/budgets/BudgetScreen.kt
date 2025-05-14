@@ -19,7 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.BudgetUi
-import com.pnj.saku_planner.kakeibo.presentation.components.CategoryBudgetCard
+import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
@@ -64,7 +64,7 @@ fun BudgetScreen(
         }
 
         budgets.forEach { budget ->
-            CategoryBudgetCard(
+            BudgetCard(
                 budget = budget,
                 onEditClick = {
                     onBudgetClicked(budget)

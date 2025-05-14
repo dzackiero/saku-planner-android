@@ -33,7 +33,6 @@ fun AccountScreen(
     onAccountClicked: (AccountUi) -> Unit = {},
     callbacks: AccountCallbacks = AccountCallbacks()
 ) {
-
     val totalBalance = accounts.sumOf { it.balance }
 
     Column(

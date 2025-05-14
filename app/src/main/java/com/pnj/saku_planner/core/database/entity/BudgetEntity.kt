@@ -33,9 +33,9 @@ data class BudgetDetail(
     val categoryId: Int? = null,
     val categoryIcon: String? = "💵",
     val categoryName: String? = null,
-    val amount: Double = 0.0,
-    val currentAmount: Double = 0.0,
-    val initialAmount: Double = 0.0,
+    val amount: Double,
+    val currentAmount: Double,
+    val initialAmount: Double,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -46,7 +46,7 @@ data class BudgetUi(
     val category: String,
     val categoryIcon: String = "💵",
     val amount: Double,
-    val currentAmount: Double = 0.0,
+    val currentAmount: Double,
 )
 
 fun BudgetDetail.toUi() = BudgetUi(

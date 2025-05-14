@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
 import android.icu.text.NumberFormat
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,11 @@ import com.pnj.saku_planner.core.theme.Typography
 import java.util.Locale
 
 @Composable
-fun CategoryBudgetCard(
+fun BudgetCard(
     budget: BudgetUi,
     onEditClick: () -> Unit
 ) {
+    Log.d("BudgetCard", "Budget: $budget")
     val formattedTotalBudget = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
         .format(budget.amount)
