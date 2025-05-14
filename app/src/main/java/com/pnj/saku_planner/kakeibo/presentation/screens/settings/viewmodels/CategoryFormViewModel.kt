@@ -39,6 +39,7 @@ class CategoryFormViewModel @Inject constructor(
             val category = categoryRepository.getCategoryById(categoryId) ?: return@launch
 
             _state.value = CategoryFormState(
+                categoryId = category.id,
                 categoryIcon = category.icon ?: "💵",
                 categoryName = category.name,
                 categoryType = TransactionType.valueOf(category.categoryType.uppercase()),

@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Room
 import com.pnj.saku_planner.core.database.AppDatabase
 import com.pnj.saku_planner.core.database.dao.AccountDao
+import com.pnj.saku_planner.core.database.dao.BudgetDao
 import com.pnj.saku_planner.core.database.dao.CategoryDao
 import com.pnj.saku_planner.core.database.dao.TransactionDao
 import com.pnj.saku_planner.kakeibo.data.repository.AccountRepositoryImpl
+import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
@@ -50,17 +53,27 @@ object AppModule {
     }
 
     @Provides
+    fun provideBudgetDao(appDatabase: AppDatabase): BudgetDao {
+        return appDatabase.budgetDao()
+    }
+
+    @Provides
     fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
         return TransactionRepositoryImpl(transactionDao)
     }
 
     @Provides
-    fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
-        return CategoryRepositoryImpl(categoryDao)
+    fun provideCategoryRepository(categoryDao: CategoryDao, budgetDao: BudgetDao): CategoryRepository {
+        return CategoryRepositoryImpl(categoryDao, budgetDao)
     }
 
     @Provides
     fun provideAccountRepository(accountDao: AccountDao): AccountRepository {
         return AccountRepositoryImpl(accountDao)
+    }
+
+    @Provides
+    fun provideBudgetRepository(budgetDao: BudgetDao): BudgetRepository {
+        return BudgetRepositoryImpl(budgetDao)
     }
 }

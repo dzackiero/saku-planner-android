@@ -25,6 +25,7 @@ class AccountRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAccount(id: Int) {
-        accountRepository.deleteAccount(id)
+        val account = accountRepository.getAccountById(id) ?: return
+        accountRepository.deleteAccount(account)
     }
 }

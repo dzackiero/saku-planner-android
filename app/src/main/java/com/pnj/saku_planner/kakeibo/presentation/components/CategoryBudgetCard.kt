@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
@@ -19,18 +20,16 @@ import java.util.Locale
 
 @Composable
 fun CategoryBudgetCard(
-    categoryName: String,
-    totalBudget: Number,
-    spentAmount: Number,
+    budget: BudgetUi,
     onEditClick: () -> Unit
 ) {
     val formattedTotalBudget = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
-        .format(totalBudget)
+        .format(budget.amount)
     val formattedSpentAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
-        .format(spentAmount)
-    val progress = (spentAmount.toFloat() / totalBudget.toFloat()).coerceIn(0f, 1f)
+        .format(budget.currentAmount)
+    val progress = (budget.currentAmount / budget.amount).coerceIn(0.0, 1.0)
     val percentage = "${(progress * 100).toInt()}%"
 
     Card(
@@ -40,7 +39,7 @@ fun CategoryBudgetCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = categoryName,
+                text = budget.category,
                 style = Typography.titleMedium
             )
             Column(
@@ -60,7 +59,7 @@ fun CategoryBudgetCard(
                     )
                 }
                 LinearProgressIndicator(
-                    progress = { progress },
+                    progress = { progress.toFloat() },
                     modifier = Modifier
                         .height(6.dp)
                         .fillMaxWidth(),

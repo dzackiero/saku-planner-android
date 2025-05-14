@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.core.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -20,6 +21,6 @@ interface AccountDao {
     @Query("SELECT * FROM accounts")
     suspend fun getAllAccounts(): List<AccountEntity>
 
-    @Query("DELETE FROM accounts WHERE id = :id")
-    suspend fun deleteAccount(id: Int)
+    @Delete
+    suspend fun deleteAccount(entity: AccountEntity)
 }

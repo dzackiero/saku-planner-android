@@ -19,37 +19,45 @@ class DatabaseSeeder @Inject constructor(
                 name = "Income A",
                 categoryType = TransactionType.INCOME.toString()
             ),
+            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income B",
                 categoryType = TransactionType.INCOME.toString()
             ),
+            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income C",
                 categoryType = TransactionType.INCOME.toString()
             ),
+            appDatabase.budgetDao()
         )
 
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense A",
+                budget = 50.0,
                 categoryType = TransactionType.EXPENSE.toString()
             ),
+            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense B",
-                categoryType = TransactionType.EXPENSE.toString()
+                budget = 100.0,
+                categoryType = TransactionType.EXPENSE.toString(),
             ),
+            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense C",
                 categoryType = TransactionType.EXPENSE.toString()
             ),
+            appDatabase.budgetDao()
         )
 
         appDatabase.accountDao().insertAccount(

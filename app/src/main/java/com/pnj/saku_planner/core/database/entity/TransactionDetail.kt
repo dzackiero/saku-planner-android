@@ -9,7 +9,8 @@ import java.time.Instant
 import java.time.ZoneId
 
 data class TransactionDetail(
-    @Embedded val transaction: TransactionEntity,
+    @Embedded
+    val transaction: TransactionEntity,
 
     @Relation(
         parentColumn = "accountId",

@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
 import android.icu.text.NumberFormat
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,18 +13,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
 import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
+import java.time.YearMonth
 import java.util.Locale
 
 @Composable
 fun MonthlyBudgetCard(
     totalBudget: Number,
     spentAmount: Number,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    yearMonth: YearMonth = YearMonth.now(),
 ) {
     val formattedTotalBudget = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
@@ -34,7 +39,7 @@ fun MonthlyBudgetCard(
     val progress = (spentAmount.toFloat() / totalBudget.toFloat()).coerceIn(0f, 1f)
     val percentage = "${(progress * 100).toInt()}%"
 
-    Card {
+    Card(modifier = Modifier.clickable { onEditClick() }) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -43,16 +48,14 @@ fun MonthlyBudgetCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Monthly Budget",
-                    style = Typography.headlineMedium,
-                )
-                Text(
-                    text = formattedSpentAmount,
-                    style = Typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Overall Budget")
+                Text(yearMonthToShortString(yearMonth))
             }
+            Text(
+                text = formattedSpentAmount,
+                style = Typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -81,12 +84,18 @@ fun MonthlyBudgetCard(
                     )
                 }
             }
-            SecondaryButton(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onEditClick
-            ) {
-                Text("Edit Monthly Budget")
-            }
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewMonthlyBudgetCard() {
+    SakuPlannerTheme {
+        MonthlyBudgetCard(
+            totalBudget = 1_000_000,
+            spentAmount = 100_000,
+            onEditClick = {}
+        )
     }
 }
