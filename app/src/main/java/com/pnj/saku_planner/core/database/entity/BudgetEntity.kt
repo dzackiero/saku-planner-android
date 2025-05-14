@@ -1,9 +1,8 @@
 package com.pnj.saku_planner.core.database.entity
 
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -21,10 +20,9 @@ import androidx.room.PrimaryKey
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val categoryId: Int,
-    val month: Int,
-    val year: Int,
+    val categoryId: Int? = null,
     val amount: Double = 0.0,
+    val initialAmount: Double = 0.0,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -32,11 +30,11 @@ data class BudgetEntity(
 
 data class BudgetDetail(
     val id: Int = 0,
-    val category: String,
-    val month: Int,
-    val year: Int,
+    val categoryId: Int? = null,
+    val categoryName: String? = null,
     val amount: Double = 0.0,
     val currentAmount: Double = 0.0,
+    val initialAmount: Double = 0.0,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -47,15 +45,12 @@ data class BudgetUi(
     val category: String,
     val amount: Double,
     val currentAmount: Double = 0.0,
-    val month: Int,
-    val year: Int,
 )
 
 fun BudgetDetail.toUi() = BudgetUi(
     id = id,
-    month = month,
-    year = year,
-    category = category,
+    category = categoryName ?: "Overall",
     amount = amount,
     currentAmount = currentAmount,
 )
+

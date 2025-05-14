@@ -6,6 +6,5 @@ data class CategoryUi(
     val id: Int,
     val name: String,
     val categoryType: TransactionType,
-    val budget: Double? = null,
     val icon: String? = null,
 )

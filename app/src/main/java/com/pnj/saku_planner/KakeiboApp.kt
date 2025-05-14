@@ -56,19 +56,19 @@ import kotlinx.serialization.Serializable
 fun KakeiboApp() {
     val navController = rememberNavController()
 
-    val items = listOf(
+    val fabItems = listOf(
         BottomNavItem(Home, Icons.Outlined.Home),
         BottomNavItem(Account, Icons.Outlined.Wallet),
         BottomNavItem(Report, Icons.Outlined.Analytics),
+    )
+    val items = fabItems + listOf(
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
 
-    val scaffoldRoutes = items.map { it.route.toString() }
-    val showScaffold = rememberShowScaffold(navController, scaffoldRoutes)
+    val showScaffold = rememberShowScaffold(navController, items.map { it.route.toString() })
+    val showFab = rememberShowScaffold(navController, fabItems.map { it.route.toString() })
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentSimpleRoute = currentRoute?.substringAfterLast('.')
-
-
 
     Scaffold(
         topBar = {
@@ -99,7 +99,7 @@ fun KakeiboApp() {
                 onClick = {
                     navController.navigate(TransactionForm())
                 },
-                show = showScaffold
+                show = showFab
             )
         }
     ) { innerPadding ->

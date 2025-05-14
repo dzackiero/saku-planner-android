@@ -13,7 +13,6 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.InputChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +30,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.EmojiPicker
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryFormCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryFormState
 
@@ -96,7 +96,7 @@ fun CategoryFormScreen(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    InputChip(
+                    SelectChip(
                         modifier = Modifier.weight(1f),
                         selected = state.categoryType == TransactionType.EXPENSE,
                         onClick = {
@@ -121,7 +121,7 @@ fun CategoryFormScreen(
                             }
                         }
                     )
-                    InputChip(
+                    SelectChip(
                         modifier = Modifier.weight(1f),
                         selected = state.categoryType == TransactionType.INCOME,
                         onClick = {

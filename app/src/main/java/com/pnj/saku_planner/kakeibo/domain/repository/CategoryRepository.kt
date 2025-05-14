@@ -14,8 +14,4 @@ interface CategoryRepository {
     suspend fun getAllCategories(): List<CategoryEntity>
 
     suspend fun deleteCategory(id: Int)
-
-    suspend fun getCategoriesWithBudget(): List<CategoryEntity>
-
-    suspend fun getCategoriesWithoutBudget(): List<CategoryEntity>
 }

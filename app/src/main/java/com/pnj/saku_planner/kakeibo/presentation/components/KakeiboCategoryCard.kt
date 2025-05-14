@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.InputChip
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 
 @Composable
 fun KakeiboCard(
@@ -24,7 +24,7 @@ fun KakeiboCard(
     modifier: Modifier = Modifier,
     onClick: (KakeiboCategoryType) -> Unit,
 ) {
-    InputChip(
+    SelectChip(
         selected = selected,
         onClick = { onClick(kakeiboCategoryType) },
         modifier = modifier,

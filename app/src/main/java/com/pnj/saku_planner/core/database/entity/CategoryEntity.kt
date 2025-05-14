@@ -12,7 +12,6 @@ data class CategoryEntity(
     val name: String,
     val icon: String? = null,
     val categoryType: String,
-    val budget: Double? = null,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -22,7 +21,6 @@ fun CategoryEntity.toUi() = CategoryUi(
     id = id,
     name = name,
     icon = icon,
-    budget = budget,
     categoryType = TransactionType.valueOf(categoryType.uppercase()),
 )
 

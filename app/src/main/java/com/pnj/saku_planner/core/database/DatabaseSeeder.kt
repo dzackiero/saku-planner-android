@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.core.database
 
 import com.pnj.saku_planner.core.database.entity.AccountEntity
+import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.CategoryEntity
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import javax.inject.Inject
@@ -17,47 +18,55 @@ class DatabaseSeeder @Inject constructor(
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income A",
-                categoryType = TransactionType.INCOME.toString()
+                categoryType = TransactionType.INCOME.toString().lowercase()
             ),
-            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income B",
-                categoryType = TransactionType.INCOME.toString()
+                categoryType = TransactionType.INCOME.toString().lowercase()
             ),
-            appDatabase.budgetDao()
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income C",
-                categoryType = TransactionType.INCOME.toString()
+                categoryType = TransactionType.INCOME.toString().lowercase()
             ),
-            appDatabase.budgetDao()
         )
 
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense A",
-                budget = 50.0,
-                categoryType = TransactionType.EXPENSE.toString()
+                categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
-            appDatabase.budgetDao()
         )
-        appDatabase.categoryDao().insertCategory(
+        val bId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense B",
-                budget = 100.0,
-                categoryType = TransactionType.EXPENSE.toString(),
+                categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
-            appDatabase.budgetDao()
         )
-        appDatabase.categoryDao().insertCategory(
+        val cId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense C",
-                categoryType = TransactionType.EXPENSE.toString()
+                categoryType = TransactionType.EXPENSE.toString().lowercase()
             ),
-            appDatabase.budgetDao()
+        )
+
+        appDatabase.budgetDao().insertBudget(
+            BudgetEntity(
+                amount = 1000.0,
+                initialAmount = 1000.0,
+                categoryId = bId.toInt(),
+            )
+        )
+
+        appDatabase.budgetDao().insertBudget(
+            BudgetEntity(
+                amount = 1000.0,
+                initialAmount = 1000.0,
+                categoryId = cId.toInt(),
+            )
         )
 
         appDatabase.accountDao().insertAccount(

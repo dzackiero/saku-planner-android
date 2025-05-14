@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
@@ -44,6 +43,7 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -172,7 +172,7 @@ fun TransactionFormScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         for (account in accounts) {
-                            FilterChip(
+                            SelectChip(
                                 selected = formState.selectedAccount == account,
                                 onClick = { callbacks.onAccountChange(account) },
                                 modifier = Modifier.width(150.dp),
@@ -222,7 +222,7 @@ fun TransactionFormScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             for (account in accounts) {
-                                FilterChip(
+                                SelectChip(
                                     selected = formState.selectedToAccount == account,
                                     onClick = { callbacks.onToAccountChange(account) },
                                     modifier = Modifier.width(150.dp),
