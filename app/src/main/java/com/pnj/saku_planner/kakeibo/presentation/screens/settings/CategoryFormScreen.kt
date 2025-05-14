@@ -27,6 +27,7 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.EmojiPicker
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
@@ -47,10 +48,10 @@ fun CategoryFormScreen(
         onNavigateBack = onNavigateBack,
         actions = {
             if (state.categoryId != null) {
-                IconButton(onClick = {
-                    onDelete()
-                }) {
-                    Icon(Icons.Outlined.Delete, "delete account")
+                Confirmable(onConfirmed = onDelete) {
+                    IconButton(onClick = it) {
+                        Icon(Icons.Outlined.Delete, "delete category")
+                    }
                 }
             }
         },

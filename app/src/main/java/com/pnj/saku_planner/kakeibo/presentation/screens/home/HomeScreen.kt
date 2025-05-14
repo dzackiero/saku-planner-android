@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
@@ -170,11 +172,11 @@ fun HomeScreen(
 
 
         // Transactions
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            padding = PaddingValues(start = 16.dp, end = 0.dp, top = 8.dp, bottom = 16.dp),
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -188,35 +190,49 @@ fun HomeScreen(
                         selectedMonth = it
                     }
                 }
-
-                if (groupedTransactions.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.you_don_t_have_any_transactions_yet),
-                        style = Typography.bodyMedium,
-                        color = AppColor.MutedForeground,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                // List of transactions
-                groupedTransactions.forEach { (date, txList) ->
-                    TransactionDateDivider(date)
-                    txList.forEach { tx ->
-                        TransactionListItem(
-                            icon = tx.icon,
-                            description = tx.description,
-                            account = tx.account,
-                            toAccount = tx.toAccount,
-                            type = tx.type,
-                            amount = tx.amount,
-                            onClick = { onTransactionClicked(tx) }
+                Column(
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .padding(vertical = 4.dp, horizontal = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (groupedTransactions.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.you_don_t_have_any_transactions_yet),
+                            style = Typography.bodyMedium,
+                            color = AppColor.MutedForeground,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            textAlign = TextAlign.Center
                         )
+                    }
+
+                    // List of transactions
+                    groupedTransactions.forEach { (date, txList) ->
+                        TransactionDateDivider(date)
+                        txList.forEach { tx ->
+                            TransactionListItem(
+                                icon = tx.icon,
+                                description = tx.description,
+                                account = tx.account,
+                                toAccount = tx.toAccount,
+                                type = tx.type,
+                                amount = tx.amount,
+                                onClick = { onTransactionClicked(tx) }
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HomeScreenPreview() {
+    HomeScreen(
+        state = HomeState(),
+    )
 }

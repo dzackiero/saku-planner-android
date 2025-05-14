@@ -25,6 +25,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormCallback
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormState
 
@@ -43,10 +44,10 @@ fun AccountFormScreen(
         modifier = modifier.fillMaxSize(),
         actions = {
             if (state.accountId != null) {
-                IconButton(onClick = {
-                    onDeleteAccount()
-                }) {
-                    Icon(Icons.Outlined.Delete, "delete account")
+                Confirmable(onConfirmed = onDeleteAccount) {
+                    IconButton(onClick = it) {
+                        Icon(Icons.Outlined.Delete, "delete account")
+                    }
                 }
             }
         },

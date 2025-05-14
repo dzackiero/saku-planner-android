@@ -43,6 +43,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDa
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -59,8 +60,8 @@ fun TransactionFormScreen(
     onNavigateBack: () -> Unit = {},
     onDelete: () -> Unit = {},
 ) {
-    // Date/time picker state
     val dateTimePickerState = rememberDateTimePickerState()
+
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
         TransactionType.INCOME,
@@ -71,10 +72,10 @@ fun TransactionFormScreen(
         title = formTitle,
         actions = {
             if (formState.transactionId != null) {
-                IconButton(onClick = {
-                    onDelete()
-                }) {
-                    Icon(Icons.Outlined.Delete, "delete account")
+                Confirmable(onConfirmed = onDelete) {
+                    IconButton(onClick = it) {
+                        Icon(Icons.Outlined.Delete, "delete transaction")
+                    }
                 }
             }
         },
@@ -301,7 +302,6 @@ fun TransactionFormScreen(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
