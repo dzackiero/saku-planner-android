@@ -1,7 +1,12 @@
 package com.pnj.saku_planner
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,6 +25,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -55,24 +62,37 @@ fun KakeiboApp() {
         BottomNavItem(Report, Icons.Outlined.Analytics),
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
+
+    val scaffoldRoutes = items.map { it.route.toString() }
+    val showScaffold = rememberShowScaffold(navController, scaffoldRoutes)
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val currentSimpleRoute = currentRoute?.substringAfterLast('.')
-    val showScaffold = items.map { it.route.toString() }.contains(currentSimpleRoute)
+
 
 
     Scaffold(
         topBar = {
-            if (showScaffold) {
+            AnimatedVisibility(
+                visible = showScaffold,
+                enter = fadeIn() + slideInVertically(initialOffsetY = { -it }),
+                exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }),
+            ) {
                 TopAppBar()
             }
         },
         bottomBar = {
-            BottomNavigationBar(
-                navController = navController,
-                currentRoute = currentSimpleRoute,
-                items = items,
-                show = showScaffold
-            )
+            AnimatedVisibility(
+                visible = showScaffold,
+                enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
+            ) {
+                BottomNavigationBar(
+                    navController = navController,
+                    currentRoute = currentSimpleRoute,
+                    items = items,
+                    show = showScaffold
+                )
+            }
         },
         floatingActionButton = {
             FAB(
@@ -188,6 +208,16 @@ fun KakeiboApp() {
                 CategoryFormRoute(navController, categoryId)
             }
         }
+    }
+}
+
+@Composable
+fun rememberShowScaffold(navController: NavController, scaffoldRoutes: List<String>): Boolean {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+    val simpleRoute = currentRoute?.substringAfterLast('.')
+    return remember(simpleRoute) {
+        scaffoldRoutes.contains(simpleRoute)
     }
 }
 
