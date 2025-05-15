@@ -26,23 +26,17 @@ class BudgetDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.value = BudgetDetailState(
                 budget = budgetRepository.getBudgetById(id)?.toUi(),
-                monthBudgets = monthBudgetRepository.getMonthlyBudgetsByYear(
-                    id,
-                    _state.value.selectedYear
-                )
+                monthBudgets = monthBudgetRepository
+                    .getMonthlyBudgetsByYear(
+                        id,
+                        _state.value.selectedYear
+                    ).reversed()
             )
         }
     }
 
     fun updateSelectedYear(year: Int) {
         _state.value = _state.value.copy(selectedYear = year)
-    }
-
-    fun deleteBudget() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val id = _state.value.budget?.id ?: return@launch
-            budgetRepository.deleteBudget(id)
-        }
     }
 }
 

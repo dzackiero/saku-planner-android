@@ -10,6 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import com.pnj.saku_planner.BudgetForm
+import com.pnj.saku_planner.MonthBudgetForm
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.BudgetDetailScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetDetailViewModel
 
@@ -46,9 +48,18 @@ fun BudgetDetailRoute(
         onNavigateBack = {
             navController.popBackStack()
         },
-        onDelete = {
-            viewModel.deleteBudget()
-            navController.popBackStack()
+        onMonthBudgetClicked = { monthBudgetId, month, year ->
+            navController.navigate(
+                MonthBudgetForm(
+                    monthBudgetId,
+                    budgetId,
+                    year,
+                    month,
+                )
+            )
+        },
+        onEdit = {
+            navController.navigate(BudgetForm(budgetId))
         },
     )
 }

@@ -6,7 +6,7 @@
     <string name="select_account">Select Account</string>
     <string name="kakeibo_category">Kakeibo Category</string>
     <string name="monthly_balance">Monthly Balance</string>
-    <string name="income_expenses">Income - Expenses</string>
+    <string name="income_expense">Income - Expense</string>
     <string name="income">Income</string>
     <string name="this_month">This Month</string>
     <string name="expenses">Expenses</string>
@@ -22,7 +22,7 @@
     <string name="balance">Balance</string>
     <string name="account_name">Account Name</string>
     <string name="total_balance">Total Balance</string>
-    <string name="accross_all_accounts">Across all accounts</string>
+    <string name="across_all_accounts">Across all accounts</string>
     <string name="expense">Expense</string>
     <string name="category_name">Category Name</string>
     <string name="category_icon">Category Icon</string>
@@ -31,4 +31,28 @@
     <string name="add_budget">Add Budget</string>
     <string name="category_budgets">Category Budgets</string>
     <string name="no_options_available">No options available</string>
+    <string name="select_category">Select Category</string>
+    <string name="budget_amount">Budget Amount</string>
+    <string name="you_don_t_have_any_account">You don\'t have any account</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="default_budget">Default Budget</string>
+    <string name="categories">Categories</string>
+    <string name="no_categories_available">No categories available</string>
+    <string name="add_category">Add Category</string>
+    <string name="account">Account</string>
+    <string name="budget">Budget</string>
+    <string name="target">Target</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete_category">delete category</string>
+    <string name="delete_budget">delete budget</string>
+    <string name="overall_budget">Overall Budget</string>
+    <string name="new_transaction">New Transaction</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="_0_0">0.0</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="e_g_main_checking">e.g., Main Checking</string>
+    <string name="e_g_account_for_groceries">e.g., account for groceries</string>
+    <string name="create">Create</string>
+    <string name="create_budget">Create Budget</string>
 </resources>

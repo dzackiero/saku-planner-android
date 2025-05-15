@@ -18,6 +18,7 @@ fun ClickableTextField(
     label: @Composable () -> Unit = {},
     placeholder: @Composable () -> Unit = {},
     trailingIcon: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true,
 ) {
     OutlinedTextField(
         value = value,
@@ -25,6 +26,7 @@ fun ClickableTextField(
         label = label,
         placeholder = placeholder,
         trailingIcon = trailingIcon,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .pointerInput(value) {
@@ -34,7 +36,7 @@ fun ClickableTextField(
                     // in the Main pass.
                     awaitFirstDown(pass = PointerEventPass.Initial)
                     val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
+                    if (upEvent != null && enabled) {
                         onClick()
                     }
                 }

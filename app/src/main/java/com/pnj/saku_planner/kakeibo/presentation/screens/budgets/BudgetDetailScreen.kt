@@ -1,5 +1,6 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.budgets
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,12 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,12 +30,12 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.YearSelector
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetDetailState
+import java.time.Year
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -42,8 +44,9 @@ import java.util.Locale
 fun BudgetDetailScreen(
     state: BudgetDetailState = BudgetDetailState(),
     onSelectedYearChange: (Int) -> Unit = {},
-    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
+    onMonthBudgetClicked: (Int?, Int, Int) -> Unit = { _, _, _ -> },
 ) {
     val currentDate = YearMonth.now()
     val scrollState = rememberScrollState()
@@ -52,10 +55,8 @@ fun BudgetDetailScreen(
         title = stringResource(R.string.budget_detail),
         onNavigateBack = onNavigateBack,
         actions = {
-            Confirmable(onConfirmed = onDelete) {
-                IconButton(onClick = it) {
-                    Icon(Icons.Outlined.Delete, "delete transaction")
-                }
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Outlined.Edit, stringResource(R.string.edit_budget))
             }
         }
     ) {
@@ -73,7 +74,7 @@ fun BudgetDetailScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "${state.budget.categoryIcon}  ${state.budget.category}",
@@ -96,10 +97,10 @@ fun BudgetDetailScreen(
                             .padding(16.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "Default Budget",
+                            text = stringResource(R.string.default_budget),
                             style = Typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -111,37 +112,19 @@ fun BudgetDetailScreen(
                     Card(padding = PaddingValues(0.dp)) {
                         Column {
                             state.monthBudgets.forEachIndexed { index, monthBudget ->
-                                Row(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                                MonthBudgetListItem(
+                                    monthBudget, currentDate, state.selectedYear
                                 ) {
-                                    Text(
-                                        text = YearMonth.of(
-                                            state.selectedYear,
-                                            monthBudget.month
-                                        ).month.getDisplayName(
-                                            TextStyle.SHORT,
-                                            Locale.getDefault()
-                                        ),
-                                        style = Typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = if (currentDate.monthValue == monthBudget.month &&
-                                            state.selectedYear == currentDate.year
-                                        ) AppColor.Primary
-                                        else AppColor.Foreground
-                                    )
-                                    Text(
-                                        text = formatToCurrency(monthBudget.amount),
-                                        style = Typography.titleMedium,
+                                    onMonthBudgetClicked(
+                                        monthBudget.id,
+                                        monthBudget.month,
+                                        monthBudget.year
                                     )
                                 }
                                 if (index != state.monthBudgets.lastIndex) {
                                     HorizontalDivider(
                                         color = AppColor.Border,
-                                        thickness = 1.dp
+                                        thickness = 1.dp,
                                     )
                                 }
                             }
@@ -150,6 +133,43 @@ fun BudgetDetailScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MonthBudgetListItem(
+    monthBudget: MonthBudgetDetail,
+    currentYearMonth: YearMonth = YearMonth.now(),
+    selectedYear: Int = Year.now().value,
+    onClick: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .clickable { onClick() }
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = YearMonth.of(
+                selectedYear,
+                monthBudget.month
+            ).month.getDisplayName(
+                TextStyle.SHORT,
+                Locale.getDefault()
+            ),
+            style = Typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = if (currentYearMonth.monthValue == monthBudget.month &&
+                selectedYear == currentYearMonth.year
+            ) AppColor.Primary
+            else AppColor.Foreground
+        )
+        Text(
+            text = formatToCurrency(monthBudget.amount),
+            style = Typography.titleMedium,
+        )
     }
 }
 
@@ -170,6 +190,7 @@ fun BudgetDetailScreenPreview() {
                 month = month,
                 year = 2023,
                 amount = 100.0,
+                categoryId = 1,
             )
         }
 

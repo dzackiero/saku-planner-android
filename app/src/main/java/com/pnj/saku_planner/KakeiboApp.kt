@@ -51,6 +51,7 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
@@ -187,6 +188,15 @@ fun KakeiboApp() {
             composable<BudgetDetail> {
                 val budgetId = it.toRoute<BudgetDetail>().budgetId
                 BudgetDetailRoute(navController, it, budgetId)
+            }
+
+            composable<MonthBudgetForm> {
+                val year = it.toRoute<MonthBudgetForm>().year
+                val month = it.toRoute<MonthBudgetForm>().month
+                val budgetId = it.toRoute<MonthBudgetForm>().budgetId
+                val monthBudgetId = it.toRoute<MonthBudgetForm>().monthBudgetId
+
+                MonthBudgetFormRoute(navController, budgetId, monthBudgetId, year, month)
             }
 
             // Report
@@ -332,6 +342,14 @@ data class AccountForm(
 @Serializable
 data class BudgetForm(
     val budgetId: Int? = null,
+)
+
+@Serializable
+data class MonthBudgetForm(
+    val monthBudgetId: Int? = null,
+    val budgetId: Int,
+    val year: Int,
+    val month: Int,
 )
 
 

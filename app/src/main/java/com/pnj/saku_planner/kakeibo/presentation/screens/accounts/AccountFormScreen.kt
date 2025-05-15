@@ -46,7 +46,7 @@ fun AccountFormScreen(
             if (state.accountId != null) {
                 Confirmable(onConfirmed = onDeleteAccount) {
                     IconButton(onClick = it) {
-                        Icon(Icons.Outlined.Delete, "delete account")
+                        Icon(Icons.Outlined.Delete, stringResource(R.string.delete_account))
                     }
                 }
             }
@@ -64,14 +64,14 @@ fun AccountFormScreen(
                 OutlinedTextField(
                     value = state.accountName,
                     label = { Text(stringResource(R.string.account_name)) },
-                    placeholder = { Text("e.g., Main Checking") },
+                    placeholder = { Text(stringResource(R.string.e_g_main_checking)) },
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = callbacks.onAccountNameChange,
                 )
 
                 BalanceTextField(
                     value = state.currentBalance,
-                    placeholder = "0.0",
+                    placeholder = stringResource(R.string._0_0),
                     label = stringResource(R.string.balance),
                     onValueChange = callbacks.onCurrentBalanceChange,
                     modifier = Modifier.fillMaxWidth(),
@@ -80,7 +80,7 @@ fun AccountFormScreen(
                 OutlinedTextField(
                     value = state.description,
                     label = { Text(stringResource(R.string.description)) },
-                    placeholder = { Text("e.g., account for groceries") },
+                    placeholder = { Text(stringResource(R.string.e_g_account_for_groceries)) },
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = callbacks.onDescriptionChange,
                 )
@@ -93,7 +93,7 @@ fun AccountFormScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Submit")
+                Text(stringResource(R.string.submit))
             }
         }
     }

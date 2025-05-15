@@ -36,7 +36,7 @@ interface BudgetDao {
           IFNULL(SUM(t.amount), 0) AS currentAmount
         FROM budgets b
         LEFT JOIN categories c ON c.id = b.categoryId
-        LEFT JOIN month_budgets mb ON mb.budgetId = b.id AND mb.month = ':month' AND mb.year = :year
+        LEFT JOIN month_budgets mb ON mb.budgetId = b.id AND mb.month = :month AND mb.year = :year
         LEFT JOIN transactions t 
           ON t.categoryId = c.id
           AND strftime('%m', datetime(t.transactionAt/1000,'unixepoch')) = printf('%02d', :month)

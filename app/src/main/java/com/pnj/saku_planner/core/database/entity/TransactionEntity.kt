@@ -7,18 +7,18 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "transactions",
     foreignKeys = [
-         ForeignKey(
-             entity = AccountEntity::class,
-             parentColumns = ["id"],
-             childColumns = ["accountId"],
-             onDelete = ForeignKey.CASCADE,
-         ),
-         ForeignKey(
-             entity = CategoryEntity::class,
-             parentColumns = ["id"],
-             childColumns = ["categoryId"],
-             onDelete = ForeignKey.SET_NULL,
-         )
+        ForeignKey(
+            entity = AccountEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["accountId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = CategoryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.SET_NULL,
+        )
     ]
 )
 data class TransactionEntity(

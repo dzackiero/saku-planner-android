@@ -22,7 +22,7 @@ data class BudgetEntity(
     val id: Int = 0,
     val categoryId: Int? = null,
     val amount: Double = 0.0,
-    val initialAmount: Double = 0.0,
+    val initialAmount: Double,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),

@@ -18,7 +18,6 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import java.time.LocalDateTime
 
 @Composable
 fun TransactionListItem(
@@ -29,7 +28,6 @@ fun TransactionListItem(
     toAccount: String? = null,
     type: TransactionType,
     amount: Number,
-    date: LocalDateTime,
     onClick: () -> Unit,
 ) {
     val color = when (type) {
@@ -65,20 +63,28 @@ fun TransactionListItem(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = icon ?: "💸",
+                    text = icon ?: "💵",
                     fontSize = 24.sp,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Column {
-                    Text(
-                        text = description,
-                        style = Typography.bodyMedium
-                    )
-                    Text(
-                        text = accountDisplay,
-                        color = AppColor.MutedForeground,
-                        style = Typography.labelSmall,
-                    )
+                    if (description == "") {
+                        Text(
+                            text = accountDisplay,
+                            style = Typography.bodyMedium,
+                            color = AppColor.MutedForeground,
+                        )
+                    } else {
+                        Text(
+                            text = description,
+                            style = Typography.bodyMedium
+                        )
+                        Text(
+                            text = accountDisplay,
+                            color = AppColor.MutedForeground,
+                            style = Typography.labelSmall,
+                        )
+                    }
                 }
             }
             Text(
@@ -96,10 +102,9 @@ fun TransactionListItem(
 fun TransactionItemPreview() {
     TransactionListItem(
         icon = "💵",
-        description = "Description",
+        description = "",
         account = "Account",
         type = TransactionType.EXPENSE,
         amount = 10_000,
-        date = LocalDateTime.now()
     ) { }
 }

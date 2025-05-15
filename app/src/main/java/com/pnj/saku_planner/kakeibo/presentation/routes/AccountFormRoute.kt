@@ -3,9 +3,11 @@ package com.pnj.saku_planner.kakeibo.presentation.routes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountFormScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormViewModel
 
@@ -21,12 +23,14 @@ fun AccountFormRoute(
         }
     }
 
-    val type = if (accountId != null) "Edit" else "New"
+    val type =
+        if (accountId != null) stringResource(R.string.edit)
+        else stringResource(R.string.create)
 
     val state by viewModel.formState.collectAsStateWithLifecycle()
     AccountFormScreen(
         state = state,
-        title = "$type Account",
+        title = "$type ${stringResource(R.string.account)}",
         callbacks = viewModel.callbacks,
         onDeleteAccount = {
             viewModel.deleteAccount()

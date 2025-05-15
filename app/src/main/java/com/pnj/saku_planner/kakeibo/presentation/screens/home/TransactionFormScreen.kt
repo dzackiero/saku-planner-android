@@ -22,12 +22,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
@@ -56,7 +58,7 @@ fun TransactionFormScreen(
     categories: List<CategoryUi>,
     accounts: List<AccountUi>,
     modifier: Modifier = Modifier,
-    formTitle: String = "New Transaction",
+    formTitle: String = stringResource(R.string.new_transaction),
     onNavigateBack: () -> Unit = {},
     onDelete: () -> Unit = {},
 ) {
@@ -73,7 +75,7 @@ fun TransactionFormScreen(
             if (formState.transactionId != null) {
                 Confirmable(onConfirmed = onDelete) {
                     IconButton(onClick = it) {
-                        Icon(Icons.Outlined.Delete, "delete transaction")
+                        Icon(Icons.Outlined.Delete, stringResource(R.string.delete_transaction))
                     }
                 }
             }
@@ -121,7 +123,7 @@ fun TransactionFormScreen(
 
                 BalanceTextField(
                     value = formState.amount,
-                    placeholder = "0.0",
+                    placeholder = stringResource(R.string._0_0),
                     label = stringResource(R.string.amount),
                     onValueChange = callbacks.onAmountChange,
                     modifier = Modifier.fillMaxWidth(),
@@ -136,9 +138,18 @@ fun TransactionFormScreen(
                         selectedItem = formState.selectedCategory,
                         onItemSelected = { callbacks.onCategoryChange(it) },
                         itemContent = {
-                            Text(it.name)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(it.name)
+                                it.icon?.let {
+                                    Text(it, fontSize = 24.sp)
+                                }
+                            }
                         },
-                        itemLabel = { it: CategoryUi -> it.name }
+                        itemLabel = { "${ it.icon ?: "" } ${it.name}" }
                     )
                 }
 

@@ -7,12 +7,12 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "month_budgets",
     foreignKeys = [
-         ForeignKey(
-             entity = BudgetEntity::class,
-             parentColumns = ["id"],
-             childColumns = ["budgetId"],
-             onDelete = ForeignKey.CASCADE,
-         )
+        ForeignKey(
+            entity = BudgetEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["budgetId"],
+            onDelete = ForeignKey.CASCADE,
+        )
     ],
     indices = [androidx.room.Index(value = ["budgetId"])]
 )
@@ -31,6 +31,7 @@ data class MonthBudgetEntity(
 data class MonthBudgetDetail(
     val id: Int? = null,
     val budgetId: Int,
+    val categoryId: Int,
     val month: Int,
     val year: Int,
     val amount: Double = 0.0,

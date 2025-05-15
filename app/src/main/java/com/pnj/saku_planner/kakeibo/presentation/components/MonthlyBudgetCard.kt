@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
@@ -48,12 +50,18 @@ fun MonthlyBudgetCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Overall Budget")
-                Text(yearMonthToShortString(yearMonth))
+                Text(
+                    text = stringResource(R.string.overall_budget),
+                    style = Typography.titleMedium,
+                )
+                Text(
+                    text = yearMonthToShortString(yearMonth),
+                    style = Typography.titleMedium,
+                )
             }
             Text(
                 text = formattedSpentAmount,
-                style = Typography.titleMedium,
+                style = Typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold
             )
 

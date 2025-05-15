@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.pnj.saku_planner.core.theme.AppColor
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.R
@@ -55,7 +56,7 @@ fun AccountScreen(
                     style = Typography.titleMedium,
                 )
                 Text(
-                    text = stringResource(R.string.accross_all_accounts),
+                    text = stringResource(R.string.across_all_accounts),
                     color = MutedForeground,
                     style = Typography.labelSmall
                 )
@@ -81,6 +82,17 @@ fun AccountScreen(
             }
         }
 
+        if (accounts.isEmpty()) {
+            Text(
+                text = stringResource(R.string.you_don_t_have_any_account),
+                style = Typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+            )
+        }
+
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -88,7 +100,7 @@ fun AccountScreen(
                 AccountCard(
                     accountName = account.name,
                     accountBalance = account.balance,
-                    onClick = {onAccountClicked(account) },
+                    onClick = { onAccountClicked(account) },
                 )
             }
         }

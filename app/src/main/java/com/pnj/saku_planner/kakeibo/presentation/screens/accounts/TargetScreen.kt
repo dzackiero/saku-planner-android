@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.kakeibo.presentation.components.TargetCard
@@ -43,8 +44,9 @@ fun TargetScreen() {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "Saving Targets",
-                style = Typography.displaySmall
+                text = "Targets",
+                style = Typography.displaySmall,
+                fontWeight = FontWeight.Bold,
             )
 
             PrimaryButton(onClick = {}) {

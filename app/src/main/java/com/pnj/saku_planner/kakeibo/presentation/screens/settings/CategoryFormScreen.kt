@@ -50,7 +50,10 @@ fun CategoryFormScreen(
             if (state.categoryId != null) {
                 Confirmable(onConfirmed = onDelete) {
                     IconButton(onClick = it) {
-                        Icon(Icons.Outlined.Delete, "delete category")
+                        Icon(
+                            Icons.Outlined.Delete,
+                            stringResource(R.string.delete_category)
+                        )
                     }
                 }
             }
@@ -93,59 +96,61 @@ fun CategoryFormScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    SelectChip(
-                        modifier = Modifier.weight(1f),
-                        selected = state.categoryType == TransactionType.EXPENSE,
-                        onClick = {
-                            callbacks.onTypeChange(TransactionType.EXPENSE)
-                        },
-                        label = {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.TrendingDown,
-                                    contentDescription = stringResource(R.string.expense),
-                                    tint = AppColor.Destructive
-                                )
-                                Spacer(modifier = Modifier.padding(4.dp))
-                                Text(
-                                    text = stringResource(R.string.expense),
-                                    style = Typography.bodyMedium,
-                                )
+                if (state.categoryId == null) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        SelectChip(
+                            modifier = Modifier.weight(1f),
+                            selected = state.categoryType == TransactionType.EXPENSE,
+                            onClick = {
+                                callbacks.onTypeChange(TransactionType.EXPENSE)
+                            },
+                            label = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.TrendingDown,
+                                        contentDescription = stringResource(R.string.expense),
+                                        tint = AppColor.Destructive
+                                    )
+                                    Spacer(modifier = Modifier.padding(4.dp))
+                                    Text(
+                                        text = stringResource(R.string.expense),
+                                        style = Typography.bodyMedium,
+                                    )
+                                }
                             }
-                        }
-                    )
-                    SelectChip(
-                        modifier = Modifier.weight(1f),
-                        selected = state.categoryType == TransactionType.INCOME,
-                        onClick = {
-                            callbacks.onTypeChange(TransactionType.INCOME)
-                        },
-                        label = {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                    contentDescription = stringResource(R.string.income),
-                                    tint = AppColor.Success
-                                )
-                                Spacer(modifier = Modifier.padding(4.dp))
-                                Text(
-                                    text = stringResource(R.string.income),
-                                    style = Typography.bodyMedium,
-                                )
+                        )
+                        SelectChip(
+                            modifier = Modifier.weight(1f),
+                            selected = state.categoryType == TransactionType.INCOME,
+                            onClick = {
+                                callbacks.onTypeChange(TransactionType.INCOME)
+                            },
+                            label = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                                        contentDescription = stringResource(R.string.income),
+                                        tint = AppColor.Success
+                                    )
+                                    Spacer(modifier = Modifier.padding(4.dp))
+                                    Text(
+                                        text = stringResource(R.string.income),
+                                        style = Typography.bodyMedium,
+                                    )
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
 

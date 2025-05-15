@@ -35,6 +35,7 @@ fun <T> BottomSheetField(
     onItemSelected: (T) -> Unit = {},
     itemContent: @Composable (T) -> Unit,
     itemLabel: (T) -> String,
+    enabled: Boolean = true,
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -44,6 +45,7 @@ fun <T> BottomSheetField(
         value = if (selectedItem != null) itemLabel(selectedItem) else "",
         label = label,
         placeholder = placeholder,
+        enabled = enabled,
         onClick = {
             showBottomSheet = true
         },

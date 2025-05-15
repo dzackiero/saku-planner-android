@@ -23,14 +23,14 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
-import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormCallbacks
-import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormState
+import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.MonthBudgetFormCallbacks
+import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.MonthBudgetFormState
 
 @Composable
-fun BudgetFormScreen(
-    title: String = "Create Budget",
-    state: BudgetFormState = BudgetFormState(),
-    callbacks: BudgetFormCallbacks = BudgetFormCallbacks(),
+fun MonthBudgetFormScreen(
+    title: String = stringResource(R.string.edit_budget),
+    state: MonthBudgetFormState = MonthBudgetFormState(),
+    callbacks: MonthBudgetFormCallbacks = MonthBudgetFormCallbacks(),
     onSubmit: () -> Unit = {},
     onDelete: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
@@ -60,20 +60,20 @@ fun BudgetFormScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 BottomSheetField(
-                    onItemSelected = callbacks.onCategorySelected,
                     selectedItem = state.selectedCategory,
-                    options = state.categories,
-                    enabled = state.id == null,
+                    options = listOf(state.selectedCategory),
+                    enabled = false,
                     label = {
                         Text(stringResource(R.string.select_category))
                     },
+                    onItemSelected = {},
                     itemContent = {
                         Text(
-                            text = it.name,
+                            text = it?.name ?: "",
                             style = Typography.bodyMedium,
                         )
                     },
-                    itemLabel = { it.name },
+                    itemLabel = { it?.name ?: "" },
                 )
 
                 BalanceTextField(
@@ -98,8 +98,8 @@ fun BudgetFormScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun BudgetFormScreenPreview() {
+fun MonthBudgetFormScreenPreview() {
     SakuPlannerTheme {
-        BudgetFormScreen()
+        MonthBudgetFormScreen()
     }
 }

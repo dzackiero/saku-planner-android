@@ -55,5 +55,3 @@ fun BalanceTextField(
         singleLine = true
     )
 }
-
-

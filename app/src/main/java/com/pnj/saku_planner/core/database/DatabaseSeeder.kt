@@ -18,18 +18,21 @@ class DatabaseSeeder @Inject constructor(
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income A",
+                icon = "😔",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income B",
+                icon = "🍇",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Income C",
+                icon = "😔",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
@@ -37,18 +40,21 @@ class DatabaseSeeder @Inject constructor(
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense A",
+                icon = "😔",
                 categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
         )
         val bId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense B",
+                icon = "😔",
                 categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
         )
         val cId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
                 name = "Expense C",
+                icon = "😔",
                 categoryType = TransactionType.EXPENSE.toString().lowercase()
             ),
         )

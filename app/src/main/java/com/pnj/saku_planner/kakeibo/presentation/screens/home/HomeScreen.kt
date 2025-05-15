@@ -83,10 +83,10 @@ fun HomeScreen(
             ) {
                 Text(
                     text = stringResource(R.string.monthly_balance),
-                    style = Typography.titleMedium
+                    style = Typography.headlineMedium
                 )
                 Text(
-                    text = stringResource(R.string.income_expenses),
+                    text = stringResource(R.string.income_expense),
                     color = AppColor.MutedForeground,
                     style = Typography.labelSmall
                 )
@@ -172,7 +172,6 @@ fun HomeScreen(
             }
         }
 
-
         // Transactions
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -196,7 +195,6 @@ fun HomeScreen(
                     modifier = Modifier
                         .padding(end = 16.dp)
                         .padding(vertical = 4.dp, horizontal = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (groupedTransactions.isEmpty()) {
                         Text(
@@ -221,7 +219,6 @@ fun HomeScreen(
                                 toAccount = tx.toAccount,
                                 type = tx.type,
                                 amount = tx.amount,
-                                date = tx.date,
                                 onClick = { onTransactionClicked(tx) }
                             )
                         }

@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.BudgetUi
@@ -25,13 +24,9 @@ class BudgetViewModel @Inject constructor(
         loadBudgets()
     }
 
-    fun loadBudgets() {
+    private fun loadBudgets() {
         viewModelScope.launch(Dispatchers.IO) {
             val currentYearMonth = YearMonth.now()
-            Log.d(
-                "currentYearMonth",
-                "year: ${currentYearMonth.year}, month: ${currentYearMonth.monthValue}"
-            )
             _budgets.value =
                 budgetRepository.getBudgetsByYearMonth(currentYearMonth).map { it.toUi() }
         }

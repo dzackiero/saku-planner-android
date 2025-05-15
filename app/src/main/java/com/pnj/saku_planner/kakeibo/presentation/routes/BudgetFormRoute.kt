@@ -4,8 +4,10 @@ import androidx.navigation.NavController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.BudgetFormScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormViewModel
 
@@ -24,13 +26,15 @@ fun BudgetFormRoute(
     }
 
     BudgetFormScreen(
+        title = if (budgetId != null)
+            stringResource(R.string.edit_budget) else stringResource(R.string.create_budget),
         state = state,
         callbacks = viewModel.callbacks,
         onNavigateBack = {
             navController.popBackStack()
         },
         onDelete = {
-            viewModel.deleteCategory()
+            viewModel.deleteBudget()
             navController.popBackStack()
         },
         onSubmit = {

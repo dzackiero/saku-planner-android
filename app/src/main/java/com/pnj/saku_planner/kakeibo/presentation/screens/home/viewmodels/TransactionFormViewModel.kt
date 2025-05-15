@@ -81,26 +81,24 @@ class TransactionFormViewModel @Inject constructor(
             loadProperties()
 
             val transactionDetail =
-                transactionRepository.getTransactionById(transactionId)?.transaction
-                    ?: return@launch
+                transactionRepository.getTransactionById(transactionId) ?: return@launch
+            val transaction = transactionDetail.transaction
+            val transactionUi = transactionDetail.toUi()
 
             val kakeibo =
-                if (
-                    _transactionFormState.value.selectedKakeibo != null
-                    && _transactionFormState.value.transactionType == TransactionType.EXPENSE
-                ) KakeiboCategoryType.valueOf(transactionDetail.kakeiboCategory!!.uppercase())
-                else null
+                if (transactionUi.kakeibo != null && transactionUi.type == TransactionType.EXPENSE)
+                    transactionUi.kakeibo else null
 
             _transactionFormState.value = TransactionFormState(
-                transactionId = transactionDetail.id,
-                transactionType = TransactionType.valueOf(transactionDetail.type.uppercase()),
-                selectedCategory = _categories.value.find { it.id == transactionDetail.categoryId },
+                transactionId = transaction.id,
+                transactionType = TransactionType.valueOf(transaction.type.uppercase()),
+                selectedCategory = _categories.value.find { it.id == transaction.categoryId },
                 selectedKakeibo = kakeibo,
-                selectedAccount = _accounts.value.find { it.id == transactionDetail.accountId },
-                selectedToAccount = _accounts.value.find { it.id == transactionDetail.toAccountId },
-                transactionAt = transactionDetail.transactionAt,
-                amount = transactionDetail.amount,
-                description = transactionDetail.description
+                selectedAccount = _accounts.value.find { it.id == transaction.accountId },
+                selectedToAccount = _accounts.value.find { it.id == transaction.toAccountId },
+                transactionAt = transaction.transactionAt,
+                amount = transaction.amount,
+                description = transaction.description
             )
         }
     }

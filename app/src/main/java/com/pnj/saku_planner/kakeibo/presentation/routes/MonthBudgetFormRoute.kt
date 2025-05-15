@@ -8,37 +8,38 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.kakeibo.presentation.screens.settings.CategoryFormScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryFormViewModel
+import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.MonthBudgetFormScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.MonthBudgetFormViewModel
 
 @Composable
-fun CategoryFormRoute(
+fun MonthBudgetFormRoute(
     navController: NavController,
-    categoryId: Int? = null,
+    budgetId: Int,
+    monthBudgetId: Int?,
+    year: Int,
+    month: Int,
 ) {
-    val viewModel = hiltViewModel<CategoryFormViewModel>()
+    val viewModel = hiltViewModel<MonthBudgetFormViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(categoryId) {
-        if (categoryId != null) {
-            viewModel.loadCategory(categoryId)
-        }
+    LaunchedEffect(budgetId) {
+        viewModel.loadMonthBudget(monthBudgetId, budgetId, month, year)
     }
 
-    val title =
-        if (categoryId == null) stringResource(R.string.add)
-        else stringResource(R.string.edit)
-
-    CategoryFormScreen(
-        title = "$title ${stringResource(R.string.category)}",
+    MonthBudgetFormScreen(
+        title = stringResource(R.string.edit_budget),
         state = state,
         callbacks = viewModel.callbacks,
+        onSubmit = {
+            viewModel.submit()
+            navController.popBackStack()
+        },
         onDelete = {
-            viewModel.deleteCategory()
+            viewModel.deleteMonthBudget()
             navController.popBackStack()
         },
         onNavigateBack = {
             navController.popBackStack()
-        },
+        }
     )
 }
