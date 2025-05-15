@@ -30,7 +30,7 @@ data class TransactionEntity(
     val categoryId: Int? = null,
 
     val type: String,
-    val kakeiboCategory: String,
+    val kakeiboCategory: String? = null,
 
     val amount: Double,
     val description: String,

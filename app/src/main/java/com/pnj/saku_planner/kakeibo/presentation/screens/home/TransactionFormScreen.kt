@@ -60,8 +60,7 @@ fun TransactionFormScreen(
     onNavigateBack: () -> Unit = {},
     onDelete: () -> Unit = {},
 ) {
-    val dateTimePickerState = rememberDateTimePickerState()
-
+    val dateTimePickerState = rememberDateTimePickerState(formState.transactionAt)
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
         TransactionType.INCOME,
@@ -254,29 +253,31 @@ fun TransactionFormScreen(
                 }
 
                 // Kakeibo categories
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.kakeibo_category),
-                        style = Typography.titleMedium
-                    )
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        maxItemsInEachRow = 2
+                if (formState.transactionType == TransactionType.EXPENSE) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        KakeiboCategoryType.entries.forEach { category ->
-                            KakeiboCard(
-                                selected = formState.selectedKakeibo == category,
-                                kakeiboCategoryType = category,
-                                modifier = Modifier.weight(0.5f),
-                            ) {
-                                callbacks.onKakeiboChange(category)
+                        Text(
+                            text = stringResource(R.string.kakeibo_category),
+                            style = Typography.titleMedium
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            maxItemsInEachRow = 2
+                        ) {
+                            KakeiboCategoryType.entries.forEach { category ->
+                                KakeiboCard(
+                                    selected = formState.selectedKakeibo == category,
+                                    kakeiboCategoryType = category,
+                                    modifier = Modifier.weight(0.5f),
+                                ) {
+                                    callbacks.onKakeiboChange(category)
+                                }
                             }
                         }
                     }

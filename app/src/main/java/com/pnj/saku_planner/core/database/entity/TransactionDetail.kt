@@ -40,7 +40,7 @@ fun TransactionDetail.toUi() = TransactionUi(
     amount = transaction.amount,
     description = transaction.description,
     type = TransactionType.valueOf(transaction.type.uppercase()),
-    kakeibo = KakeiboCategoryType.valueOf(transaction.kakeiboCategory.uppercase()),
+    kakeibo = if (transaction.kakeiboCategory != null) KakeiboCategoryType.valueOf(transaction.kakeiboCategory.uppercase()) else null,
     date = Instant.ofEpochMilli(transaction.transactionAt).atZone(ZoneId.systemDefault())
-        .toLocalDate(),
+        .toLocalDateTime(),
 )

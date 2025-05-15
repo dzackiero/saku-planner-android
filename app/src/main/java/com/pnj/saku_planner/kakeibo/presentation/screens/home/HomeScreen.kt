@@ -50,10 +50,12 @@ fun HomeScreen(
     var selectedMonth by remember { mutableStateOf(YearMonth.now()) }
 
     val filteredTransactions = state.transactions.filter {
-        it.date.month == selectedMonth.month && it.date.year == selectedMonth.year
+        it.date.toLocalDate().month == selectedMonth.month &&
+                it.date.toLocalDate().year == selectedMonth.year
     }
     val groupedTransactions = filteredTransactions
-        .groupBy { it.date }
+        .sortedByDescending { it.date }
+        .groupBy { it.date.toLocalDate() }
         .toSortedMap(compareByDescending { it })
     val income = filteredTransactions
         .filter { it.type == TransactionType.INCOME }
@@ -219,6 +221,7 @@ fun HomeScreen(
                                 toAccount = tx.toAccount,
                                 type = tx.type,
                                 amount = tx.amount,
+                                date = tx.date,
                                 onClick = { onTransactionClicked(tx) }
                             )
                         }

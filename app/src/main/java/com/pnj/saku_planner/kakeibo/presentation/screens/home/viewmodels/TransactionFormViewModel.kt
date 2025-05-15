@@ -84,11 +84,18 @@ class TransactionFormViewModel @Inject constructor(
                 transactionRepository.getTransactionById(transactionId)?.transaction
                     ?: return@launch
 
+            val kakeibo =
+                if (
+                    _transactionFormState.value.selectedKakeibo != null
+                    && _transactionFormState.value.transactionType == TransactionType.EXPENSE
+                ) KakeiboCategoryType.valueOf(transactionDetail.kakeiboCategory!!.uppercase())
+                else null
+
             _transactionFormState.value = TransactionFormState(
                 transactionId = transactionDetail.id,
                 transactionType = TransactionType.valueOf(transactionDetail.type.uppercase()),
                 selectedCategory = _categories.value.find { it.id == transactionDetail.categoryId },
-                selectedKakeibo = KakeiboCategoryType.valueOf(transactionDetail.kakeiboCategory.uppercase()),
+                selectedKakeibo = kakeibo,
                 selectedAccount = _accounts.value.find { it.id == transactionDetail.accountId },
                 selectedToAccount = _accounts.value.find { it.id == transactionDetail.toAccountId },
                 transactionAt = transactionDetail.transactionAt,
@@ -117,6 +124,12 @@ class TransactionFormViewModel @Inject constructor(
                 null
             }
 
+            val kakeibo = if (state.transactionType == TransactionType.EXPENSE) {
+                state.selectedKakeibo!!.name.lowercase()
+            } else {
+                null
+            }
+
             val transactionEntity = TransactionEntity(
                 id = state.transactionId ?: 0,
                 accountId = state.selectedAccount!!.id,
@@ -125,7 +138,7 @@ class TransactionFormViewModel @Inject constructor(
                 type = state.transactionType.toString().lowercase(),
                 amount = state.amount ?: 0.0,
                 description = state.description,
-                kakeiboCategory = state.selectedKakeibo!!.toString().lowercase(),
+                kakeiboCategory = kakeibo,
                 transactionAt = state.transactionAt,
             )
 

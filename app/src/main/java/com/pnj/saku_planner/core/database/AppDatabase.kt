@@ -20,7 +20,7 @@ import com.pnj.saku_planner.core.database.entity.TransactionEntity
         AccountEntity::class,
         BudgetEntity::class,
         MonthBudgetEntity::class,
-    ], version = 7
+    ], version = 8
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao

@@ -10,12 +10,15 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun rememberDateTimePickerState(): DateTimePickerState {
-    val now = remember { Calendar.getInstance() }
-
+fun rememberDateTimePickerState(
+    dateTime: Long = Calendar.getInstance().timeInMillis
+): DateTimePickerState {
     val dateState = rememberDatePickerState(
-        initialSelectedDateMillis = now.timeInMillis
+        initialSelectedDateMillis = dateTime
     )
+
+    val now = Calendar.getInstance()
+    now.timeInMillis = dateTime
 
     val timeState = rememberTimePickerState(
         initialHour = now.get(Calendar.HOUR_OF_DAY),
