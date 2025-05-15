@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
 data class BudgetEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val categoryId: Int? = null,
+    val categoryId: Int,
     val amount: Double = 0.0,
     val initialAmount: Double,
     val syncedAt: Long? = null,
@@ -30,9 +30,9 @@ data class BudgetEntity(
 
 data class BudgetDetail(
     val id: Int = 0,
-    val categoryId: Int? = null,
+    val categoryId: Int,
     val categoryIcon: String? = "💵",
-    val categoryName: String? = null,
+    val categoryName: String,
     val amount: Double,
     val currentAmount: Double,
     val initialAmount: Double,
@@ -51,7 +51,7 @@ data class BudgetUi(
 
 fun BudgetDetail.toUi() = BudgetUi(
     id = id,
-    category = categoryName ?: "Overall",
+    category = categoryName,
     amount = amount,
     currentAmount = currentAmount,
 )
