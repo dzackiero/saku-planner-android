@@ -16,6 +16,7 @@ reflect on your spending habits and make better financial decisions.
 ## UI TODOS
 
 - [x] Implement Navigation
+- [ ] Implement Validation
 
 ### Home (Transaction)
 
@@ -32,23 +33,24 @@ reflect on your spending habits and make better financial decisions.
 - [x] Add Account Form
 - [x] Detail/Edit Account Form
 - [x] Add ViewModel and UI Model
-- [ ] Implement Repository and Entity
+- [x] Implement Repository and Entity
+- [x] Finished Offline Implementation
+
+### Budget
+
+- [x] Budget Screen
+- [x] Create Budget Form
+- [ ] Detail/Edit Budget Form
+- [x] Add ViewModel and UI Model
+- [x] Implement Repository and Entity
 - [ ] Finished Offline Implementation
 
 ### Target
 
 - [x] Target Screen
+- [ ] Implement Target Builder
 - [ ] Saving Target Form
 - [ ] Detail/Edit Target Form
-- [ ] Add ViewModel and UI Model
-- [ ] Implement Repository and Entity
-- [ ] Finished Offline Implementation
-
-### Budget
-
-- [x] Budget Screen
-- [ ] Create Budget Form
-- [ ] Detail/Edit Budget Form
 - [ ] Add ViewModel and UI Model
 - [ ] Implement Repository and Entity
 - [ ] Finished Offline Implementation
@@ -56,8 +58,9 @@ reflect on your spending habits and make better financial decisions.
 ### Report
 
 - [ ] Report Financial Screen (Dashboard and Charts)
-- [x] Report Transaction Screen (List and Filters)
+- [ ] Report Transaction Screen (List and Filters)
 - [x] Reflection Screen (Kakeibo Reflection)
+- [ ] Reflection Creation Form
 - [ ] Add ViewModel and UI Model
 - [ ] Implement Repository and Entity
 
@@ -65,9 +68,10 @@ reflect on your spending habits and make better financial decisions.
 
 - [x] Settings Screen
 - [x] Categories Screen
-- [ ] Create Expense/Income Category Form
-- [ ] Implement Repository and Entity
-- [ ] Finished Offline Implementation
+- [x] Create Expense/Income Category Form
+- [x] Implement Repository and Entity
+- [x] Finished Offline Implementation
+
 - [ ] Implement DataStore for User Preferences
 
 ## OTHERS TODOS
