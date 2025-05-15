@@ -161,7 +161,7 @@ fun CategoryFormScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Submit")
+                Text(stringResource(R.string.submit))
             }
         }
     }

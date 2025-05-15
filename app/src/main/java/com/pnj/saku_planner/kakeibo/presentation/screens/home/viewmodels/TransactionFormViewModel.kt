@@ -1,9 +1,11 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.core.database.entity.toUi
+import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
@@ -112,10 +114,11 @@ class TransactionFormViewModel @Inject constructor(
         }
     }
 
-    private fun submitTransaction() {
-        val state = _transactionFormState.value
+    private fun submitTransaction(): Boolean {
+        if (validateForm()) return false
 
         viewModelScope.launch(Dispatchers.IO) {
+            val state = _transactionFormState.value
             val categoryId = if (state.transactionType != TransactionType.TRANSFER) {
                 state.selectedCategory?.id
             } else {
@@ -146,20 +149,77 @@ class TransactionFormViewModel @Inject constructor(
             } else {
                 transactionRepository.insertTransaction(transactionEntity)
             }
+
         }
+        return true
+    }
+
+    private fun validateForm(): Boolean {
+        val stateValue = _transactionFormState.value
+
+        _transactionFormState.value = _transactionFormState.value.copy(
+            transactionTypeError = validateRequired(_transactionFormState.value.transactionType)
+        )
+        _transactionFormState.value = _transactionFormState.value.copy(
+            selectedAccountError = validateRequired(_transactionFormState.value.selectedAccount)
+        )
+        _transactionFormState.value = _transactionFormState.value.copy(
+            amountError = validateRequired(_transactionFormState.value.amount)
+        )
+
+        if (stateValue.transactionType == TransactionType.TRANSFER) {
+            _transactionFormState.value = _transactionFormState.value.copy(
+                selectedToAccountError = validateRequired(_transactionFormState.value.selectedToAccount)
+            )
+        }
+
+        if (stateValue.transactionType == TransactionType.INCOME) {
+            _transactionFormState.value = _transactionFormState.value.copy(
+                selectedCategoryError = validateRequired(_transactionFormState.value.selectedCategory)
+            )
+        }
+
+        if (stateValue.transactionType == TransactionType.EXPENSE) {
+            _transactionFormState.value = _transactionFormState.value.copy(
+                selectedCategoryError = validateRequired(_transactionFormState.value.selectedCategory)
+            )
+            _transactionFormState.value = _transactionFormState.value.copy(
+                selectedKakeiboError = validateRequired(_transactionFormState.value.selectedKakeibo)
+            )
+        }
+
+        Log.d("State", _transactionFormState.value.toString())
+
+        return _transactionFormState.value.hasError()
     }
 }
 
 data class TransactionFormState(
     val transactionId: Int? = null,
+
     val transactionType: TransactionType = TransactionType.EXPENSE,
+    val transactionTypeError: String? = null,
+
     val selectedCategory: CategoryUi? = null,
+    val selectedCategoryError: String? = null,
+
     val selectedKakeibo: KakeiboCategoryType? = null,
+    val selectedKakeiboError: String? = null,
+
     val selectedAccount: AccountUi? = null,
+    val selectedAccountError: String? = null,
+
     val selectedToAccount: AccountUi? = null,
+    val selectedToAccountError: String? = null,
+
     val transactionAt: Long = System.currentTimeMillis(),
+    val transactionAtError: String? = null,
+
     val amount: Double? = null,
-    val description: String = ""
+    val amountError: String? = null,
+
+    val description: String = "",
+    val descriptionError: String? = null,
 )
 
 
@@ -172,5 +232,18 @@ data class TransactionFormCallbacks(
     val onKakeiboChange: (KakeiboCategoryType) -> Unit,
     val onAmountChange: (Double?) -> Unit,
     val onDescriptionChange: (String) -> Unit,
-    val onSubmit: () -> Unit
+    val onSubmit: () -> Boolean
 )
+
+fun TransactionFormState.hasError(): Boolean {
+    return listOf(
+        transactionTypeError,
+        selectedCategoryError,
+        selectedKakeiboError,
+        selectedAccountError,
+        selectedToAccountError,
+        transactionAtError,
+        amountError,
+        descriptionError
+    ).any { !it.isNullOrBlank() }
+}

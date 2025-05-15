@@ -17,44 +17,44 @@ class DatabaseSeeder @Inject constructor(
     private suspend fun seed() {
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Income A",
-                icon = "😔",
+                name = "Salary",
+                icon = "🧑‍💼",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Income B",
+                name = "Gift",
                 icon = "🍇",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Income C",
-                icon = "😔",
+                name = "Allowance",
+                icon = "🧑‍🤝‍🧑",
                 categoryType = TransactionType.INCOME.toString().lowercase()
             ),
         )
 
         appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Expense A",
-                icon = "😔",
+                name = "Foods",
+                icon = "🍉",
                 categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
         )
         val bId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Expense B",
-                icon = "😔",
+                name = "School",
+                icon = "📔",
                 categoryType = TransactionType.EXPENSE.toString().lowercase(),
             ),
         )
         val cId = appDatabase.categoryDao().insertCategory(
             CategoryEntity(
-                name = "Expense C",
-                icon = "😔",
+                name = "Internet",
+            icon = "💻",
                 categoryType = TransactionType.EXPENSE.toString().lowercase()
             ),
         )

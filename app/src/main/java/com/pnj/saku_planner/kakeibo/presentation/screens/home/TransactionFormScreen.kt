@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +46,7 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
@@ -121,44 +123,53 @@ fun TransactionFormScreen(
                     }
                 )
 
-                BalanceTextField(
-                    value = formState.amount,
-                    placeholder = stringResource(R.string._0_0),
-                    label = stringResource(R.string.amount),
-                    onValueChange = callbacks.onAmountChange,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (formState.transactionType != TransactionType.TRANSFER) {
-                    BottomSheetField(
-                        options = categories.filter { it.categoryType == formState.transactionType },
-                        label = {
-                            Text(stringResource(R.string.category))
-                        },
-                        selectedItem = formState.selectedCategory,
-                        onItemSelected = { callbacks.onCategoryChange(it) },
-                        itemContent = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(it.name)
-                                it.icon?.let {
-                                    Text(it, fontSize = 24.sp)
-                                }
-                            }
-                        },
-                        itemLabel = { "${ it.icon ?: "" } ${it.name}" }
+                Field(formState.amountError) {
+                    BalanceTextField(
+                        isError = it,
+                        value = formState.amount,
+                        placeholder = stringResource(R.string._0_0),
+                        label = stringResource(R.string.amount),
+                        onValueChange = callbacks.onAmountChange,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
 
-                OutlinedTextField(
-                    value = formState.description,
-                    onValueChange = callbacks.onDescriptionChange,
-                    label = { Text(stringResource(R.string.description)) },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                if (formState.transactionType != TransactionType.TRANSFER) {
+                    Field(formState.selectedCategoryError) { isError ->
+                        BottomSheetField(
+                            isError = isError,
+                            options = categories.filter { it.categoryType == formState.transactionType },
+                            label = {
+                                Text(stringResource(R.string.category))
+                            },
+                            selectedItem = formState.selectedCategory,
+                            onItemSelected = { callbacks.onCategoryChange(it) },
+                            itemContent = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(it.name)
+                                    it.icon?.let {
+                                        Text(it, fontSize = 24.sp)
+                                    }
+                                }
+                            },
+                            itemLabel = { "${it.icon ?: ""} ${it.name}" }
+                        )
+                    }
+                }
+
+                Field(formState.descriptionError) {
+                    OutlinedTextField(
+                        isError = it,
+                        value = formState.description,
+                        onValueChange = callbacks.onDescriptionChange,
+                        label = { Text(stringResource(R.string.description)) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
 
             // Account And Kakeibo categories
@@ -172,7 +183,19 @@ fun TransactionFormScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.select_account),
-                            style = Typography.titleMedium
+                            style = Typography.titleMedium,
+                            color = if (formState.selectedAccountError != null) AppColor.Destructive else Color.Unspecified
+                        )
+                    }
+                    if (accounts.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.you_don_t_have_any_account),
+                            style = Typography.titleSmall,
+                            textAlign = TextAlign.Center,
+                            color = AppColor.MutedForeground,
+                            modifier = Modifier
+                                .padding(top = 16.dp, bottom = 8.dp)
+                                .fillMaxWidth(),
                         )
                     }
                     Row(
@@ -181,6 +204,7 @@ fun TransactionFormScreen(
                             .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
+
                         for (account in accounts) {
                             SelectChip(
                                 selected = formState.selectedAccount == account,
@@ -215,14 +239,23 @@ fun TransactionFormScreen(
                 // to account chips
                 if (formState.transactionType == TransactionType.TRANSFER) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(
+                        Text(
+                            text = stringResource(R.string.select_target_account),
+                            style = Typography.titleMedium,
+                            color = if (formState.selectedToAccountError != null) AppColor.Destructive else Color.Unspecified,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp)
-                        ) {
+                        )
+                        if (accounts.isEmpty()) {
                             Text(
-                                text = stringResource(R.string.select_target_account),
-                                style = Typography.titleMedium
+                                text = stringResource(R.string.you_don_t_have_any_account),
+                                style = Typography.titleSmall,
+                                textAlign = TextAlign.Center,
+                                color = AppColor.MutedForeground,
+                                modifier = Modifier
+                                    .padding(top = 16.dp, bottom = 8.dp)
+                                    .fillMaxWidth(),
                             )
                         }
                         Row(
@@ -273,7 +306,8 @@ fun TransactionFormScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.kakeibo_category),
-                            style = Typography.titleMedium
+                            style = Typography.titleMedium,
+                            color = if (formState.selectedKakeiboError != null) AppColor.Destructive else Color.Unspecified
                         )
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
@@ -297,8 +331,7 @@ fun TransactionFormScreen(
                 // Submit button
                 PrimaryButton(
                     onClick = {
-                        callbacks.onSubmit()
-                        onNavigateBack()
+                        if (callbacks.onSubmit()) onNavigateBack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -332,7 +365,7 @@ fun PreviewNewTransactionForm() {
             onDescriptionChange = { state = state.copy(description = it) },
             onTransactionAtChange = { state = state.copy(transactionAt = it) },
             onToAccountChange = { state = state.copy(selectedToAccount = it) },
-            onSubmit = {},
+            onSubmit = { true },
         )
 
         val categories = listOf(
@@ -341,10 +374,10 @@ fun PreviewNewTransactionForm() {
             CategoryUi(3, "Entertainment", TransactionType.INCOME),
         )
 
-        val accounts = listOf(
-            AccountUi(1, "Wallet", 100_000.0),
-            AccountUi(2, "Bank", 500_000.0),
-            AccountUi(3, "Cash", 200_000.0),
+        val accounts = listOf<AccountUi>(
+//            AccountUi(1, "Wallet", 100_000.0),
+//            AccountUi(2, "Bank", 500_000.0),
+//            AccountUi(3, "Cash", 200_000.0),
         )
 
 

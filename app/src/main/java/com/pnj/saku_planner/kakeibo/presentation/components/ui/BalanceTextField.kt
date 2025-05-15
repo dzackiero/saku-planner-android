@@ -18,6 +18,7 @@ import java.util.Locale
 fun BalanceTextField(
     value: Double?,
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
     onValueChange: (Double?) -> Unit,
     label: String = "Balance",
     placeholder: String = "0.0",
@@ -36,6 +37,7 @@ fun BalanceTextField(
 
     OutlinedTextField(
         value = text,
+        isError = isError,
         onValueChange = { newText ->
             val cleaned = newText.replace(Regex("[^\\d.,]"), "").replace(".", "").replace(",", ".")
             text = newText

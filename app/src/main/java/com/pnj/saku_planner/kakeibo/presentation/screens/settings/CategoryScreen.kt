@@ -182,7 +182,7 @@ fun CategoryItem(
         )
         Text(
             text = category.icon ?: "💵",
-            style = Typography.bodyLarge
+            style = Typography.headlineMedium
         )
     }
 }

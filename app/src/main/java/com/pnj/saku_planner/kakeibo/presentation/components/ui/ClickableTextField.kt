@@ -13,6 +13,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 @Composable
 fun ClickableTextField(
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
     value: String,
     onClick: () -> Unit = {},
     label: @Composable () -> Unit = {},
@@ -22,6 +23,7 @@ fun ClickableTextField(
 ) {
     OutlinedTextField(
         value = value,
+        isError = isError,
         onValueChange = {},
         label = label,
         placeholder = placeholder,

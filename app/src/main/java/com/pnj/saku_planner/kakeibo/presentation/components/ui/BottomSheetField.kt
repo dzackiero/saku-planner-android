@@ -30,6 +30,7 @@ fun <T> BottomSheetField(
     modifier: Modifier = Modifier,
     options: List<T> = emptyList(),
     selectedItem: T? = null,
+    isError: Boolean = false,
     label: @Composable () -> Unit,
     placeholder: @Composable () -> Unit = {},
     onItemSelected: (T) -> Unit = {},
@@ -41,6 +42,7 @@ fun <T> BottomSheetField(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     ClickableTextField(
+        isError = isError,
         modifier = modifier,
         value = if (selectedItem != null) itemLabel(selectedItem) else "",
         label = label,
