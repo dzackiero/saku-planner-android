@@ -39,8 +39,9 @@ fun BudgetFormRoute(
             navController.popBackStack(route = Account, inclusive = false)
         },
         onSubmit = {
-            viewModel.submit()
-            navController.popBackStack()
+            if (viewModel.submit()) {
+                navController.popBackStack()
+            }
         },
     )
 }

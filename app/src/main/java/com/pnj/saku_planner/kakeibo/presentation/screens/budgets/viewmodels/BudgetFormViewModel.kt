@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.toUi
+import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
@@ -47,10 +48,11 @@ class BudgetFormViewModel @Inject constructor(
         }
     }
 
-    fun submit() {
+    fun submit(): Boolean {
+        if(validateForm()) return false
+
         viewModelScope.launch(Dispatchers.IO) {
             val stateValue = _state.value
-
             val initialAmount =
                 if (stateValue.id == null) stateValue.amount else stateValue.initialAmount
 
@@ -67,13 +69,27 @@ class BudgetFormViewModel @Inject constructor(
                 budgetRepository.insertBudget(budgetEntity)
             }
         }
+        return true
+    }
+
+    private fun validateForm(): Boolean {
+        val formValues = _state.value
+
+        _state.value = _state.value.copy(
+            amountError = validateRequired(formValues.amount)
+        )
+
+        _state.value = _state.value.copy(
+            selectedCategoryError = validateRequired(formValues.selectedCategory)
+        )
+
+        return _state.value.hasError()
     }
 
     fun loadBudget(budgetId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val budget = budgetRepository.getBudgetById(budgetId) ?: return@launch
 
-            if (budget.categoryId == null) return@launch
             val category = categoryRepository.getCategoryById(budget.categoryId) ?: return@launch
             val categories = _state.value.categories.plus(category.toUi())
 
@@ -90,12 +106,24 @@ class BudgetFormViewModel @Inject constructor(
 
 data class BudgetFormState(
     val id: Int? = null,
-    val amount: Double? = null,
+
     val initialAmount: Double? = null,
+    val amount: Double? = null,
+    val amountError: String? = null,
+
     val selectedCategory: CategoryUi? = null,
+    val selectedCategoryError: String? = null,
+
     val categories: List<CategoryUi> = emptyList(),
     val isLoading: Boolean = false,
 )
+
+fun BudgetFormState.hasError(): Boolean {
+    return listOf(
+        amountError,
+        selectedCategoryError,
+    ).any { !it.isNullOrBlank() }
+}
 
 data class BudgetFormCallbacks(
     val onCategorySelected: (CategoryUi) -> Unit = {},

@@ -22,6 +22,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormState
@@ -59,29 +60,35 @@ fun BudgetFormScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                BottomSheetField(
-                    onItemSelected = callbacks.onCategorySelected,
-                    selectedItem = state.selectedCategory,
-                    options = state.categories,
-                    enabled = state.id == null,
-                    label = {
-                        Text(stringResource(R.string.select_category))
-                    },
-                    itemContent = {
-                        Text(
-                            text = it.name,
-                            style = Typography.bodyMedium,
-                        )
-                    },
-                    itemLabel = { it.name },
-                )
+                Field(state.selectedCategoryError) { isError ->
+                    BottomSheetField(
+                        isError = isError,
+                        onItemSelected = callbacks.onCategorySelected,
+                        selectedItem = state.selectedCategory,
+                        options = state.categories,
+                        enabled = state.id == null,
+                        label = {
+                            Text(stringResource(R.string.select_category))
+                        },
+                        itemContent = {
+                            Text(
+                                text = it.name,
+                                style = Typography.bodyMedium,
+                            )
+                        },
+                        itemLabel = { it.name },
+                    )
+                }
 
-                BalanceTextField(
-                    label = stringResource(R.string.budget_amount),
-                    value = state.amount,
-                    onValueChange = callbacks.onAmountChange,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                Field(state.selectedCategoryError) { isError ->
+                    BalanceTextField(
+                        isError = isError,
+                        label = stringResource(R.string.budget_amount),
+                        value = state.amount,
+                        onValueChange = callbacks.onAmountChange,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
 
             PrimaryButton(

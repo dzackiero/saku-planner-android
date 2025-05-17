@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
@@ -158,37 +157,35 @@ class TransactionFormViewModel @Inject constructor(
         val stateValue = _transactionFormState.value
 
         _transactionFormState.value = _transactionFormState.value.copy(
-            transactionTypeError = validateRequired(_transactionFormState.value.transactionType)
+            transactionTypeError = validateRequired(stateValue.transactionType)
         )
         _transactionFormState.value = _transactionFormState.value.copy(
-            selectedAccountError = validateRequired(_transactionFormState.value.selectedAccount)
+            selectedAccountError = validateRequired(stateValue.selectedAccount)
         )
         _transactionFormState.value = _transactionFormState.value.copy(
-            amountError = validateRequired(_transactionFormState.value.amount)
+            amountError = validateRequired(stateValue.amount)
         )
 
         if (stateValue.transactionType == TransactionType.TRANSFER) {
             _transactionFormState.value = _transactionFormState.value.copy(
-                selectedToAccountError = validateRequired(_transactionFormState.value.selectedToAccount)
+                selectedToAccountError = validateRequired(stateValue.selectedToAccount)
             )
         }
 
         if (stateValue.transactionType == TransactionType.INCOME) {
             _transactionFormState.value = _transactionFormState.value.copy(
-                selectedCategoryError = validateRequired(_transactionFormState.value.selectedCategory)
+                selectedCategoryError = validateRequired(stateValue.selectedCategory)
             )
         }
 
         if (stateValue.transactionType == TransactionType.EXPENSE) {
             _transactionFormState.value = _transactionFormState.value.copy(
-                selectedCategoryError = validateRequired(_transactionFormState.value.selectedCategory)
+                selectedCategoryError = validateRequired(stateValue.selectedCategory)
             )
             _transactionFormState.value = _transactionFormState.value.copy(
-                selectedKakeiboError = validateRequired(_transactionFormState.value.selectedKakeibo)
+                selectedKakeiboError = validateRequired(stateValue.selectedKakeibo)
             )
         }
-
-        Log.d("State", _transactionFormState.value.toString())
 
         return _transactionFormState.value.hasError()
     }

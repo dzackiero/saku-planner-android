@@ -3,6 +3,7 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.AccountEntity
+import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,11 @@ class AccountFormViewModel @Inject constructor(
         onCurrentBalanceChange = {
             _formState.value = _formState.value.copy(currentBalance = it)
         },
-        onSubmit = { submit() }
+        onSubmit = { onSuccess ->
+            if (submit()) {
+                onSuccess()
+            }
+        }
     )
 
     fun loadAccount(accountId: Int) {
@@ -51,9 +56,10 @@ class AccountFormViewModel @Inject constructor(
         }
     }
 
-    private fun submit() {
-        val values = _formState.value
+    private fun submit(): Boolean {
+        if (validateForm()) return false
 
+        val values = _formState.value
         val accountEntity = AccountEntity(
             id = values.accountId ?: 0,
             name = values.accountName,
@@ -68,19 +74,50 @@ class AccountFormViewModel @Inject constructor(
                 accountRepository.insertAccount(accountEntity)
             }
         }
+
+        return true
+    }
+
+    private fun validateForm(): Boolean {
+        val formValues = _formState.value
+
+        _formState.value = _formState.value.copy(
+            accountNameError = validateRequired(formValues.accountName)
+        )
+        _formState.value = _formState.value.copy(
+            currentBalanceError = validateRequired(formValues.currentBalance)
+        )
+
+        return _formState.value.hasError()
     }
 }
 
 data class AccountFormState(
     val accountId: Int? = null,
+
     val accountName: String = "",
+    val accountNameError: String? = null,
+
     val currentBalance: Double? = null,
+    val currentBalanceError: String? = null,
+
     val description: String = "",
+    val descriptionError: String? = null,
 )
+
+
+fun AccountFormState.hasError(): Boolean {
+    return listOf(
+        accountNameError,
+        currentBalanceError,
+        descriptionError,
+    ).any { !it.isNullOrBlank() }
+}
+
 
 data class AccountFormCallback(
     val onAccountNameChange: (String) -> Unit,
     val onCurrentBalanceChange: (Double?) -> Unit,
     val onDescriptionChange: (String) -> Unit,
-    val onSubmit: () -> Unit,
+    val onSubmit: (() -> Unit) -> Unit,
 )

@@ -26,6 +26,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormCallback
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormState
 
@@ -61,35 +62,43 @@ fun AccountFormScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
-                    value = state.accountName,
-                    label = { Text(stringResource(R.string.account_name)) },
-                    placeholder = { Text(stringResource(R.string.e_g_main_checking)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = callbacks.onAccountNameChange,
-                )
+                Field(state.accountNameError) {
+                    OutlinedTextField(
+                        isError = it,
+                        value = state.accountName,
+                        label = { Text(stringResource(R.string.account_name)) },
+                        placeholder = { Text(stringResource(R.string.e_g_main_checking)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        onValueChange = callbacks.onAccountNameChange,
+                    )
+                }
 
-                BalanceTextField(
-                    value = state.currentBalance,
-                    placeholder = stringResource(R.string._0_0),
-                    label = stringResource(R.string.balance),
-                    onValueChange = callbacks.onCurrentBalanceChange,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                Field(state.currentBalanceError) {
+                    BalanceTextField(
+                        isError = it,
+                        value = state.currentBalance,
+                        placeholder = stringResource(R.string._0_0),
+                        label = stringResource(R.string.balance),
+                        onValueChange = callbacks.onCurrentBalanceChange,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
 
-                OutlinedTextField(
-                    value = state.description,
-                    label = { Text(stringResource(R.string.description)) },
-                    placeholder = { Text(stringResource(R.string.e_g_account_for_groceries)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = callbacks.onDescriptionChange,
-                )
+                Field(state.descriptionError) {
+                    OutlinedTextField(
+                        isError = it,
+                        value = state.description,
+                        label = { Text(stringResource(R.string.description)) },
+                        placeholder = { Text(stringResource(R.string.e_g_account_for_groceries)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        onValueChange = callbacks.onDescriptionChange,
+                    )
+                }
             }
 
             PrimaryButton(
                 onClick = {
-                    callbacks.onSubmit()
-                    onNavigateBack()
+                    callbacks.onSubmit(onNavigateBack)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
