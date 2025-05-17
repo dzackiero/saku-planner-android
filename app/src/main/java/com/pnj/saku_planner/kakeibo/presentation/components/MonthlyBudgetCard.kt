@@ -1,7 +1,6 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
 import android.icu.text.NumberFormat
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,9 +26,8 @@ import java.util.Locale
 
 @Composable
 fun MonthlyBudgetCard(
-    totalBudget: Number,
-    spentAmount: Number,
-    onEditClick: () -> Unit,
+    totalBudget: Double,
+    spentAmount: Double,
     yearMonth: YearMonth = YearMonth.now(),
 ) {
     val formattedTotalBudget = NumberFormat
@@ -41,7 +39,7 @@ fun MonthlyBudgetCard(
     val progress = (spentAmount.toFloat() / totalBudget.toFloat()).coerceIn(0f, 1f)
     val percentage = "${(progress * 100).toInt()}%"
 
-    Card(modifier = Modifier.clickable { onEditClick() }) {
+    Card {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -101,9 +99,8 @@ fun MonthlyBudgetCard(
 fun PreviewMonthlyBudgetCard() {
     SakuPlannerTheme {
         MonthlyBudgetCard(
-            totalBudget = 1_000_000,
-            spentAmount = 100_000,
-            onEditClick = {}
+            totalBudget = 1_000_000.0,
+            spentAmount = 100_000.0,
         )
     }
 }

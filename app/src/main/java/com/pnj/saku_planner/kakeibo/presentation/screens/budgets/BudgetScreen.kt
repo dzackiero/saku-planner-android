@@ -9,33 +9,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.BudgetUi
-import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.MonthlyBudgetCard
-import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetViewModel
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 
 
 @Composable
 fun BudgetScreen(
+    budgets: List<BudgetUi>,
     onAddBudgetClicked: () -> Unit,
     onBudgetClicked: (BudgetUi) -> Unit
 ) {
-    val viewModel = hiltViewModel<BudgetViewModel>()
-    val budgets by viewModel.budgets.collectAsStateWithLifecycle()
+    val totalBudget = budgets.sumOf { it.amount }
+    val spentAmount = budgets.sumOf { it.currentAmount }
 
     Column(
         modifier = Modifier
@@ -44,11 +41,12 @@ fun BudgetScreen(
             .background(AppColor.PrimaryForeground),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        MonthlyBudgetCard(
-            totalBudget = 1_000_000,
-            spentAmount = 100_000,
-            onEditClick = {}
-        )
+        if (budgets.isNotEmpty()) {
+            MonthlyBudgetCard(
+                totalBudget = totalBudget,
+                spentAmount = spentAmount,
+            )
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),

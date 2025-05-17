@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pnj.saku_planner.Account
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.BudgetFormScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetFormViewModel
@@ -35,7 +36,7 @@ fun BudgetFormRoute(
         },
         onDelete = {
             viewModel.deleteBudget()
-            navController.popBackStack()
+            navController.popBackStack(route = Account, inclusive = false)
         },
         onSubmit = {
             viewModel.submit()

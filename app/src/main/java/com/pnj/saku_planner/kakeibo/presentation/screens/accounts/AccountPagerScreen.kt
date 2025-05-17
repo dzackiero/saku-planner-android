@@ -12,38 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.database.entity.BudgetUi
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
-import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
-import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.BudgetScreen
+import com.pnj.saku_planner.kakeibo.presentation.routes.AccountRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetRoute
 import kotlinx.coroutines.launch
 
 @Composable
 fun AccountPagerScreen(
+    navController: NavController ,
+    navBackStackEntry: NavBackStackEntry,
     modifier: Modifier = Modifier,
-    accounts: List<AccountUi> = emptyList(),
-    onAccountClicked: (AccountUi) -> Unit = {},
-    accountCallbacks: AccountCallbacks = AccountCallbacks(),
-
-    onAddBudgetClicked: () -> Unit = {},
-    onBudgetClicked: (BudgetUi) -> Unit = {},
 ) {
     val tabs = listOf(
         TabItem(label = stringResource(R.string.account)) {
-            AccountScreen(
-                accounts = accounts,
-                callbacks = accountCallbacks,
-                onAccountClicked = onAccountClicked,
-            )
+            AccountRoute(navController, navBackStackEntry)
         },
         TabItem(label = stringResource(R.string.budget)) {
-            BudgetScreen(
-                onAddBudgetClicked,
-                onBudgetClicked
-            )
+            BudgetRoute(navController, navBackStackEntry)
         },
         TabItem(label = stringResource(R.string.target)) { TargetScreen() }
     )
@@ -83,11 +70,3 @@ data class TabItem(
     val label: String,
     val content: @Composable () -> Unit
 )
-
-@Preview(showBackground = true)
-@Composable
-fun AccountSavingScreenPreview() {
-    SakuPlannerTheme {
-        AccountPagerScreen()
-    }
-}

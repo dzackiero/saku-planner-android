@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.pnj.saku_planner.Account
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.AccountFormScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountFormViewModel
@@ -34,7 +35,7 @@ fun AccountFormRoute(
         callbacks = viewModel.callbacks,
         onDeleteAccount = {
             viewModel.deleteAccount()
-            navController.popBackStack()
+            navController.popBackStack(Account, false)
         },
         onNavigateBack = {
             navController.popBackStack()
