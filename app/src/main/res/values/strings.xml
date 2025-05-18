@@ -77,4 +77,9 @@
     <string name="month">month</string>
     <string name="all">All</string>
     <string name="no_data_available">No data available</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="previous_option">previous option</string>
+    <string name="next_option">next option</string>
+    <string name="kakeibo">Kakeibo</string>
 </resources>

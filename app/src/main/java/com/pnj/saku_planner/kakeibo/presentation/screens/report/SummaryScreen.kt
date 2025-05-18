@@ -67,8 +67,22 @@ fun SummaryScreen(
             color = it.color,
         )
     }
-    val timeOptions = listOf("Monthly", "Yearly")
-    val typeOptions: List<String> = listOf("Expense", "Income", "Kakeibo")
+    val timeOptions = listOf(
+        FilterData(
+            label = stringResource(R.string.monthly),
+            value = "monthly"
+        ),
+        FilterData(
+            label = stringResource(R.string.yearly),
+            value = "yearly"
+        )
+    )
+    val typeOptions =
+        listOf(
+            FilterData(stringResource(R.string.expense), "expense"),
+            FilterData(stringResource(R.string.income), "income"),
+            FilterData(stringResource(R.string.kakeibo), "kakeibo")
+        )
 
     var selectedTimeIndex by remember { mutableIntStateOf(0) }
     var timeDropdownExpanded by remember { mutableStateOf(false) }
@@ -84,7 +98,7 @@ fun SummaryScreen(
                 .padding(end = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (timeOptions[selectedTimeIndex] == "Yearly") {
+            if (timeOptions[selectedTimeIndex].value == "yearly") {
                 YearSelector(
                     year = yearMonth.value.year,
                 ) {
@@ -118,7 +132,7 @@ fun SummaryScreen(
                     shape = RoundedCornerShape(2.dp),
                 ) {
                     Text(
-                        text = timeOptions[selectedTimeIndex],
+                        text = timeOptions[selectedTimeIndex].label,
                         style = Typography.bodyMedium,
                         fontWeight = FontWeight.Medium,
                         color = AppColor.Foreground
@@ -134,11 +148,11 @@ fun SummaryScreen(
                     ) {
                         timeOptions.forEachIndexed { index, option ->
                             DropdownMenuItem(
-                                text = { Text(option) },
+                                text = { Text(option.label) },
                                 onClick = {
                                     selectedTimeIndex = index
                                     timeDropdownExpanded = false
-                                    callback.onTimeTypeSelected(option.lowercase())
+                                    callback.onTimeTypeSelected(option.value)
                                 }
                             )
                         }
@@ -152,7 +166,7 @@ fun SummaryScreen(
             chartDataList = chartData,
             startupAnimation = false,
             totalFormatter = { formatToCurrency(it) },
-            totalLabel = typeOptions[selectedOptionIndex],
+            totalLabel = typeOptions[selectedOptionIndex].label,
         )
 
         Row(
@@ -166,21 +180,24 @@ fun SummaryScreen(
             IconButton(onClick = {
                 if (selectedOptionIndex > 0) selectedOptionIndex-- else
                     selectedOptionIndex = typeOptions.lastIndex
-                callback.onOptionSelected(typeOptions[selectedOptionIndex])
+                callback.onOptionSelected(typeOptions[selectedOptionIndex].value)
             }) {
-                Icon(Icons.Default.ArrowBackIosNew, "previous option")
+                Icon(Icons.Default.ArrowBackIosNew, stringResource(R.string.previous_option))
             }
             Text(
-                text = typeOptions[selectedOptionIndex],
+                text = typeOptions[selectedOptionIndex].label,
                 style = Typography.titleMedium
             )
 
             IconButton(onClick = {
                 if (selectedOptionIndex < typeOptions.lastIndex) selectedOptionIndex++ else
                     selectedOptionIndex = 0
-                callback.onOptionSelected(typeOptions[selectedOptionIndex])
+                callback.onOptionSelected(typeOptions[selectedOptionIndex].value)
             }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, "next option")
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowForwardIos,
+                    stringResource(R.string.next_option)
+                )
             }
         }
 
@@ -251,6 +268,11 @@ data class SummaryData(
     val color: Color = TailwindColor.Orange400,
     val amount: Double,
     val icon: String? = null,
+)
+
+data class FilterData(
+    val label: String,
+    val value: String,
 )
 
 @Preview(showBackground = true)
