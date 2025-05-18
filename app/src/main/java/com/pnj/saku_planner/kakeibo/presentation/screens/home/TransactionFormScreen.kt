@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -216,12 +217,25 @@ fun TransactionFormScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(vertical = 8.dp),
-                                        verticalArrangement = Arrangement.spacedBy(24.dp)
+                                        verticalArrangement = Arrangement.spacedBy(18.dp)
                                     ) {
-                                        Text(
-                                            text = account.name,
-                                            style = Typography.labelMedium,
-                                        )
+                                        Column {
+                                            Text(
+                                                text = account.name,
+                                                style = Typography.labelMedium,
+                                                fontWeight = FontWeight.Medium,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                            Text(
+                                                text = if (account.target == null)
+                                                    stringResource(R.string.spending).lowercase()
+                                                else stringResource(R.string.saving).lowercase(),
+                                                style = Typography.labelSmall,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                            )
+                                        }
                                         Text(
                                             text = formatToCurrency(account.balance),
                                             maxLines = 1,

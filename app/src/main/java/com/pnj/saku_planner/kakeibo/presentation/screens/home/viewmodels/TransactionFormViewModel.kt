@@ -43,7 +43,8 @@ class TransactionFormViewModel @Inject constructor(
     // Load categories and accounts from the repository
     private suspend fun loadProperties() {
         _categories.value = categoryRepository.getAllCategories().map { it.toUi() }
-        _accounts.value = accountRepository.getAllAccounts().map { it.toUi() }
+        _accounts.value =
+            accountRepository.getAllAccounts().map { it.toUi() }.sortedBy { it.target != null }
     }
 
     // Callbacks to handle user interactions
