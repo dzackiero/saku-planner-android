@@ -6,11 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
@@ -27,22 +32,28 @@ fun AccountCard(
         .format(accountBalance)
 
     Card(modifier = Modifier.clickable { onClick() }) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Row(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
         ) {
-            Text(
-                text = accountName,
-                style = Typography.titleMedium,
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-            ) {
+            Column {
                 Text(
-                    text = balance,
-                    style = Typography.displayMedium,
+                    text = accountName,
+                    style = Typography.headlineMedium,
+                )
+                Text(
+                    text = stringResource(R.string.spending),
+                    style = Typography.bodySmall,
+                    color = AppColor.MutedForeground,
                 )
             }
+            Text(
+                text = balance,
+                style = Typography.headlineMedium,
+            )
         }
     }
 }
@@ -52,8 +63,8 @@ fun AccountCard(
 fun AccountCardPreview() {
     SakuPlannerTheme {
         AccountCard(
-            accountName = "Test",
-            accountBalance = 100,
+            accountName = "Bank Jago",
+            accountBalance = 1_500_000,
         )
     }
 }

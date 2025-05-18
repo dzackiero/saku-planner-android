@@ -20,10 +20,14 @@ fun ClickableTextField(
     placeholder: @Composable () -> Unit = {},
     trailingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
+    singleLine: Boolean = false,
+    readOnly: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,
         isError = isError,
+        singleLine = singleLine,
+        readOnly = readOnly,
         onValueChange = {},
         label = label,
         placeholder = placeholder,

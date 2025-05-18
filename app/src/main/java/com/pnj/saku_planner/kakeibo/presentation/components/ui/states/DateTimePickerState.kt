@@ -52,8 +52,8 @@ class DateTimePickerState(
 ) {
     fun getDateMillis(): Long =
         datePickerState.selectedDateMillis ?: Calendar.getInstance().timeInMillis
-
     fun getTime(): Pair<Int, Int> = timePickerState.hour to timePickerState.minute
+
     fun getDateTimeMilis(): Long = Calendar.getInstance().apply {
         timeInMillis = getDateMillis()
         set(Calendar.HOUR_OF_DAY, timePickerState.hour)

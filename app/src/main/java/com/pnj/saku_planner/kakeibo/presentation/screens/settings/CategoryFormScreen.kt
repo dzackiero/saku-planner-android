@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.EmojiPicker
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryFormCallbacks
@@ -67,89 +69,103 @@ fun CategoryFormScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    EmojiPicker(
-                        emoji = state.categoryIcon,
-                    ) {
-                        callbacks.onIconChange(it)
-                    }
                     Text(
                         text = stringResource(R.string.category_icon),
                         style = Typography.labelMedium,
                         color = AppColor.MutedForeground
                     )
+                    EmojiPicker(
+                        emoji = state.categoryIcon,
+                    ) {
+                        callbacks.onIconChange(it)
+                    }
                 }
 
-                OutlinedTextField(
-                    value = state.categoryName,
-                    placeholder = {
-                        Text(stringResource(R.string.category_name))
-                    },
-                    onValueChange = callbacks.onNameChange,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Field(state.categoryNameError) {
+                    OutlinedTextField(
+                        isError = it,
+                        value = state.categoryName,
+                        placeholder = {
+                            Text(stringResource(R.string.category_name))
+                        },
+                        onValueChange = callbacks.onNameChange,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
                 if (state.categoryId == null) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        SelectChip(
-                            modifier = Modifier.weight(1f),
-                            selected = state.categoryType == TransactionType.EXPENSE,
-                            onClick = {
-                                callbacks.onTypeChange(TransactionType.EXPENSE)
-                            },
-                            label = {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.TrendingDown,
-                                        contentDescription = stringResource(R.string.expense),
-                                        tint = AppColor.Destructive
-                                    )
-                                    Spacer(modifier = Modifier.padding(4.dp))
-                                    Text(
-                                        text = stringResource(R.string.expense),
-                                        style = Typography.bodyMedium,
-                                    )
+                        Field(state.categoryTypeError) {
+                            Text(
+                                text = stringResource(R.string.select_type),
+                                style = Typography.titleMedium,
+                                color = if (it) AppColor.Destructive else Color.Unspecified
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            SelectChip(
+                                modifier = Modifier.weight(1f),
+                                selected = state.categoryType == TransactionType.EXPENSE,
+                                onClick = {
+                                    callbacks.onTypeChange(TransactionType.EXPENSE)
+                                },
+                                label = {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.TrendingDown,
+                                            contentDescription = stringResource(R.string.expense),
+                                            modifier = Modifier.padding(vertical = 6.dp),
+                                            tint = AppColor.Destructive
+                                        )
+                                        Spacer(modifier = Modifier.padding(4.dp))
+                                        Text(
+                                            text = stringResource(R.string.expense),
+                                            style = Typography.bodyMedium,
+                                        )
+                                    }
                                 }
-                            }
-                        )
-                        SelectChip(
-                            modifier = Modifier.weight(1f),
-                            selected = state.categoryType == TransactionType.INCOME,
-                            onClick = {
-                                callbacks.onTypeChange(TransactionType.INCOME)
-                            },
-                            label = {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                        contentDescription = stringResource(R.string.income),
-                                        tint = AppColor.Success
-                                    )
-                                    Spacer(modifier = Modifier.padding(4.dp))
-                                    Text(
-                                        text = stringResource(R.string.income),
-                                        style = Typography.bodyMedium,
-                                    )
+                            )
+                            SelectChip(
+                                modifier = Modifier.weight(1f),
+                                selected = state.categoryType == TransactionType.INCOME,
+                                onClick = {
+                                    callbacks.onTypeChange(TransactionType.INCOME)
+                                },
+                                label = {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                                            contentDescription = stringResource(R.string.income),
+                                            modifier = Modifier.padding(vertical = 6.dp),
+                                            tint = AppColor.Success
+                                        )
+                                        Spacer(modifier = Modifier.padding(4.dp))
+                                        Text(
+                                            text = stringResource(R.string.income),
+                                            style = Typography.bodyMedium,
+                                        )
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

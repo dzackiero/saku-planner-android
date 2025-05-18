@@ -32,7 +32,6 @@ fun AccountPagerScreen(
         TabItem(label = stringResource(R.string.budget)) {
             BudgetRoute(navController, navBackStackEntry)
         },
-        TabItem(label = stringResource(R.string.target)) { TargetScreen() }
     )
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
     val scope = rememberCoroutineScope()

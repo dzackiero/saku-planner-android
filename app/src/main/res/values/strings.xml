@@ -55,4 +55,25 @@
     <string name="e_g_account_for_groceries">e.g., account for groceries</string>
     <string name="create">Create</string>
     <string name="create_budget">Create Budget</string>
+    <string name="select_type">Select Type</string>
+    <string name="per_month">%1$s/month</string>
+    <string name="of_">of %1$s</string>
+    <string name="spending">Spending</string>
+    <string name="saving">Saving</string>
+    <string name="account_type">Account Type</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="ok">OK</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="target_start_date">Target Start Date</string>
+    <string name="duration">Duration</string>
+    <string name="target_amount">Target Amount</string>
+    <string name="target_information">Target Information</string>
+    <string name="monthly_target">Monthly Target</string>
+    <string name="_per_month">/month</string>
+    <string name="target_end_date">Target End Date</string>
+    <string name="month">month</string>
+    <string name="all">All</string>
 </resources>

@@ -117,7 +117,8 @@ fun TransactionFormScreen(
                 }
 
                 DateTimePickerField(
-                    dateTimePickerState,
+                    state = dateTimePickerState,
+                    label = { Text("Transaction Date") },
                     onDateTimeChange = {
                         callbacks.onTransactionAtChange(it)
                     }

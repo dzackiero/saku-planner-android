@@ -6,43 +6,48 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
 import java.util.Locale
 
 @Composable
-fun TargetCard(
-    title: String,
+fun AccountWithTargetCard(
     account: String,
-    amount: Number,
-    totalAmount: Number,
-    progress: Float,
-    monthlyAmount: Number
+    amount: Double,
+    targetAmount: Double,
+    duration: Int
 ) {
     val formattedAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
         .format(amount)
-    val formattedTotalAmount = NumberFormat
+    val formattedTargetAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
-        .format(totalAmount)
+        .format(targetAmount)
+
+    val monthlyAmount = if (duration == 0) 0.0 else targetAmount / duration
     val formattedMonthlyAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
         .format(monthlyAmount)
-    val percentage = "${(progress * 100).toInt()}%"
+
+    val progress =
+        if (targetAmount == 0.0) 0f else (amount / targetAmount).toFloat().coerceIn(0f, 1f)
+    val percentage = "${String.format(Locale.getDefault(), "%.0f", progress * 100)}%"
+
+
 
     Card {
         Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Column {
@@ -50,10 +55,10 @@ fun TargetCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = title, style = Typography.displaySmall)
+                    Text(text = account, style = Typography.headlineMedium)
                     Text(
                         text = formattedAmount,
-                        style = Typography.titleMedium,
+                        style = Typography.headlineMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -62,12 +67,12 @@ fun TargetCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Account: $account",
-                        style = Typography.titleSmall,
+                        text = stringResource(R.string.saving),
+                        style = Typography.bodySmall,
                         color = AppColor.MutedForeground,
                     )
                     Text(
-                        text = "of $formattedTotalAmount",
+                        text = stringResource(R.string.of_, formattedTargetAmount),
                         style = Typography.bodySmall,
                         color = AppColor.MutedForeground,
                     )
@@ -88,7 +93,7 @@ fun TargetCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "$formattedMonthlyAmount/month",
+                        text = stringResource(R.string.per_month, formattedMonthlyAmount),
                         style = Typography.labelSmall,
                         color = AppColor.MutedForeground,
                     )
@@ -102,4 +107,15 @@ fun TargetCard(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AccountWithTargetCardPreview() {
+    AccountWithTargetCard(
+        account = "BCA",
+        amount = 1000000.0,
+        targetAmount = 5000000.0,
+        duration = 5
+    )
 }

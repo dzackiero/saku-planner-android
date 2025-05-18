@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.kakeibo.presentation.components.TargetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.SakuPlannerTheme
@@ -77,14 +76,6 @@ fun TargetScreen() {
         }
 
         Column {
-            TargetCard(
-                title = "New Card",
-                account = "Test",
-                amount = 100_000,
-                totalAmount = 1_000_000,
-                progress = 0.2f,
-                monthlyAmount = 200000
-            )
         }
     }
 }

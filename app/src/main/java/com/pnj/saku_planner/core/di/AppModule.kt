@@ -7,6 +7,7 @@ import com.pnj.saku_planner.core.database.dao.AccountDao
 import com.pnj.saku_planner.core.database.dao.BudgetDao
 import com.pnj.saku_planner.core.database.dao.CategoryDao
 import com.pnj.saku_planner.core.database.dao.MonthBudgetDao
+import com.pnj.saku_planner.core.database.dao.TargetDao
 import com.pnj.saku_planner.core.database.dao.TransactionDao
 import com.pnj.saku_planner.kakeibo.data.repository.AccountRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
@@ -54,6 +55,11 @@ object AppModule {
     }
 
     @Provides
+    fun targetDao(appDatabase: AppDatabase): TargetDao {
+        return appDatabase.targetDao()
+    }
+
+    @Provides
     fun provideBudgetDao(appDatabase: AppDatabase): BudgetDao {
         return appDatabase.budgetDao()
     }
@@ -74,8 +80,12 @@ object AppModule {
     }
 
     @Provides
-    fun provideAccountRepository(accountDao: AccountDao): AccountRepository {
-        return AccountRepositoryImpl(accountDao)
+    fun provideAccountRepository(
+        accountDao: AccountDao,
+        targetDao: TargetDao,
+        appDatabase: AppDatabase
+    ): AccountRepository {
+        return AccountRepositoryImpl(accountDao, targetDao, appDatabase)
     }
 
     @Provides

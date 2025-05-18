@@ -40,20 +40,20 @@ reflect on your spending habits and make better financial decisions.
 
 - [x] Budget Screen
 - [x] Create Budget Form
-- [ ] Detail/Edit Budget Form
+- [x] Detail/Edit Budget Form
 - [x] Add ViewModel and UI Model
 - [x] Implement Repository and Entity
-- [ ] Finished Offline Implementation
+- [x] Finished Offline Implementation
 
 ### Target
 
 - [x] Target Screen
-- [ ] Implement Target Builder
-- [ ] Saving Target Form
-- [ ] Detail/Edit Target Form
-- [ ] Add ViewModel and UI Model
-- [ ] Implement Repository and Entity
-- [ ] Finished Offline Implementation
+- [x] Implement Target Builder
+- [x] Saving Target Form
+- [x] Detail/Edit Target Form
+- [x] Add ViewModel and UI Model
+- [x] Implement Repository and Entity
+- [x] Finished Offline Implementation
 
 ### Report
 
@@ -71,7 +71,6 @@ reflect on your spending habits and make better financial decisions.
 - [x] Create Expense/Income Category Form
 - [x] Implement Repository and Entity
 - [x] Finished Offline Implementation
-
 - [ ] Implement DataStore for User Preferences
 
 ## OTHERS TODOS

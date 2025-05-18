@@ -76,9 +76,15 @@ class CategoryFormViewModel @Inject constructor(
 
 data class CategoryFormState(
     val categoryId: Int? = null,
+
     val categoryIcon: String = "💵",
+    val categoryIconError: String? = null,
+
     val categoryName: String = "",
+    val categoryNameError: String? = null,
+
     val categoryType: TransactionType = TransactionType.EXPENSE,
+    val categoryTypeError: String? = null,
 )
 
 data class CategoryFormCallbacks(
