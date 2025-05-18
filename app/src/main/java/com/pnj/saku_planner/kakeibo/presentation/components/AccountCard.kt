@@ -25,13 +25,16 @@ import java.util.Locale
 fun AccountCard(
     accountName: String,
     accountBalance: Number,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     val balance = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
         .format(accountBalance)
 
-    Card(modifier = Modifier.clickable { onClick() }) {
+    Card(
+        modifier = modifier.clickable { onClick() }
+    ) {
         Row(
             modifier = Modifier
                 .padding(vertical = 8.dp)

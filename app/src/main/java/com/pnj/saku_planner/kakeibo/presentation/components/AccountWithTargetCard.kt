@@ -1,6 +1,7 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
 import android.icu.text.NumberFormat
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,9 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import java.util.Locale
 
 @Composable
@@ -25,7 +26,9 @@ fun AccountWithTargetCard(
     account: String,
     amount: Double,
     targetAmount: Double,
-    duration: Int
+    duration: Int,
+    modifier: Modifier = Modifier ,
+    onClick: () -> Unit = {},
 ) {
     val formattedAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
@@ -45,7 +48,7 @@ fun AccountWithTargetCard(
 
 
 
-    Card {
+    Card(modifier = modifier.clickable { onClick() }) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),

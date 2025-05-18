@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">saku-planner</string>
+    <string name="app_name">Kakeibo</string>
     <string name="amount">Amount</string>
     <string name="category">Category</string>
     <string name="description">Description</string>

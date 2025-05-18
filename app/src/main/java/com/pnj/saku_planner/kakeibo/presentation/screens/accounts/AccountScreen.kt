@@ -15,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -144,25 +146,29 @@ fun AccountScreen(
             )
         }
 
-        Column(
+        LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
-            filteredAccounts.forEach { account ->
+            items(filteredAccounts, key = { it.id }) { account ->
                 if (account.target != null) {
                     AccountWithTargetCard(
                         account = account.name,
                         amount = account.balance,
                         duration = account.target.duration,
                         targetAmount = account.target.targetAmount,
+                        onClick = { onAccountClicked(account) },
+                        modifier = Modifier.animateItem(),
                     )
                 } else {
                     AccountCard(
                         accountName = account.name,
                         accountBalance = account.balance,
                         onClick = { onAccountClicked(account) },
+                        modifier = Modifier.animateItem(),
                     )
                 }
+
             }
         }
     }
