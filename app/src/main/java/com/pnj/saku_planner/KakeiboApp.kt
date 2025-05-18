@@ -7,6 +7,8 @@ import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
@@ -79,8 +81,8 @@ fun KakeiboApp() {
         topBar = {
             AnimatedVisibility(
                 visible = showScaffold,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { -it }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }),
+                enter = slideInVertically(initialOffsetY = { -it }),
+                exit = slideOutVertically(targetOffsetY = { -it }),
             ) {
                 TopAppBar()
             }
@@ -88,8 +90,8 @@ fun KakeiboApp() {
         bottomBar = {
             AnimatedVisibility(
                 visible = showScaffold,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it }),
             ) {
                 BottomNavigationBar(
                     navController = navController,
@@ -118,8 +120,8 @@ fun KakeiboApp() {
         NavHost(
             startDestination = Home,
             navController = navController,
-            enterTransition = { fadeIn(animationSpec = tween(0)) },
-            exitTransition = { fadeOut(animationSpec = tween(0)) },
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) },
             modifier = contentModifier
         ) {
             // Home

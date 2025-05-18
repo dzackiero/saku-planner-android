@@ -64,6 +64,10 @@ class AccountFormViewModel @Inject constructor(
                 accountId = account.id,
                 accountName = account.name,
                 currentBalance = account.balance,
+                accountType = if (account.target == null) AccountType.Checking else AccountType.Savings,
+                targetAmount = account.target?.targetAmount,
+                targetDuration = account.target?.duration,
+                targetStartDate = account.target?.startDate,
                 description = account.description ?: "",
             )
         }
