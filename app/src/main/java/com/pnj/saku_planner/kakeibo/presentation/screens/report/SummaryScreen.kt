@@ -164,7 +164,6 @@ fun SummaryScreen(
 
         PieChartWithText(
             chartDataList = chartData,
-            startupAnimation = false,
             totalFormatter = { formatToCurrency(it) },
             totalLabel = typeOptions[selectedOptionIndex].label,
         )
