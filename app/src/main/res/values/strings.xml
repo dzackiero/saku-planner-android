@@ -76,4 +76,5 @@
     <string name="target_end_date">Target End Date</string>
     <string name="month">month</string>
     <string name="all">All</string>
+    <string name="no_data_available">No data available</string>
 </resources>

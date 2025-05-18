@@ -1,6 +1,8 @@
 package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import android.icu.text.NumberFormat
+import androidx.compose.ui.graphics.Color
+import com.pnj.saku_planner.core.theme.TailwindColor
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.YearMonth
@@ -41,4 +43,21 @@ fun formatToCurrency(
 ): String {
     val formatter = NumberFormat.getCurrencyInstance(locale)
     return formatter.format(amount)
+}
+
+fun colorWheel(size: Int): Color {
+    if (size < 0) {
+        throw IllegalArgumentException("Size must be a non-negative integer")
+    }
+
+    val colors = listOf(
+        TailwindColor.Orange400,
+        TailwindColor.Blue400,
+        TailwindColor.Green400,
+        TailwindColor.Purple400,
+        TailwindColor.Red400,
+        TailwindColor.Yellow400,
+        TailwindColor.Pink400,
+    )
+    return colors[size % colors.size]
 }

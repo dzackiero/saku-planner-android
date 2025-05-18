@@ -3,7 +3,11 @@ package com.pnj.saku_planner.kakeibo.data.repository
 import com.pnj.saku_planner.core.database.dao.TransactionDao
 import com.pnj.saku_planner.core.database.entity.TransactionDetail
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
+import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.colorWheel
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryData
 import javax.inject.Inject
 
 class TransactionRepositoryImpl @Inject constructor(
@@ -28,5 +32,38 @@ class TransactionRepositoryImpl @Inject constructor(
 
     override suspend fun deleteTransaction(id: Int) {
         transactionDao.deleteTransactionAndRecalculateBalance(id)
+    }
+
+    override suspend fun getTransactionSummaryByCategory(
+        type: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): List<SummaryData> {
+        return transactionDao.getTransactionSummaryByCategory(
+            type = type.toString().lowercase(),
+            startDate = startDate,
+            endDate = endDate
+        ).mapIndexed { index, data ->
+            SummaryData(
+                name = data.name,
+                icon = data.icon,
+                amount = data.amount,
+                color = colorWheel(index)
+            )
+        }
+    }
+
+    override suspend fun getKakeiboSummary(startDate: Long, endDate: Long): List<SummaryData> {
+        return transactionDao.getKakeiboSummary(
+            startDate = startDate,
+            endDate = endDate
+        ).map { data ->
+            SummaryData(
+                name = data.name.replaceFirstChar { it.uppercase() },
+                icon = data.icon,
+                amount = data.amount,
+                color = KakeiboCategoryType.valueOf(data.name.uppercase()).getStyle().color
+            )
+        }
     }
 }

@@ -53,8 +53,8 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.SummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
-import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReflectionScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -64,9 +64,9 @@ fun KakeiboApp() {
     val fabItems = listOf(
         BottomNavItem(Home, Icons.Outlined.Home),
         BottomNavItem(Account, Icons.Outlined.Wallet),
-        BottomNavItem(Report, Icons.Outlined.Analytics),
     )
     val items = fabItems + listOf(
+        BottomNavItem(Report, Icons.Outlined.Analytics),
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
 
@@ -201,7 +201,7 @@ fun KakeiboApp() {
 
             // Report
             composable<Report> {
-                ReflectionScreen()
+                SummaryRoute(navController)
             }
 
             // Settings

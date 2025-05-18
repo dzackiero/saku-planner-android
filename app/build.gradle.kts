@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.compose.emoji.picker)
     implementation(libs.okhttp)
+    implementation (libs.compose.charts)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)

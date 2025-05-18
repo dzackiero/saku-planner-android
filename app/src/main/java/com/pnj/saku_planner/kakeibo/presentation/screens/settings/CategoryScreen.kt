@@ -116,7 +116,7 @@ fun CategoryScreen(
                         .weight(1f)
                 ) { page ->
                     Column(Modifier.fillMaxSize()) {
-                        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        Box(modifier = Modifier) {
                             tabs[page].content()
                         }
                     }

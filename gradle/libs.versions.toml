@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.2"
+composeCharts = "0.1.7"
 composeEmojiPicker = "1.0.0-alpha16"
 desugar_jdk_libs = "2.1.5"
 kotlin = "2.1.20"
@@ -22,6 +23,7 @@ room="2.7.1"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
+compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 compose-emoji-picker = { module = "com.github.Abhimanyu14:compose-emoji-picker", version.ref = "composeEmojiPicker" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.pnj.saku_planner.core.database.entity.TransactionDetail
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
+import com.pnj.saku_planner.core.database.entity.TransactionCategorySummary
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 
 @Dao
@@ -18,11 +19,51 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions")
     suspend fun getAllTransactions(): List<TransactionDetail>
 
+    @Transaction
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getTransactionDetailById(id: Int): TransactionDetail?
 
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getTransactionById(id: Int): TransactionEntity?
+
+    @Transaction
+    @Query(
+        """
+        SELECT 
+            c.name AS name,
+            c.icon AS icon,
+            SUM(t.amount) AS amount
+        FROM transactions t 
+        JOIN categories c 
+            ON t.categoryId = c.id
+        WHERE type = :type
+      AND t.createdAt BETWEEN :startDate AND :endDate
+      GROUP BY c.name
+    """
+    )
+    suspend fun getTransactionSummaryByCategory(
+        type: String,
+        startDate: Long,
+        endDate: Long,
+    ): List<TransactionCategorySummary>
+
+    @Transaction
+    @Query(
+        """
+        SELECT
+            kakeiboCategory AS name,
+            SUM(t.amount) AS amount
+        FROM transactions t
+        WHERE type = 'expense'
+            AND t.createdAt BETWEEN :startDate AND :endDate
+        GROUP BY kakeiboCategory
+    """
+    )
+    suspend fun getKakeiboSummary(
+        startDate: Long,
+        endDate: Long,
+    ): List<TransactionCategorySummary>
+
 
     @Insert
     suspend fun insertTransaction(transaction: TransactionEntity)
