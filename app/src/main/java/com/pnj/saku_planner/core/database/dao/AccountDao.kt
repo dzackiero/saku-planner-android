@@ -12,7 +12,7 @@ import com.pnj.saku_planner.core.database.entity.AccountWithTarget
 @Dao
 interface AccountDao {
     @Insert
-    suspend fun insertAccount(account: AccountEntity)
+    suspend fun insertAccount(account: AccountEntity): Long
 
     @Transaction
     @Query("SELECT * FROM accounts WHERE id = :id")

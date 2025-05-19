@@ -28,7 +28,6 @@ import com.pnj.saku_planner.core.theme.Typography
 fun SettingsScreen(
     navigateToCategories: () -> Unit = {},
     onResetAppData: () -> Unit = {},
-    onLogout: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -75,11 +74,11 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "App Settings",
+                    text = stringResource(R.string.app_settings_title),
                     style = Typography.titleMedium
                 )
                 Text(
-                    text = "Manage your app preferences and data",
+                    text = stringResource(R.string.app_settings_subtitle),
                     color = AppColor.MutedForeground,
                     style = Typography.labelMedium
                 )
@@ -92,10 +91,10 @@ fun SettingsScreen(
                         contentDescription = "delete app data",
                         modifier = Modifier.padding(end = 8.dp)
                     )
-                    Text("Reset App Data")
+                    Text(stringResource(R.string.reset_app_data))
                 }
                 Text(
-                    text = "This will delete all your accounts, categories, transactions, and settings. This action cannot be undone.",
+                    text = stringResource(R.string.app_settings_description),
                     color = AppColor.MutedForeground,
                     style = Typography.labelSmall
                 )

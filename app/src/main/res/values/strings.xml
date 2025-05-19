@@ -88,4 +88,9 @@
     <string name="filter">Filter</string>
     <string name="week">Week</string>
     <string name="year">Year</string>
+    <string name="across_accounts">Across %1$s accounts</string>
+    <string name="app_settings_title">App Settings</string>
+    <string name="app_settings_subtitle">Manage your app preferences and data</string>
+    <string name="reset_app_data">Reset App Data</string>
+    <string name="app_settings_description">This will delete all your accounts, categories, transactions, and settings. This action cannot be undone.</string>
 </resources>

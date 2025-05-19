@@ -41,7 +41,9 @@ fun formatToCurrency(
     amount: Number,
     locale: Locale = Locale("id", "ID")
 ): String {
-    val formatter = NumberFormat.getCurrencyInstance(locale)
+    val formatter = NumberFormat.getCurrencyInstance(locale).apply {
+        maximumFractionDigits = 0
+    }
     return formatter.format(amount)
 }
 

@@ -19,7 +19,7 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun saveAccount(
         account: AccountEntity,
         target: TargetEntity?,
-    ) = db.withTransaction {
+    ): Unit = db.withTransaction {
         if (target != null) { // If target is not null, we need to save it
             val targetId = if (target.id == 0) {
                 targetDao.insertTarget(target).toInt()

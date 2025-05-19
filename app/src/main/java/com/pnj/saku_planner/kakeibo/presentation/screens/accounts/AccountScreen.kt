@@ -85,7 +85,7 @@ fun AccountScreen(
                         style = Typography.titleMedium,
                     )
                     Text(
-                        text = stringResource(R.string.across_all_accounts),
+                        text = stringResource(R.string.across_accounts, selectedFilter),
                         color = MutedForeground,
                         style = Typography.labelSmall
                     )

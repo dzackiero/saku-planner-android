@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,16 +75,18 @@ fun TransactionListItem(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     text = icon ?: "💵",
                     fontSize = 24.sp,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    if (description == "") {
+                    if (description.isBlank()) {
                         Text(
                             text = accountDisplay,
                             style = Typography.bodyMedium,
@@ -92,7 +95,9 @@ fun TransactionListItem(
                     } else {
                         Text(
                             text = description,
-                            style = Typography.bodyMedium
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = Typography.bodyMedium,
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -124,7 +129,7 @@ fun TransactionListItem(
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(1.dp),
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
             ) {
                 Text(
                     color = color,
@@ -151,11 +156,11 @@ fun TransactionItemPreview() {
     SakuPlannerTheme {
         TransactionListItem(
             icon = "💵",
-            description = "Description A",
+            description = "Description ajkhasjkdhaskjdhsajkdhsajkd",
             account = "Account",
             type = TransactionType.EXPENSE,
             kakeibo = KakeiboCategoryType.NEEDS,
-            amount = 10_000,
+            amount = 100000000_000,
             date = LocalDateTime.now()
         ) { }
     }

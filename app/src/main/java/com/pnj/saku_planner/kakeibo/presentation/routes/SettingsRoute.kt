@@ -14,6 +14,5 @@ fun SettingsRoute(navController: NavController) {
     SettingsScreen(
         navigateToCategories = { navController.navigate(Category) },
         onResetAppData = { viewModel.resetDatabase() },
-        onLogout = { /* TODO: Handle logout */ },
     )
 }
