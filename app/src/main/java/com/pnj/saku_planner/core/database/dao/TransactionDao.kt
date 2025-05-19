@@ -37,7 +37,7 @@ interface TransactionDao {
         JOIN categories c 
             ON t.categoryId = c.id
         WHERE type = :type
-      AND t.createdAt BETWEEN :startDate AND :endDate
+      AND t.transactionAt BETWEEN :startDate AND :endDate
       GROUP BY c.name
     """
     )
@@ -55,7 +55,7 @@ interface TransactionDao {
             SUM(t.amount) AS amount
         FROM transactions t
         WHERE type = 'expense'
-            AND t.createdAt BETWEEN :startDate AND :endDate
+            AND t.transactionAt BETWEEN :startDate AND :endDate
         GROUP BY kakeiboCategory
     """
     )
