@@ -7,8 +7,6 @@ import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
@@ -55,8 +53,8 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
-import com.pnj.saku_planner.kakeibo.presentation.routes.SummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -110,18 +108,12 @@ fun KakeiboApp() {
             )
         }
     ) { innerPadding ->
-
-        val contentModifier = if (showScaffold) {
-            Modifier.padding(innerPadding)
-        } else {
-            Modifier
-        }
-
+        val contentModifier = if (showScaffold) Modifier.padding(innerPadding) else Modifier
         NavHost(
             startDestination = Home,
             navController = navController,
-            enterTransition = { fadeIn(animationSpec = tween(300)) },
-            exitTransition = { fadeOut(animationSpec = tween(300)) },
+            enterTransition = { fadeIn(animationSpec = tween(0)) },
+            exitTransition = { fadeOut(animationSpec = tween(0)) },
             modifier = contentModifier
         ) {
             // Home
@@ -203,7 +195,7 @@ fun KakeiboApp() {
 
             // Report
             composable<Report> {
-                SummaryRoute(navController)
+                ReportPagerScreen(navController)
             }
 
             // Settings

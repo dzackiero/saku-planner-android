@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -90,13 +92,17 @@ fun SummaryScreen(
     val yearMonth = remember { mutableStateOf(YearMonth.now()) }
     var selectedOptionIndex by remember { mutableIntStateOf(0) }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-                .padding(end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 8.dp, top = 8.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             if (timeOptions[selectedTimeIndex].value == "yearly") {
                 YearSelector(
@@ -243,7 +249,7 @@ fun SummaryScreen(
                                 }
                                 Text(
                                     text = data.name,
-                                    style = Typography.bodySmall,
+                                    style = Typography.bodyMedium,
                                 )
                             }
                             Text(
@@ -278,7 +284,16 @@ data class FilterData(
 @Composable
 fun ReflectionScreenPreview() {
     SakuPlannerTheme {
-        SummaryScreen(modifier = Modifier.fillMaxSize())
+        SummaryScreen(
+            state = SummaryState(
+                summaryData = listOf(
+                    SummaryData("Food", TailwindColor.Orange400, 1000.0),
+                    SummaryData("Transport", TailwindColor.Green400, 2000.0),
+                    SummaryData("Entertainment", TailwindColor.Blue400, 3000.0),
+                    SummaryData("Shopping", TailwindColor.Purple400, 4000.0),
+                )
+            ),
+        )
     }
 }
 

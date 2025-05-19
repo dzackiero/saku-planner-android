@@ -7,12 +7,12 @@ import java.time.LocalDateTime
 data class TransactionUi(
     val id: Int,
     val date: LocalDateTime,
-    val icon: String?,
-    val description: String,
+    val icon: String? = null,
+    val description: String = "",
     val account: String,
-    val toAccount: String?,
-    val category: String?,
+    val toAccount: String? = null,
+    val category: String? = null,
     val type: TransactionType,
-    val kakeibo: KakeiboCategoryType?,
+    val kakeibo: KakeiboCategoryType? = null,
     val amount: Double
 )

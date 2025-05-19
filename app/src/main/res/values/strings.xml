@@ -82,4 +82,10 @@
     <string name="previous_option">previous option</string>
     <string name="next_option">next option</string>
     <string name="kakeibo">Kakeibo</string>
+    <string name="insight">Insight</string>
+    <string name="transaction_list">Transaction List</string>
+    <string name="transaction_filter">transaction filter</string>
+    <string name="filter">Filter</string>
+    <string name="week">Week</string>
+    <string name="year">Year</string>
 </resources>
