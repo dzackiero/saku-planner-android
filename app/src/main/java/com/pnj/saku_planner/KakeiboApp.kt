@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Wallet
@@ -52,7 +53,9 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
 import kotlinx.serialization.Serializable
@@ -67,6 +70,7 @@ fun KakeiboApp() {
     )
     val items = fabItems + listOf(
         BottomNavItem(Report, Icons.Outlined.Analytics),
+        BottomNavItem(Scan, Icons.Outlined.CameraAlt),
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
 
@@ -196,6 +200,23 @@ fun KakeiboApp() {
             // Report
             composable<Report> {
                 ReportPagerScreen(navController)
+            }
+
+            //Read Receipt or Scan
+            composable<Scan> {
+                ScanRoute(navController)
+            }
+
+            composable<SummaryScan> {
+                ScanSummaryRoute(navController)
+            }
+
+            composable<DetailScan> {
+                ScanRoute(navController)
+            }
+
+            composable<EditScan> {
+                ScanRoute(navController)
             }
 
             // Settings
@@ -354,6 +375,24 @@ data class BudgetDetail(
 
 @Serializable
 data object Report
+
+@Serializable
+data object Scan
+
+@Serializable
+data class SummaryScan(
+    val data: String? = null
+)
+
+@Serializable
+data class DetailScan(
+    val data: String? = null
+)
+
+@Serializable
+data class EditScan(
+    val data: String? = null
+)
 
 @Serializable
 data object Settings

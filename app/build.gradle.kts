@@ -65,6 +65,12 @@ dependencies {
     implementation(libs.okhttp)
     implementation (libs.compose.charts)
 
+    //camera
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.accompanist.permissions)
+
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)
 

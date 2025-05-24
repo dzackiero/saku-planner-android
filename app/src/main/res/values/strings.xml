@@ -93,4 +93,9 @@
     <string name="app_settings_subtitle">Manage your app preferences and data</string>
     <string name="reset_app_data">Reset App Data</string>
     <string name="app_settings_description">This will delete all your accounts, categories, transactions, and settings. This action cannot be undone.</string>
+    <string name="camera_permission">This feature requires camera access to capture receipts or invoices.\nPlease allow camera permission.</string>
+    <string name="camera_permission_rejected">Camera access was denied. Please enable it in settings to use this feature.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="lighting_warning">Ensure good lighting for clear receipt or invoice capture</string>
+    <string name="permission_request">Permission Request</string>
 </resources>
