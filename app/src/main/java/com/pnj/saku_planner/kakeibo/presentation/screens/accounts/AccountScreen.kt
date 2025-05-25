@@ -39,6 +39,7 @@ import com.pnj.saku_planner.core.theme.AppColor.MutedForeground
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountCard
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountWithTargetCard
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 
 @Composable
@@ -181,17 +182,18 @@ fun HomeScreenPreview() {
         AccountScreen(
             accounts = listOf(
                 AccountUi(
-                    id = 1,
+                    id = randomUuid(),
                     name = "Cash",
                     balance = 1_000_000.0,
                     description = "Cash in hand",
                 ),
                 AccountUi(
-                    id = 2,
+                    id = randomUuid(),
                     name = "Bank",
                     balance = 1_000_000.0,
                     description = "Bank account",
                     target = TargetUi(
+                        id = randomUuid(),
                         targetAmount = 5_000_000.0,
                         duration = 6,
                     )

@@ -4,17 +4,18 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 
 @Entity(tableName = "accounts")
 data class AccountEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: String = randomUuid(),
     val name: String,
     val balance: Double = 0.0,
     val description: String? = null,
 
-    val targetId: Int? = null,
+    val targetId: String? = null,
 
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
@@ -34,7 +35,7 @@ data class AccountWithTarget(
 
 fun AccountEntity.toUi(): AccountUi {
     return AccountUi(
-        id = id,
+        id = id.toString(),
         name = name,
         balance = balance,
         description = description,
@@ -43,7 +44,7 @@ fun AccountEntity.toUi(): AccountUi {
 
 fun AccountWithTarget.toUi(): AccountUi {
     return AccountUi(
-        id = account.id,
+        id = account.id.toString(),
         name = account.name,
         balance = account.balance,
         description = account.description,

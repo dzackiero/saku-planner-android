@@ -14,7 +14,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.Cat
 @Composable
 fun CategoryFormRoute(
     navController: NavController,
-    categoryId: Int? = null,
+    categoryId: String? = null,
 ) {
     val viewModel = hiltViewModel<CategoryFormViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()

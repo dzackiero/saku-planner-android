@@ -7,6 +7,7 @@ import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +50,7 @@ class BudgetFormViewModel @Inject constructor(
     }
 
     fun submit(): Boolean {
-        if(validateForm()) return false
+        if (validateForm()) return false
 
         viewModelScope.launch(Dispatchers.IO) {
             val stateValue = _state.value
@@ -57,17 +58,12 @@ class BudgetFormViewModel @Inject constructor(
                 if (stateValue.id == null) stateValue.amount else stateValue.initialAmount
 
             val budgetEntity = BudgetEntity(
-                id = stateValue.id ?: 0,
+                id = stateValue.id ?: randomUuid(),
                 amount = stateValue.amount!!,
                 initialAmount = initialAmount!!,
                 categoryId = stateValue.selectedCategory!!.id,
             )
-
-            if (stateValue.id != null) {
-                budgetRepository.updateBudget(budgetEntity)
-            } else {
-                budgetRepository.insertBudget(budgetEntity)
-            }
+            budgetRepository.saveBudget(budgetEntity)
         }
         return true
     }
@@ -86,7 +82,7 @@ class BudgetFormViewModel @Inject constructor(
         return _state.value.hasError()
     }
 
-    fun loadBudget(budgetId: Int) {
+    fun loadBudget(budgetId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val budget = budgetRepository.getBudgetById(budgetId) ?: return@launch
 
@@ -105,7 +101,7 @@ class BudgetFormViewModel @Inject constructor(
 }
 
 data class BudgetFormState(
-    val id: Int? = null,
+    val id: String? = null,
 
     val initialAmount: Double? = null,
     val amount: Double? = null,

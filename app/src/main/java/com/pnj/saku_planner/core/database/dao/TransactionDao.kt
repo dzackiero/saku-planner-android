@@ -2,10 +2,9 @@ package com.pnj.saku_planner.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.Upsert
 import com.pnj.saku_planner.core.database.entity.TransactionDetail
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.core.database.entity.TransactionCategorySummary
@@ -16,15 +15,16 @@ interface TransactionDao {
 
     // ==== Basic Queries ====
 
+    @Transaction
     @Query("SELECT * FROM transactions")
     suspend fun getAllTransactions(): List<TransactionDetail>
 
     @Transaction
     @Query("SELECT * FROM transactions WHERE id = :id")
-    suspend fun getTransactionDetailById(id: Int): TransactionDetail?
+    suspend fun getTransactionDetailById(id: String): TransactionDetail?
 
     @Query("SELECT * FROM transactions WHERE id = :id")
-    suspend fun getTransactionById(id: Int): TransactionEntity?
+    suspend fun getTransactionById(id: String): TransactionEntity?
 
     @Transaction
     @Query(
@@ -52,6 +52,7 @@ interface TransactionDao {
         """
         SELECT
             kakeiboCategory AS name,
+            '💵' AS icon,
             SUM(t.amount) AS amount
         FROM transactions t
         WHERE type = 'expense'
@@ -64,13 +65,10 @@ interface TransactionDao {
         endDate: Long,
     ): List<TransactionCategorySummary>
 
+    @Upsert
+    suspend fun upsertTransaction(transaction: TransactionEntity)
 
-    @Insert
-    suspend fun insertTransaction(transaction: TransactionEntity)
-
-    @Update
-    suspend fun updateTransaction(transaction: TransactionEntity)
-
+    // ==== Delete ====
     @Delete
     suspend fun deleteTransaction(transaction: TransactionEntity)
 
@@ -78,73 +76,65 @@ interface TransactionDao {
     // ==== Balance Update Helpers ====
 
     @Query("UPDATE accounts SET balance = balance + :amount WHERE id = :accountId")
-    suspend fun increaseBalance(accountId: Int, amount: Double)
+    suspend fun increaseBalance(accountId: String, amount: Double)
 
     @Query("UPDATE accounts SET balance = balance - :amount WHERE id = :accountId")
-    suspend fun decreaseBalance(accountId: Int, amount: Double)
+    suspend fun decreaseBalance(accountId: String, amount: Double)
 
 
-    // ==== Transaction Insert ====
+    // ==== Save Transaction (Handles Insert/Update + Balance) ====
     @Transaction
-    suspend fun insertTransactionWithBalanceUpdate(transaction: TransactionEntity) {
-        // Step 1: Insert transaction
-        insertTransaction(transaction)
+    suspend fun saveTransaction(transaction: TransactionEntity) {
+        // Fetch the old transaction *before* upserting, to know its previous state.
+        // Important: This assumes 'transaction.id' is set correctly.
+        // If it's a new transaction with an auto-generated ID, its ID might be 0.
+        // getTransactionById(0) will likely return null, correctly identifying it as new.
+        val oldTx = getTransactionById(transaction.id)
 
-        // Step 2: Apply balance changes
-        when (transaction.type) {
-            "income" -> increaseBalance(transaction.accountId, transaction.amount)
-            "expense" -> decreaseBalance(transaction.accountId, transaction.amount)
-            "transfer" -> {
-                decreaseBalance(transaction.accountId, transaction.amount)
-                transaction.toAccountId?.let {
-                    increaseBalance(it, transaction.amount)
+        // Step 1: Revert old transaction effect IF it exists (i.e., it's an update)
+        if (oldTx != null) {
+            // Check if account IDs changed, revert from *all* relevant old accounts
+            val oldFromAccountId = oldTx.accountId
+            val oldToAccountId = oldTx.toAccountId
+
+            when (TransactionType.valueOf(oldTx.type.uppercase())) {
+                TransactionType.INCOME -> decreaseBalance(oldFromAccountId, oldTx.amount)
+                TransactionType.EXPENSE -> increaseBalance(oldFromAccountId, oldTx.amount)
+                TransactionType.TRANSFER -> {
+                    increaseBalance(oldFromAccountId, oldTx.amount)
+                    oldToAccountId?.let { decreaseBalance(it, oldTx.amount) }
                 }
-            }
-        }
-    }
-
-
-    // ==== Edit Transaction ====
-    @Transaction
-    suspend fun updateTransactionAndRecalculateBalance(transaction: TransactionEntity) {
-        val oldTx = getTransactionById(transaction.id) ?: return
-
-        // Step 1: Revert old transaction effect
-        when (oldTx.type) {
-            "income" -> decreaseBalance(oldTx.accountId, oldTx.amount)
-            "expense" -> increaseBalance(oldTx.accountId, oldTx.amount)
-            "transfer" -> {
-                increaseBalance(oldTx.accountId, oldTx.amount)
-                oldTx.toAccountId?.let { decreaseBalance(it, oldTx.amount) }
             }
         }
 
         // Step 2: Apply new transaction effect
-        val transactionType = TransactionType.valueOf(transaction.type.uppercase())
-        when (transactionType) {
-            TransactionType.INCOME -> increaseBalance(transaction.accountId, transaction.amount)
-            TransactionType.EXPENSE -> decreaseBalance(transaction.accountId, transaction.amount)
+        val newFromAccountId = transaction.accountId
+        val newToAccountId = transaction.toAccountId
+
+        when (TransactionType.valueOf(transaction.type.uppercase())) {
+            TransactionType.INCOME -> increaseBalance(newFromAccountId, transaction.amount)
+            TransactionType.EXPENSE -> decreaseBalance(newFromAccountId, transaction.amount)
             TransactionType.TRANSFER -> {
-                decreaseBalance(transaction.accountId, transaction.amount)
-                transaction.toAccountId?.let { increaseBalance(it, transaction.amount) }
+                decreaseBalance(newFromAccountId, transaction.amount)
+                newToAccountId?.let { increaseBalance(it, transaction.amount) }
             }
         }
 
-        // Step 3: Save the updated transaction
-        updateTransaction(transaction)
+        // Step 3: Save (Insert or Update) the transaction using Upsert
+        upsertTransaction(transaction)
     }
 
 
     // ==== Delete Transaction ====
     @Transaction
-    suspend fun deleteTransactionAndRecalculateBalance(transactionId: Int) {
+    suspend fun deleteTransactionAndRecalculateBalance(transactionId: String) {
         val tx = getTransactionById(transactionId) ?: return
 
         // Step 1: Revert transaction effect
-        when (tx.type) {
-            "income" -> decreaseBalance(tx.accountId, tx.amount)
-            "expense" -> increaseBalance(tx.accountId, tx.amount)
-            "transfer" -> {
+        when (TransactionType.valueOf(tx.type.uppercase())) {
+            TransactionType.INCOME -> decreaseBalance(tx.accountId, tx.amount)
+            TransactionType.EXPENSE -> increaseBalance(tx.accountId, tx.amount)
+            TransactionType.TRANSFER -> {
                 increaseBalance(tx.accountId, tx.amount)
                 tx.toAccountId?.let { decreaseBalance(it, tx.amount) }
             }

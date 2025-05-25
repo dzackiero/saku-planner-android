@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.CategoryEntity
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,7 @@ class CategoryFormViewModel @Inject constructor(
         }
     )
 
-    fun loadCategory(categoryId: Int) {
+    fun loadCategory(categoryId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val category = categoryRepository.getCategoryById(categoryId) ?: return@launch
 
@@ -59,23 +60,20 @@ class CategoryFormViewModel @Inject constructor(
     private fun submit() {
         val category = _state.value
         val categoryEntity = CategoryEntity(
-            id = category.categoryId ?: 0,
+            id = category.categoryId ?: randomUuid(),
             icon = category.categoryIcon,
             name = category.categoryName,
             categoryType = category.categoryType.name.lowercase()
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            if (category.categoryId != null) {
-                categoryRepository.updateCategory(categoryEntity)
-            } else
-                categoryRepository.insertCategory(categoryEntity)
+            categoryRepository.saveCategory(categoryEntity)
         }
     }
 }
 
 data class CategoryFormState(
-    val categoryId: Int? = null,
+    val categoryId: String? = null,
 
     val categoryIcon: String = "💵",
     val categoryIconError: String? = null,

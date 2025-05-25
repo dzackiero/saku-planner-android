@@ -15,7 +15,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.Acc
 @Composable
 fun AccountFormRoute(
     navController: NavController,
-    accountId: Int? = null,
+    accountId: String? = null,
 ) {
     val viewModel = hiltViewModel<AccountFormViewModel>()
     LaunchedEffect(accountId) {

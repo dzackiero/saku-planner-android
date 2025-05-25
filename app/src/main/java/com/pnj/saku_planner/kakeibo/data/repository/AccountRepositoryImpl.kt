@@ -20,33 +20,18 @@ class AccountRepositoryImpl @Inject constructor(
         account: AccountEntity,
         target: TargetEntity?,
     ): Unit = db.withTransaction {
-        if (target != null) { // If target is not null, we need to save it
-            val targetId = if (target.id == 0) {
-                targetDao.insertTarget(target).toInt()
-            } else {
-                targetDao.updateTarget(target)
-                target.id
-            }
-
-            if (account.id == 0) {
-                accountDao.insertAccount(account.copy(targetId = targetId))
-            } else {
-                accountDao.updateAccount(account.copy(targetId = targetId))
-            }
-        } else { // If target is null, we need to delete the target if it exists
+        if (target != null) {
+            targetDao.saveTarget(target)
+            accountDao.saveAccount(account.copy(targetId = target.id))
+        } else {
             if (account.targetId != null) {
                 targetDao.deleteTarget(TargetEntity(id = account.targetId))
             }
-
-            if (account.id == 0) {
-                accountDao.insertAccount(account.copy(targetId = null))
-            } else {
-                accountDao.updateAccount(account.copy(targetId = null))
-            }
+            accountDao.saveAccount(account.copy(targetId = null))
         }
     }
 
-    override suspend fun getAccountById(id: Int): AccountWithTarget? {
+    override suspend fun getAccountById(id: String): AccountWithTarget? {
         return accountDao.getAccountById(id)
     }
 
@@ -54,15 +39,15 @@ class AccountRepositoryImpl @Inject constructor(
         return accountDao.getAllAccounts()
     }
 
-    override suspend fun deleteAccount(id: Int) = db.withTransaction {
+    override suspend fun deleteAccount(id: String) = db.withTransaction {
         val account = accountDao.getAccountById(id)?.account
         val target = account?.targetId?.let { targetDao.getTargetById(it) }
 
-        if(account == null) {
+        if (account == null) {
             return@withTransaction
         }
         accountDao.deleteAccount(account)
-        if(target != null) {
+        if (target != null) {
             targetDao.deleteTarget(target)
         }
     }

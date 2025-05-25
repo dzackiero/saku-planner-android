@@ -2,23 +2,20 @@ package com.pnj.saku_planner.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.Upsert
 import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
 
 @Dao
 interface MonthBudgetDao {
-    @Insert
-    suspend fun insertMonthBudget(monthBudgetEntity: MonthBudgetEntity)
+    @Upsert
+    suspend fun saveMonthBudget(monthBudgetEntity: MonthBudgetEntity)
 
-    @Update
-    suspend fun updateMonthBudget(monthBudgetEntity: MonthBudgetEntity)
 
     @Query("SELECT * FROM month_budgets WHERE id = :id")
-    suspend fun getMonthBudgetById(id: Int): MonthBudgetEntity?
+    suspend fun getMonthBudgetById(id: String): MonthBudgetEntity?
 
     @Transaction
     @Query(
@@ -63,7 +60,7 @@ interface MonthBudgetDao {
       ORDER BY b.id, months.m
     """
     )
-    suspend fun getYearlyMonthBudgets(id: Int, year: Int): List<MonthBudgetDetail>
+    suspend fun getYearlyMonthBudgets(id: String, year: Int): List<MonthBudgetDetail>
 
     @Transaction
     @Query(
@@ -109,7 +106,7 @@ interface MonthBudgetDao {
       LIMIT 1
     """
     )
-    suspend fun getSingleMonthBudget(id: Int, month: Int, year: Int): MonthBudgetDetail
+    suspend fun getSingleMonthBudget(id: String, month: Int, year: Int): MonthBudgetDetail
 
 
     @Delete

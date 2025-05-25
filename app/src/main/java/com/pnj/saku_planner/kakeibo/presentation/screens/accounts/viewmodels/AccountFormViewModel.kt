@@ -8,11 +8,13 @@ import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.enum.AccountType
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,7 +58,7 @@ class AccountFormViewModel @Inject constructor(
         }
     )
 
-    fun loadAccount(accountId: Int) {
+    fun loadAccount(accountId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val account = accountRepository.getAccountById(accountId)?.toUi() ?: return@launch
 
@@ -86,7 +88,7 @@ class AccountFormViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val values = _formState.value
             val accountEntity = AccountEntity(
-                id = values.accountId ?: 0,
+                id = values.accountId ?: UUID.randomUUID().toString(),
                 name = values.accountName,
                 balance = values.currentBalance ?: 0.0,
                 description = values.description,
@@ -95,7 +97,7 @@ class AccountFormViewModel @Inject constructor(
             var targetEntity: TargetEntity? = null
             if (values.accountType == AccountType.Savings) {
                 targetEntity = TargetEntity(
-                    id = 0,
+                    id = randomUuid(),
                     duration = values.targetDuration ?: 0,
                     startDate = values.targetStartDate ?: 0,
                     targetAmount = values.targetAmount ?: 0.0,
@@ -133,7 +135,7 @@ class AccountFormViewModel @Inject constructor(
 }
 
 data class AccountFormState(
-    val accountId: Int? = null,
+    val accountId: String? = null,
 
     val accountName: String = "",
     val accountNameError: String? = null,

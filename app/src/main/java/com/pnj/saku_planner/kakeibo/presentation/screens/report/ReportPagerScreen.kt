@@ -25,7 +25,7 @@ fun ReportPagerScreen(
 ) {
     val tabs = listOf(
         TabItem(label = stringResource(R.string.insight)) {
-            SummaryRoute(navController)
+            SummaryRoute()
         },
         TabItem(label = stringResource(R.string.transactions)) {
             TransactionRoute(navController)

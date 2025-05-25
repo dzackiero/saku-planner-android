@@ -15,12 +15,12 @@ class BudgetRepositoryImpl @Inject constructor(
     private val monthBudgetDao: MonthBudgetDao,
 ) : BudgetRepository {
 
-    override suspend fun insertBudget(budget: BudgetEntity) {
-        budgetDao.insertBudget(budget)
+    override suspend fun saveBudget(budget: BudgetEntity) {
+        budgetDao.saveBudget(budget)
     }
 
-    override suspend fun getBudgetById(id: Int, month: Int, year: Int): BudgetDetail? {
-        return budgetDao.getBudgetById(id, month, year)
+    override suspend fun getBudgetById(id: String, month: Int, year: Int): BudgetDetail? {
+        return budgetDao.getBudgetById(id, month.toString(), year.toString())
     }
 
     override suspend fun getBudgetsByYearMonth(yearMonth: YearMonth): List<BudgetDetail> {
@@ -30,33 +30,25 @@ class BudgetRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun insertMonthBudget(monthBudgetEntity: MonthBudgetEntity) {
-        monthBudgetDao.insertMonthBudget(monthBudgetEntity)
+    override suspend fun saveMonthBudget(monthBudgetEntity: MonthBudgetEntity) {
+        monthBudgetDao.saveMonthBudget(monthBudgetEntity)
     }
 
-    override suspend fun updateMonthBudget(monthBudgetEntity: MonthBudgetEntity) {
-        monthBudgetDao.updateMonthBudget(monthBudgetEntity)
-    }
-
-    override suspend fun getMonthlyBudgetsByYear(id: Int, year: Int): List<MonthBudgetDetail> {
+    override suspend fun getMonthlyBudgetsByYear(id: String, year: Int): List<MonthBudgetDetail> {
         return monthBudgetDao.getYearlyMonthBudgets(id, year)
     }
 
-    override suspend fun getSingleMonthBudget(id: Int, month: Int, year: Int): MonthBudgetDetail {
+    override suspend fun getSingleMonthBudget(id: String, month: Int, year: Int): MonthBudgetDetail {
         return monthBudgetDao.getSingleMonthBudget(id, month, year)
     }
 
 
-    override suspend fun updateBudget(budget: BudgetEntity) {
-        budgetDao.updateBudget(budget)
-    }
-
-    override suspend fun deleteBudget(id: Int) {
+    override suspend fun deleteBudget(id: String) {
         val budget = budgetDao.getBudgetById(id) ?: return
         budgetDao.deleteBudget(budget)
     }
 
-    override suspend fun deleteMonthBudget(id: Int, isMonthlyBudget: Boolean) {
+    override suspend fun deleteMonthBudget(id: String, isMonthlyBudget: Boolean) {
         if (isMonthlyBudget) {
             val monthBudget = monthBudgetDao.getMonthBudgetById(id) ?: return
             monthBudgetDao.deleteMonthBudget(monthBudget)

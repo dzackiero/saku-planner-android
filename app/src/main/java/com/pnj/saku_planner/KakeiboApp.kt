@@ -355,7 +355,7 @@ data object Home
 
 @Serializable
 data class TransactionForm(
-    val transactionId: Int? = null,
+    val transactionId: String? = null,
 )
 
 @Serializable
@@ -363,19 +363,19 @@ data object Account
 
 @Serializable
 data class AccountForm(
-    val accountId: Int? = null,
+    val accountId: String? = null,
 )
 
 
 @Serializable
 data class BudgetForm(
-    val budgetId: Int? = null,
+    val budgetId: String? = null,
 )
 
 @Serializable
 data class MonthBudgetForm(
-    val monthBudgetId: Int? = null,
-    val budgetId: Int,
+    val monthBudgetId: String? = null,
+    val budgetId: String,
     val year: Int,
     val month: Int,
 )
@@ -383,7 +383,7 @@ data class MonthBudgetForm(
 
 @Serializable
 data class BudgetDetail(
-    val budgetId: Int,
+    val budgetId: String,
 )
 
 @Serializable
@@ -397,7 +397,7 @@ data object Category
 
 @Serializable
 data class CategoryForm(
-    val categoryId: Int? = null,
+    val categoryId: String? = null,
 )
 
 @Preview

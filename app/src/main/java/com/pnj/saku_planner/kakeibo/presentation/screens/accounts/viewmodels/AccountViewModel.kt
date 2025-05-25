@@ -33,6 +33,6 @@ class AccountViewModel @Inject constructor(
 
 data class AccountCallbacks(
     val onCreateNewAccount: () -> Unit = {},
-    val onEditAccount: (Int) -> Unit = {},
-    val onDeleteAccount: (Int) -> Unit = {},
+    val onEditAccount: (String) -> Unit = {},
+    val onDeleteAccount: (String) -> Unit = {},
 )

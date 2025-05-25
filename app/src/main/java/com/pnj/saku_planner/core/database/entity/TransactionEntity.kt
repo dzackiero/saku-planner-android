@@ -3,6 +3,7 @@ package com.pnj.saku_planner.core.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 
 @Entity(
     tableName = "transactions",
@@ -22,12 +23,12 @@ import androidx.room.PrimaryKey
     ]
 )
 data class TransactionEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: String = randomUuid(),
 
-    val accountId: Int,
-    val toAccountId: Int? = null,
-    val categoryId: Int? = null,
+    val accountId: String,
+    val toAccountId: String? = null,
+    val categoryId: String? = null,
 
     val type: String,
     val kakeiboCategory: String? = null,

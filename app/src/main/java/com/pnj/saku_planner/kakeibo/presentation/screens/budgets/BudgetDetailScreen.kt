@@ -34,6 +34,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.YearSelector
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetDetailState
 import java.time.Year
 import java.time.YearMonth
@@ -46,7 +47,7 @@ fun BudgetDetailScreen(
     onSelectedYearChange: (Int) -> Unit = {},
     onEdit: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
-    onMonthBudgetClicked: (Int?, Int, Int) -> Unit = { _, _, _ -> },
+    onMonthBudgetClicked: (String?, Int, Int) -> Unit = { _, _, _ -> },
 ) {
     val currentDate = YearMonth.now()
     val scrollState = rememberScrollState()
@@ -178,19 +179,19 @@ fun MonthBudgetListItem(
 fun BudgetDetailScreenPreview() {
     KakeiboTheme {
         val budget = BudgetUi(
-            id = 1,
+            id = randomUuid(),
             amount = 100.0,
             category = "Food",
             currentAmount = 100.0,
         )
         val monthlyBudgets = (1..12).map { month ->
             MonthBudgetDetail(
-                id = month,
-                budgetId = 1,
+                id = randomUuid(),
+                budgetId = randomUuid(),
                 month = month,
                 year = 2023,
                 amount = 100.0,
-                categoryId = 1,
+                categoryId = randomUuid(),
             )
         }
 

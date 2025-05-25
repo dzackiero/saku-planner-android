@@ -49,6 +49,7 @@ import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -384,9 +385,9 @@ fun PreviewNewTransactionForm() {
         )
 
         val categories = listOf(
-            CategoryUi(1, "Food and Drink", TransactionType.INCOME),
-            CategoryUi(2, "Transport", TransactionType.EXPENSE),
-            CategoryUi(3, "Entertainment", TransactionType.INCOME),
+            CategoryUi(randomUuid(), "Food and Drink", TransactionType.INCOME),
+            CategoryUi(randomUuid(), "Transport", TransactionType.EXPENSE),
+            CategoryUi(randomUuid(), "Entertainment", TransactionType.INCOME),
         )
 
         val accounts = listOf<AccountUi>(

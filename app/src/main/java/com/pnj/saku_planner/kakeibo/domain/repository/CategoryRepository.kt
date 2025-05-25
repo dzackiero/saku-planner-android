@@ -5,14 +5,12 @@ import com.pnj.saku_planner.core.database.entity.CategoryEntity
 
 interface CategoryRepository {
 
-    suspend fun insertCategory(categoryEntity: CategoryEntity)
+    suspend fun saveCategory(categoryEntity: CategoryEntity)
 
-    suspend fun updateCategory(categoryEntity: CategoryEntity)
-
-    suspend fun getCategoryById(id: Int): CategoryEntity?
+    suspend fun getCategoryById(id: String): CategoryEntity?
 
     suspend fun getAllCategories(): List<CategoryEntity>
 
-    suspend fun deleteCategory(id: Int)
+    suspend fun deleteCategory(id: String)
     suspend fun getAllCategoriesWithoutBudget(): List<CategoryEntity>
 }

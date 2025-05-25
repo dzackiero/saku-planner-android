@@ -15,7 +15,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.Budg
 @Composable
 fun BudgetFormRoute(
     navController: NavController,
-    budgetId: Int?,
+    budgetId: String?,
 ) {
     val viewModel = hiltViewModel<BudgetFormViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()

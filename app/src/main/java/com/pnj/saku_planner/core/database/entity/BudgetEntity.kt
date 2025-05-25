@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 
 @Entity(
     tableName = "budgets",
@@ -18,9 +19,9 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["categoryId"])]
 )
 data class BudgetEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val categoryId: Int,
+    @PrimaryKey
+    val id: String = randomUuid(),
+    val categoryId: String,
     val amount: Double = 0.0,
     val initialAmount: Double,
     val syncedAt: Long? = null,
@@ -29,8 +30,8 @@ data class BudgetEntity(
 )
 
 data class BudgetDetail(
-    val id: Int = 0,
-    val categoryId: Int,
+    val id: String = randomUuid(),
+    val categoryId: String,
     val categoryIcon: String? = "💵",
     val categoryName: String,
     val amount: Double,
@@ -42,7 +43,7 @@ data class BudgetDetail(
 )
 
 data class BudgetUi(
-    val id: Int,
+    val id: String,
     val category: String,
     val categoryIcon: String = "💵",
     val amount: Double,

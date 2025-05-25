@@ -10,7 +10,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.home.TransactionFormScr
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 
 @Composable
-fun TransactionFormRoute(navController: NavController, transactionId: Int? = null) {
+fun TransactionFormRoute(navController: NavController, transactionId: String? = null) {
     val viewModel = hiltViewModel<TransactionFormViewModel>()
     val state by viewModel.transactionFormState.collectAsStateWithLifecycle()
 

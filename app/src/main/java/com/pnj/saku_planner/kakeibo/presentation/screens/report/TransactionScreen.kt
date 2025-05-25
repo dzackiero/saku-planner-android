@@ -39,6 +39,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -64,7 +65,7 @@ enum class TimeOptions {
 @Composable
 fun TransactionScreen(
     modifier: Modifier = Modifier,
-    onTransactionClicked: (Int) -> Unit = {},
+    onTransactionClicked: (String) -> Unit = {},
     transactions: List<TransactionUi> = emptyList()
 ) {
     var selectedOption by remember { mutableIntStateOf(0) }
@@ -233,7 +234,7 @@ fun TransactionScreenPreview() {
     val now = LocalDateTime.now()
     val samples = listOf(
         TransactionUi(
-            id = 1,
+            id = randomUuid(),
             icon = "💡",
             category = "Coffee",
             account = "Wallet A",
@@ -243,7 +244,7 @@ fun TransactionScreenPreview() {
             date = now.minusDays(1),
         ),
         TransactionUi(
-            id = 2,
+            id = randomUuid(),
             icon = "🛒",
             category = "Groceries",
             account = "Wallet A",
@@ -253,7 +254,7 @@ fun TransactionScreenPreview() {
             date = now.minusWeeks(1).plusDays(2)
         ),
         TransactionUi(
-            id = 3,
+            id = randomUuid(),
             icon = "💰",
             category = "Salary",
             account = "Wallet A",
@@ -262,7 +263,7 @@ fun TransactionScreenPreview() {
             date = now.minusMonths(1),
         ),
         TransactionUi(
-            id = 4,
+            id = randomUuid(),
             icon = "🍽️",
             category = "Dinner",
             account = "Wallet A",

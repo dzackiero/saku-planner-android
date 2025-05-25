@@ -14,7 +14,12 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
+
+fun randomUuid(): String {
+    return UUID.randomUUID().toString()
+}
 
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())

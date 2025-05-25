@@ -8,15 +8,13 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryData
 
 interface TransactionRepository {
 
-    suspend fun insertTransaction(transactionEntity: TransactionEntity)
+    suspend fun saveTransaction(transactionEntity: TransactionEntity)
 
-    suspend fun updateTransaction(transactionEntity: TransactionEntity)
-
-    suspend fun getTransactionById(id: Int): TransactionDetail?
+    suspend fun getTransactionById(id: String): TransactionDetail?
 
     suspend fun getAllTransactions(): List<TransactionDetail>
 
-    suspend fun deleteTransaction(id: Int)
+    suspend fun deleteTransaction(id: String)
 
     suspend fun getTransactionSummaryByCategory(
         type: TransactionType,

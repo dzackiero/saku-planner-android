@@ -14,23 +14,19 @@ class TransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
 
-    override suspend fun insertTransaction(transactionEntity: TransactionEntity) {
-        transactionDao.insertTransactionWithBalanceUpdate(transactionEntity)
+    override suspend fun saveTransaction(transactionEntity: TransactionEntity) {
+        transactionDao.saveTransaction(transactionEntity)
     }
 
-    override suspend fun getTransactionById(id: Int): TransactionDetail? {
+    override suspend fun getTransactionById(id: String): TransactionDetail? {
         return transactionDao.getTransactionDetailById(id)
-    }
-
-    override suspend fun updateTransaction(transactionEntity: TransactionEntity) {
-        transactionDao.updateTransactionAndRecalculateBalance(transactionEntity)
     }
 
     override suspend fun getAllTransactions(): List<TransactionDetail> {
         return transactionDao.getAllTransactions()
     }
 
-    override suspend fun deleteTransaction(id: Int) {
+    override suspend fun deleteTransaction(id: String) {
         transactionDao.deleteTransactionAndRecalculateBalance(id)
     }
 

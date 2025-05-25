@@ -8,16 +8,12 @@ import javax.inject.Inject
 class CategoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
 ) : CategoryRepository {
-    override suspend fun insertCategory(categoryEntity: CategoryEntity) {
-        categoryDao.insertCategory(categoryEntity)
+    override suspend fun saveCategory(categoryEntity: CategoryEntity) {
+        categoryDao.saveCategory(categoryEntity)
     }
 
-    override suspend fun getCategoryById(id: Int): CategoryEntity? {
+    override suspend fun getCategoryById(id: String): CategoryEntity? {
         return categoryDao.getCategoryById(id)
-    }
-
-    override suspend fun updateCategory(categoryEntity: CategoryEntity) {
-        categoryDao.updateCategory(categoryEntity)
     }
 
     override suspend fun getAllCategories(): List<CategoryEntity> {
@@ -28,7 +24,7 @@ class CategoryRepositoryImpl @Inject constructor(
         return categoryDao.getAllCategoriesWithoutBudget()
     }
 
-    override suspend fun deleteCategory(id: Int) {
+    override suspend fun deleteCategory(id: String) {
         val category = categoryDao.getCategoryById(id) ?: return
         categoryDao.deleteCategory(category)
     }
