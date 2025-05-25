@@ -35,7 +35,7 @@ data class AccountWithTarget(
 
 fun AccountEntity.toUi(): AccountUi {
     return AccountUi(
-        id = id.toString(),
+        id = id,
         name = name,
         balance = balance,
         description = description,
@@ -44,7 +44,7 @@ fun AccountEntity.toUi(): AccountUi {
 
 fun AccountWithTarget.toUi(): AccountUi {
     return AccountUi(
-        id = account.id.toString(),
+        id = account.id,
         name = account.name,
         balance = account.balance,
         description = account.description,

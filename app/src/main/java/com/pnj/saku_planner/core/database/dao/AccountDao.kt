@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
 import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.AccountWithTarget

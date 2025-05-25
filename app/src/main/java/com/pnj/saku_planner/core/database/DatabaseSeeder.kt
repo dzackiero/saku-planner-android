@@ -58,7 +58,7 @@ class DatabaseSeeder @Inject constructor(
         incomeCategories.forEach { appDatabase.categoryDao().saveCategory(it) }
 
         // Insert expense categories and store returned IDs
-        val expenseCategoryIds = expenseCategories.associateWith {
+        expenseCategories.associateWith {
             appDatabase.categoryDao().saveCategory(it)
         }
 
