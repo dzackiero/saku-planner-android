@@ -20,6 +20,7 @@ data class AccountEntity(
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
+    val isDeleted: Boolean = false,
 )
 
 data class AccountWithTarget(
@@ -30,7 +31,6 @@ data class AccountWithTarget(
         entityColumn = "id",
     )
     val target: TargetEntity?,
-
 )
 
 fun AccountEntity.toUi(): AccountUi {

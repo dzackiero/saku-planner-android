@@ -25,7 +25,7 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteCategory(id: String) {
-        val category = categoryDao.getCategoryById(id) ?: return
-        categoryDao.deleteCategory(category)
+        categoryDao.getCategoryById(id) ?: return
+        categoryDao.deleteCategory(id)
     }
 }

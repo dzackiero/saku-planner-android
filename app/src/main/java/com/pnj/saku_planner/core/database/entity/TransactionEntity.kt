@@ -41,4 +41,5 @@ data class TransactionEntity(
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
+    val isDeleted: Boolean = false,
 )

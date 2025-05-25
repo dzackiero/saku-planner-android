@@ -44,14 +44,14 @@ class BudgetRepositoryImpl @Inject constructor(
 
 
     override suspend fun deleteBudget(id: String) {
-        val budget = budgetDao.getBudgetById(id) ?: return
-        budgetDao.deleteBudget(budget)
+        budgetDao.getBudgetById(id) ?: return
+        budgetDao.deleteBudget(id)
     }
 
     override suspend fun deleteMonthBudget(id: String, isMonthlyBudget: Boolean) {
         if (isMonthlyBudget) {
-            val monthBudget = monthBudgetDao.getMonthBudgetById(id) ?: return
-            monthBudgetDao.deleteMonthBudget(monthBudget)
+            monthBudgetDao.getMonthBudgetById(id) ?: return
+            monthBudgetDao.deleteMonthBudget(id)
         } else {
             deleteBudget(id)
         }

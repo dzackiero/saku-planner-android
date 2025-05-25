@@ -65,6 +65,10 @@ dependencies {
     implementation(libs.compose.emoji.picker)
     implementation (libs.compose.charts)
 
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.timber)
+
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.okhttp)

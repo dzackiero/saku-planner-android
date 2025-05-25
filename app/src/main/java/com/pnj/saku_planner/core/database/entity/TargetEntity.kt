@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 
 @Entity("targets")
-class TargetEntity(
+data class TargetEntity(
     @PrimaryKey
     val id: String = randomUuid(),
 
@@ -16,6 +16,7 @@ class TargetEntity(
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
+    val isDeleted: Boolean = false,
 )
 
 fun TargetEntity.toUi(): TargetUi {

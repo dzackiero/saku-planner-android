@@ -20,12 +20,13 @@ class AccountRepositoryImpl @Inject constructor(
         account: AccountEntity,
         target: TargetEntity?,
     ): Unit = db.withTransaction {
+        val now = System.currentTimeMillis()
         if (target != null) {
             targetDao.saveTarget(target)
             accountDao.saveAccount(account.copy(targetId = target.id))
         } else {
             if (account.targetId != null) {
-                targetDao.deleteTarget(TargetEntity(id = account.targetId))
+                targetDao.deleteTarget(account.targetId)
             }
             accountDao.saveAccount(account.copy(targetId = null))
         }
@@ -46,9 +47,9 @@ class AccountRepositoryImpl @Inject constructor(
         if (account == null) {
             return@withTransaction
         }
-        accountDao.deleteAccount(account)
+        accountDao.deleteAccount(id)
         if (target != null) {
-            targetDao.deleteTarget(target)
+            targetDao.deleteTarget(target.id)
         }
     }
 }

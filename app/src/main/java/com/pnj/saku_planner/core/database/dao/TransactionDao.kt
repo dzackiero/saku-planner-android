@@ -1,10 +1,10 @@
 package com.pnj.saku_planner.core.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.TransactionDetail
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.core.database.entity.TransactionCategorySummary
@@ -13,10 +13,8 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 @Dao
 interface TransactionDao {
 
-    // ==== Basic Queries ====
-
     @Transaction
-    @Query("SELECT * FROM transactions")
+    @Query("SELECT * FROM transactions WHERE isDeleted = 0")
     suspend fun getAllTransactions(): List<TransactionDetail>
 
     @Transaction
@@ -37,8 +35,9 @@ interface TransactionDao {
         JOIN categories c 
             ON t.categoryId = c.id
         WHERE type = :type
-      AND t.transactionAt BETWEEN :startDate AND :endDate
-      GROUP BY c.name
+          AND t.transactionAt BETWEEN :startDate AND :endDate
+          AND t.isDeleted = 0
+        GROUP BY c.name
     """
     )
     suspend fun getTransactionSummaryByCategory(
@@ -57,6 +56,7 @@ interface TransactionDao {
         FROM transactions t
         WHERE type = 'expense'
             AND t.transactionAt BETWEEN :startDate AND :endDate
+            AND t.isDeleted = 0
         GROUP BY kakeiboCategory
     """
     )
@@ -69,8 +69,8 @@ interface TransactionDao {
     suspend fun upsertTransaction(transaction: TransactionEntity)
 
     // ==== Delete ====
-    @Delete
-    suspend fun deleteTransaction(transaction: TransactionEntity)
+    @Query("UPDATE transactions SET isDeleted = 1, updatedAt = :timestamp WHERE id = :id")
+    suspend fun deleteTransaction(id: String, timestamp: Long = System.currentTimeMillis())
 
 
     // ==== Balance Update Helpers ====
@@ -85,12 +85,7 @@ interface TransactionDao {
     // ==== Save Transaction (Handles Insert/Update + Balance) ====
     @Transaction
     suspend fun saveTransaction(transaction: TransactionEntity) {
-        // Fetch the old transaction *before* upserting, to know its previous state.
-        // Important: This assumes 'transaction.id' is set correctly.
-        // If it's a new transaction with an auto-generated ID, its ID might be 0.
-        // getTransactionById(0) will likely return null, correctly identifying it as new.
         val oldTx = getTransactionById(transaction.id)
-
         // Step 1: Revert old transaction effect IF it exists (i.e., it's an update)
         if (oldTx != null) {
             // Check if account IDs changed, revert from *all* relevant old accounts
@@ -120,8 +115,12 @@ interface TransactionDao {
             }
         }
 
+        val transactionToSave = transaction.copy(
+            updatedAt = System.currentTimeMillis()
+        )
+
         // Step 3: Save (Insert or Update) the transaction using Upsert
-        upsertTransaction(transaction)
+        upsertTransaction(transactionToSave)
     }
 
 
@@ -141,6 +140,20 @@ interface TransactionDao {
         }
 
         // Step 2: Delete transaction
-        deleteTransaction(tx)
+        deleteTransaction(tx.id)
     }
+
+    // --- Sync Methods ---
+    @Query("SELECT * FROM transactions WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
+    suspend fun getTransactionsToUpsert(): List<AccountEntity>
+
+    @Query("SELECT id FROM transactions WHERE isDeleted = 1")
+    suspend fun getDeletedAccountIds(): List<String>
+
+    @Query("UPDATE transactions SET syncedAt = :timestamp WHERE id IN (:ids)")
+    suspend fun markTransactionsAsSynced(ids: List<String>, timestamp: Long)
+
+    @Query("DELETE FROM transactions WHERE id IN (:ids)")
+    suspend fun hardDeleteTransactions(ids: List<String>)
+
 }
