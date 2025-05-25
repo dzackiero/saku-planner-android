@@ -32,7 +32,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.TargetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.core.theme.AppColor.MutedForeground
@@ -177,7 +177,7 @@ fun AccountScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         AccountScreen(
             accounts = listOf(
                 AccountUi(

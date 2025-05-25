@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.TopAppBar
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
@@ -190,7 +190,7 @@ fun CategoryItem(
 @Preview(showBackground = true)
 @Composable
 fun CategoryPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         CategoryScreen()
     }
 }

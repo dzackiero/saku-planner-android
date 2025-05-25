@@ -42,7 +42,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
@@ -51,9 +51,12 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.CategoryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.LoginRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.RegisterRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
+import com.pnj.saku_planner.kakeibo.presentation.screens.auth.OnboardingScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
 import kotlinx.serialization.Serializable
 
@@ -110,13 +113,35 @@ fun KakeiboApp() {
     ) { innerPadding ->
         val contentModifier = if (showScaffold) Modifier.padding(innerPadding) else Modifier
         NavHost(
-            startDestination = Home,
+            startDestination = Start,
             navController = navController,
             enterTransition = { fadeIn(animationSpec = tween(0)) },
             exitTransition = { fadeOut(animationSpec = tween(0)) },
             modifier = contentModifier
         ) {
-            // Home
+            composable<Start> {
+                OnboardingScreen(
+                    onLoginClicked = {
+                        navController.navigate(Login) {
+                            popUpTo(Start) { inclusive = true }
+                        }
+                    },
+                    onRegisterClicked = {
+                        navController.navigate(Register) {
+                            popUpTo(Start) { inclusive = true }
+                        }
+                    },
+                )
+            }
+
+            composable<Login> {
+                LoginRoute(navController)
+            }
+
+            composable<Register> {
+                RegisterRoute(navController)
+            }
+
             composable<Home> { backStackEntry ->
                 HomeTabRoute(navController, backStackEntry)
             }
@@ -317,6 +342,15 @@ data class BottomNavItem(
 )
 
 @Serializable
+data object Start
+
+@Serializable
+data object Login
+
+@Serializable
+data object Register
+
+@Serializable
 data object Home
 
 @Serializable
@@ -369,7 +403,7 @@ data class CategoryForm(
 @Preview
 @Composable
 fun KakeiboAppPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         KakeiboApp()
     }
 }

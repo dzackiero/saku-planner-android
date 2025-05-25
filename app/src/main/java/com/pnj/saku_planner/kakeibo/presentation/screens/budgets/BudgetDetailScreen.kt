@@ -27,7 +27,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.YearSelector
@@ -176,7 +176,7 @@ fun MonthBudgetListItem(
 @Composable
 @Preview(showBackground = true)
 fun BudgetDetailScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         val budget = BudgetUi(
             id = 1,
             amount = 100.0,

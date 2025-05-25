@@ -21,7 +21,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DestructiveButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 
 @Composable
@@ -106,7 +106,7 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         SettingsScreen()
     }
 }

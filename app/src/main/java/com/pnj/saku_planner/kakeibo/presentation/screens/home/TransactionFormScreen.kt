@@ -44,7 +44,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
@@ -366,7 +366,7 @@ fun TransactionFormScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewNewTransactionForm() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         var state by remember { mutableStateOf(TransactionFormState()) }
 
         val callbacks = TransactionFormCallbacks(

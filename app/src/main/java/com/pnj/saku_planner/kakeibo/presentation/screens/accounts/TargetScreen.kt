@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 
 @Composable
@@ -83,7 +83,7 @@ fun TargetScreen() {
 @Preview(showBackground = true)
 @Composable
 fun TargetScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         TargetScreen()
     }
 }

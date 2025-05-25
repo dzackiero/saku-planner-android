@@ -36,7 +36,7 @@ private val LightColorScheme = lightColorScheme(
 
 
 @Composable
-fun SakuPlannerTheme(
+fun KakeiboTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

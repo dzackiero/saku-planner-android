@@ -93,4 +93,22 @@
     <string name="app_settings_subtitle">Manage your app preferences and data</string>
     <string name="reset_app_data">Reset App Data</string>
     <string name="app_settings_description">This will delete all your accounts, categories, transactions, and settings. This action cannot be undone.</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="enter_your_credentials_to_sign_in_to_your_account">Enter your credentials to sign in to your account</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="login">Login</string>
+    <string name="onboarding_description">Kakeibo is a Japanese method for mindful spending. By tracking expenses and reflecting on purchases, you gain insights into your financial habits.</string>
+    <string name="onboarding_subtitle">Track your expenses with intention and mindfulness.</string>
+    <string name="onboarding_title">Welcome to Kakeibo</string>
+    <string name="onboarding_welcome">Hello!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="loading">Loading...</string>
+    <string name="create_an_account">Create an Account</string>
+    <string name="enter_your_information_to_create_a_new_account">Enter your information to create a new account</string>
+    <string name="full_name">Full Name</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

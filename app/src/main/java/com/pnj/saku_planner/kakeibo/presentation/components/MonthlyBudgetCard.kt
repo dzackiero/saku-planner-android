@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
 import java.time.YearMonth
@@ -97,7 +97,7 @@ fun MonthlyBudgetCard(
 @Composable
 @Preview(showBackground = true)
 fun PreviewMonthlyBudgetCard() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         MonthlyBudgetCard(
             totalBudget = 1_000_000.0,
             spentAmount = 100_000.0,

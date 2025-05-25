@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
@@ -153,7 +153,7 @@ fun TransactionListItem(
 @Preview(showBackground = true)
 @Composable
 fun TransactionItemPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         TransactionListItem(
             icon = "💵",
             description = "Description ajkhasjkdhaskjdhsajkdhsajkd",

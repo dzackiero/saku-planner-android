@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.MonthlyBudgetCard
@@ -78,7 +78,7 @@ fun BudgetScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewBudgetScreen() {
-    SakuPlannerTheme {
+    KakeiboTheme {
     }
 }
 

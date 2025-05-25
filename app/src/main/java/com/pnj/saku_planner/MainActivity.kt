@@ -1,7 +1,7 @@
 package com.pnj.saku_planner
 
 import android.app.Application
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import androidx.activity.compose.setContent
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SakuPlannerTheme {
+            KakeiboTheme {
                 KakeiboApp()
             }
         }

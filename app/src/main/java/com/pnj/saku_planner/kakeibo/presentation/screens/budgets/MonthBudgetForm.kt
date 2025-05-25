@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
@@ -99,7 +99,7 @@ fun MonthBudgetFormScreen(
 @Preview(showBackground = true)
 @Composable
 fun MonthBudgetFormScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         MonthBudgetFormScreen()
     }
 }

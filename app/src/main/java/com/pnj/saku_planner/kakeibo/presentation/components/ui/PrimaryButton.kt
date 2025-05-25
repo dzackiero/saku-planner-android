@@ -10,12 +10,13 @@ import androidx.compose.ui.unit.dp
 fun PrimaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-
+    enabled: Boolean = true,
     content: @Composable (() -> Unit),
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
         shape = RoundedCornerShape(2.dp),
     ) {
         content()
