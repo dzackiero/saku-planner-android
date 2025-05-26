@@ -68,6 +68,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
 import com.pnj.saku_planner.kakeibo.presentation.components.DeleteTempFile
 import com.pnj.saku_planner.kakeibo.presentation.components.CreateCustomTempFile
 import timber.log.Timber
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -106,7 +107,13 @@ fun CameraScreen(
     { uri: Uri? ->
         if (uri != null) {
             isLoading = true
-            //SEND FOTO TO API
+            val file = uri.path?.let { File(it) }
+            if (file != null) {
+                scanViewModel.loadItems(file)
+            }
+            if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
+                navigateToSummary()
+            }
         } else {
             isLoading = false
             Timber.tag("Photo Picker").d("No media selected")
@@ -237,6 +244,12 @@ fun CameraScreen(
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                         imageUri = output.savedUri!!
+                                        val file = File(imageUri.path ?: return)
+
+                                        scanViewModel.loadItems(file)
+                                        if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
+                                            navigateToSummary()
+                                        }
                                     }
 
 
@@ -283,7 +296,9 @@ fun CameraScreen(
             }
         }
         if (isLoading) {
-            Box(modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)) {
+            Box(
+//                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+            ) {
                 LoadingScreen()
             }
         }
