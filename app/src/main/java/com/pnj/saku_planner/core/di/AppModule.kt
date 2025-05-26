@@ -9,19 +9,21 @@ import com.pnj.saku_planner.core.database.dao.CategoryDao
 import com.pnj.saku_planner.core.database.dao.MonthBudgetDao
 import com.pnj.saku_planner.core.database.dao.TargetDao
 import com.pnj.saku_planner.core.database.dao.TransactionDao
-import com.pnj.saku_planner.kakeibo.data.local.UserStorage
+import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
 import com.pnj.saku_planner.kakeibo.data.remote.api.AppApi
 import com.pnj.saku_planner.kakeibo.data.remote.api.AuthInterceptor
 import com.pnj.saku_planner.kakeibo.data.repository.AccountRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.AuthRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
+import com.pnj.saku_planner.kakeibo.data.repository.DataRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.ScanRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.ScanRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
@@ -88,8 +90,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserStorage(@ApplicationContext context: Context): UserStorage {
-        return UserStorage(context)
+    fun provideUserStorage(@ApplicationContext context: Context): SettingsDataStore {
+        return SettingsDataStore(context)
     }
 
     @Provides
@@ -157,8 +159,29 @@ object AppModule {
     @Provides
     fun provideAuthRepository(
         appApi: AppApi,
-        userStorage: UserStorage
+        settingsDataStore: SettingsDataStore
     ): AuthRepository {
-        return AuthRepositoryImpl(appApi, userStorage)
+        return AuthRepositoryImpl(appApi, settingsDataStore)
+    }
+
+    @Provides
+    fun provideDataRepository(
+        appApi: AppApi,
+        accountDao: AccountDao,
+        budgetDao: BudgetDao,
+        categoryDao: CategoryDao,
+        monthBudgetDao: MonthBudgetDao,
+        targetDao: TargetDao,
+        transactionDao: TransactionDao
+    ): DataRepository {
+        return DataRepositoryImpl(
+            appApi,
+            accountDao,
+            budgetDao,
+            categoryDao,
+            monthBudgetDao,
+            targetDao,
+            transactionDao
+        )
     }
 }

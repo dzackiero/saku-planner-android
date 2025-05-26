@@ -20,7 +20,7 @@ data class CategoryDto(
     @SerializedName("icon")
     val icon: String?,
 
-    @SerializedName("category_type")
+    @SerializedName("type")
     val categoryType: String,
 
     @SerializedName("created_at")

@@ -14,10 +14,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,8 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.work.WorkInfo
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
@@ -38,7 +43,9 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 
 @Composable
 fun SettingsScreen(
+    workInfo: WorkInfo? = null,
     navigateToCategories: () -> Unit = {},
+    onManualSyncing: () -> Unit = {},
     onResetAppData: () -> Unit = {},
     onLogout: () -> Unit = {},
 ) {
@@ -56,37 +63,56 @@ fun SettingsScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp),
         )
+        Card {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.manage_categories),
+                    style = Typography.titleMedium
+                )
+                Text(
+                    text = stringResource(R.string.manage_your_income_and_expense_categories),
+                    color = AppColor.MutedForeground,
+                    style = Typography.labelMedium
+                )
+                PrimaryButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = navigateToCategories
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = stringResource(R.string.edit_categories),
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(text = stringResource(R.string.manage_categories))
+                }
+            }
+        }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                text = stringResource(R.string.categories),
+                text = stringResource(R.string.data_management),
                 style = Typography.headlineMedium,
                 color = AppColor.MutedForeground,
             )
-            Card {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.manage_categories),
-                        style = Typography.titleMedium
-                    )
-                    Text(
-                        text = stringResource(R.string.manage_your_income_and_expense_categories),
-                        color = AppColor.MutedForeground,
-                        style = Typography.labelMedium
-                    )
-                    PrimaryButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = navigateToCategories
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = stringResource(R.string.edit_categories),
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(text = stringResource(R.string.manage_categories))
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SettingCard(
+                    title = stringResource(R.string.sync_title),
+                    description = stringResource(R.string.sync_description),
+                    icon = Icons.Outlined.Sync
+                )
+                SettingCard(
+                    title = stringResource(R.string.manual_sync),
+                    description = stringResource(R.string.manual_sync_desc),
+                    icon = Icons.Outlined.CloudUpload,
+                    onClick = onManualSyncing
+                )
+                when (workInfo?.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        LinearProgressIndicator(Modifier.fillMaxWidth())
                     }
+                    else -> {}
                 }
             }
         }
@@ -172,7 +198,9 @@ fun SettingCard(
                 Text(
                     text = description,
                     color = AppColor.MutedForeground,
-                    style = Typography.labelMedium
+                    style = Typography.labelMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

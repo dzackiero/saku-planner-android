@@ -127,4 +127,9 @@
     <string name="open_settings">Open Settings</string>
     <string name="lighting_warning">Ensure good lighting for clear receipt or invoice capture</string>
     <string name="permission_request">Permission Request</string>
+    <string name="manual_sync">Manual Sync</string>
+    <string name="data_management">Data Management</string>
+    <string name="sync_description">Manage your data synchronization time and frequency</string>
+    <string name="sync_title">Sync Settings</string>
+    <string name="manual_sync_desc">Manually sync your data to the cloud</string>
 </resources>

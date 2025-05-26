@@ -1,20 +1,28 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pnj.saku_planner.core.sync.AlarmSchedulerUtil
 import com.pnj.saku_planner.core.util.Resource
+import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
+import com.pnj.saku_planner.kakeibo.data.local.UserPreferencesKeys
 import com.pnj.saku_planner.kakeibo.data.remote.dto.AuthResponse
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val authRepository: AuthRepository,
+    private val settingsDataStore: SettingsDataStore,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
@@ -37,6 +45,19 @@ class LoginViewModel @Inject constructor(
                 when (resource) {
                     is Resource.Success -> {
                         _state.update { it.copy(isLoading = false, user = resource.data) }
+                        // Assuming resource.data != null means successful login and token is saved by AuthRepository
+                        if (resource.data != null) {
+                            // Schedule the daily sync
+                            val syncTimePair = settingsDataStore.syncTimeFlow.firstOrNull() ?: Pair(
+                                UserPreferencesKeys.DEFAULT_SYNC_HOUR,
+                                UserPreferencesKeys.DEFAULT_SYNC_MINUTE
+                            )
+                            AlarmSchedulerUtil.scheduleDailySync(
+                                appContext,
+                                syncTimePair.first,
+                                syncTimePair.second
+                            )
+                        }
                     }
 
                     is Resource.Error -> {
@@ -52,7 +73,6 @@ class LoginViewModel @Inject constructor(
                         _state.update { it.copy(isLoading = true, errorMessage = null) }
                     }
                 }
-
             }
         }
     }
