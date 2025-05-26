@@ -4,12 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryScreen
-import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryViewModel
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels.SummaryViewModel
 
 @Composable
-fun SummaryRoute(navController: NavController) {
+fun SummaryRoute() {
     val viewModel = hiltViewModel<SummaryViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 

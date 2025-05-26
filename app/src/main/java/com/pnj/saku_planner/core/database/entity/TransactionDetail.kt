@@ -2,7 +2,6 @@ package com.pnj.saku_planner.core.database.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import androidx.room.RoomWarnings
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
@@ -49,7 +48,5 @@ fun TransactionDetail.toUi() = TransactionUi(
 data class TransactionCategorySummary(
     val name: String,
     val amount: Double,
-
-    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
-    val icon: String? = null,
+    val icon: String? = null
 )

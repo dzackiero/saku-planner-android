@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +64,7 @@ fun DefaultForm(
 @Preview(showBackground = true)
 @Composable
 fun PreviewDefaultForm() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         DefaultForm(
             title = "New Transaction"
         ) {

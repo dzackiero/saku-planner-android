@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.kakeibo.presentation.screens.report
+package com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

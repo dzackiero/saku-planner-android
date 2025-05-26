@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 
 @Composable
 fun SecondaryButton(
@@ -26,7 +26,7 @@ fun SecondaryButton(
             contentColor = AppColor.SecondaryForeground,
         ),
         shape = RoundedCornerShape(2.dp),
-        border = BorderStroke(0.5.dp, AppColor.Border)
+        border = BorderStroke(1.dp, AppColor.Border)
     ) {
         content()
     }
@@ -35,7 +35,7 @@ fun SecondaryButton(
 @Preview
 @Composable
 fun SecondaryButtonPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         SecondaryButton(
             onClick = {},
             content = {

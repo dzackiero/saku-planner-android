@@ -14,8 +14,8 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.Mont
 @Composable
 fun MonthBudgetFormRoute(
     navController: NavController,
-    budgetId: Int,
-    monthBudgetId: Int?,
+    budgetId: String,
+    monthBudgetId: String?,
     year: Int,
     month: Int,
 ) {

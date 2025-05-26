@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.TailwindColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.MonthSelector
@@ -49,6 +49,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PieChartWithText
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels.SummaryCallback
+import com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels.SummaryState
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
@@ -283,7 +285,7 @@ data class FilterData(
 @Preview(showBackground = true)
 @Composable
 fun ReflectionScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         SummaryScreen(
             state = SummaryState(
                 summaryData = listOf(

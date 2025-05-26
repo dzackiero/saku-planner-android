@@ -8,27 +8,23 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 interface BudgetRepository {
-    suspend fun insertBudget(budget: BudgetEntity)
+    suspend fun saveBudget(budget: BudgetEntity)
 
     suspend fun getBudgetsByYearMonth(yearMonth: YearMonth): List<BudgetDetail>
 
     suspend fun getBudgetById(
-        id: Int,
+        id: String,
         month: Int = LocalDate.now().monthValue,
         year: Int = LocalDate.now().year
     ): BudgetDetail?
 
-    suspend fun updateBudget(budget: BudgetEntity)
+    suspend fun deleteBudget(id: String)
 
-    suspend fun deleteBudget(id: Int)
+    suspend fun saveMonthBudget(monthBudgetEntity: MonthBudgetEntity)
 
-    suspend fun insertMonthBudget(monthBudgetEntity: MonthBudgetEntity)
+    suspend fun getMonthlyBudgetsByYear(id: String, year: Int): List<MonthBudgetDetail>
 
-    suspend fun updateMonthBudget(monthBudgetEntity: MonthBudgetEntity)
+    suspend fun deleteMonthBudget(id: String, isMonthlyBudget: Boolean)
 
-    suspend fun getMonthlyBudgetsByYear(id: Int, year: Int): List<MonthBudgetDetail>
-
-    suspend fun deleteMonthBudget(id: Int, isMonthlyBudget: Boolean)
-
-    suspend fun getSingleMonthBudget(id: Int, month: Int, year: Int): MonthBudgetDetail
+    suspend fun getSingleMonthBudget(id: String, month: Int, year: Int): MonthBudgetDetail
 }

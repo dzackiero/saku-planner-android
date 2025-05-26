@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +94,7 @@ fun <T> BottomSheetField(
 @Preview(showBackground = true)
 @Composable
 fun BottomSheetFieldPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         var selected by remember { mutableStateOf<String?>(null) }
 
         BottomSheetField(

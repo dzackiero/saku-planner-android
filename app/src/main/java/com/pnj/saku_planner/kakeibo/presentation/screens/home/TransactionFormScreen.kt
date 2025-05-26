@@ -44,11 +44,12 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -366,7 +367,7 @@ fun TransactionFormScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewNewTransactionForm() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         var state by remember { mutableStateOf(TransactionFormState()) }
 
         val callbacks = TransactionFormCallbacks(
@@ -384,9 +385,9 @@ fun PreviewNewTransactionForm() {
         )
 
         val categories = listOf(
-            CategoryUi(1, "Food and Drink", TransactionType.INCOME),
-            CategoryUi(2, "Transport", TransactionType.EXPENSE),
-            CategoryUi(3, "Entertainment", TransactionType.INCOME),
+            CategoryUi(randomUuid(), "Food and Drink", TransactionType.INCOME),
+            CategoryUi(randomUuid(), "Transport", TransactionType.EXPENSE),
+            CategoryUi(randomUuid(), "Entertainment", TransactionType.INCOME),
         )
 
         val accounts = listOf<AccountUi>(

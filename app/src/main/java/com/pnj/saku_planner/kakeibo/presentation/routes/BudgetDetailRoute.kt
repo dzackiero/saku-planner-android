@@ -19,7 +19,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.Budg
 fun BudgetDetailRoute(
     navController: NavController,
     navBackStackEntry: NavBackStackEntry,
-    budgetId: Int,
+    budgetId: String,
 ) {
     val lifecycle = navBackStackEntry.lifecycle
     val currentEntry by rememberUpdatedState(navBackStackEntry)

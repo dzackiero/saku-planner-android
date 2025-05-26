@@ -6,6 +6,7 @@ import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
 import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,7 @@ class MonthBudgetFormViewModel @Inject constructor(
         _state.value = _state.value.copy(amount = it)
     })
 
-    fun loadMonthBudget(id: Int?, budgetId: Int, month: Int, year: Int) {
+    fun loadMonthBudget(id: String?, budgetId: String, month: Int, year: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val monthBudget = budgetRepository.getSingleMonthBudget(budgetId, month, year)
             val category =
@@ -58,25 +59,21 @@ class MonthBudgetFormViewModel @Inject constructor(
             val stateValue = _state.value
 
             val monthBudgetEntity = MonthBudgetEntity(
-                id = stateValue.id ?: 0,
-                budgetId = stateValue.budgetId,
+                id = stateValue.id ?: randomUuid(),
+                budgetId = stateValue.budgetId ?: randomUuid(),
                 amount = stateValue.amount ?: 0.0,
                 month = stateValue.month,
                 year = stateValue.year,
             )
 
-            if (stateValue.id == null) {
-                budgetRepository.insertMonthBudget(monthBudgetEntity)
-            } else {
-                budgetRepository.updateMonthBudget(monthBudgetEntity)
-            }
+            budgetRepository.saveMonthBudget(monthBudgetEntity)
         }
     }
 }
 
 data class MonthBudgetFormState(
-    val id: Int? = null,
-    val budgetId: Int = 0,
+    val id: String? = null,
+    val budgetId: String? = null,
     val amount: Double? = null,
     val year: Int = YearMonth.now().year,
     val month: Int = YearMonth.now().monthValue,

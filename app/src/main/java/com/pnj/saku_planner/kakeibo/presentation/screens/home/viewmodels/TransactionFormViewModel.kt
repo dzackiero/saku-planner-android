@@ -10,6 +10,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,7 +79,7 @@ class TransactionFormViewModel @Inject constructor(
             submitTransaction()
         })
 
-    fun loadTransaction(transactionId: Int) {
+    fun loadTransaction(transactionId: String) {
         viewModelScope.launch {
             loadProperties()
 
@@ -132,7 +133,7 @@ class TransactionFormViewModel @Inject constructor(
             }
 
             val transactionEntity = TransactionEntity(
-                id = state.transactionId ?: 0,
+                id = state.transactionId ?: randomUuid(),
                 accountId = state.selectedAccount!!.id,
                 toAccountId = state.selectedToAccount?.id,
                 categoryId = categoryId,
@@ -142,13 +143,7 @@ class TransactionFormViewModel @Inject constructor(
                 kakeiboCategory = kakeibo,
                 transactionAt = state.transactionAt,
             )
-
-
-            if (state.transactionId != null) {
-                transactionRepository.updateTransaction(transactionEntity)
-            } else {
-                transactionRepository.insertTransaction(transactionEntity)
-            }
+            transactionRepository.saveTransaction(transactionEntity)
 
         }
         return true
@@ -193,7 +188,7 @@ class TransactionFormViewModel @Inject constructor(
 }
 
 data class TransactionFormState(
-    val transactionId: Int? = null,
+    val transactionId: String? = null,
 
     val transactionType: TransactionType = TransactionType.EXPENSE,
     val transactionTypeError: String? = null,

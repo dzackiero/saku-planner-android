@@ -22,7 +22,7 @@ class BudgetDetailViewModel @Inject constructor(
     private val _state: MutableStateFlow<BudgetDetailState> = MutableStateFlow(BudgetDetailState())
     val state: StateFlow<BudgetDetailState> = _state
 
-    fun loadYearBudget(id: Int) {
+    fun loadYearBudget(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.value = BudgetDetailState(
                 budget = budgetRepository.getBudgetById(id)?.toUi(),

@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.makeappssimple.abhimanyu.composeemojipicker.ComposeEmojiPickerBottomSheetUI
 import com.makeappssimple.abhimanyu.composeemojipicker.ComposeEmojiPickerEmojiUI
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +84,7 @@ fun EmojiPicker(
 @Preview
 @Composable
 fun ComposeEmojiPickerDemoPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         EmojiPicker(emoji = "😔") {}
     }
 }

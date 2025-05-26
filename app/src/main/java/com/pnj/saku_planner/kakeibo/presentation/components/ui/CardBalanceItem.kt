@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 
 @Composable
 fun CardBalanceItem(
@@ -58,7 +58,7 @@ fun CardBalanceItem(
 @Preview(showBackground = true)
 @Composable
 fun CardBalanceItemPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         CardBalanceItem(
             cardName = "Main Wallet",
             balance = "Rp 1.200.000"

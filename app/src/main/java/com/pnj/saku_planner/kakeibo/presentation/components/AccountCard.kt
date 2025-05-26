@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import java.util.Locale
@@ -64,7 +64,7 @@ fun AccountCard(
 @Composable
 @Preview(showBackground = true)
 fun AccountCardPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         AccountCard(
             accountName = "Bank Jago",
             accountBalance = 1_500_000,

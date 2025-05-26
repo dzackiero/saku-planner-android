@@ -32,13 +32,14 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.TargetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.core.theme.SakuPlannerTheme
+import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.core.theme.AppColor.MutedForeground
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountCard
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountWithTargetCard
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 
 @Composable
@@ -177,21 +178,22 @@ fun AccountScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    SakuPlannerTheme {
+    KakeiboTheme {
         AccountScreen(
             accounts = listOf(
                 AccountUi(
-                    id = 1,
+                    id = randomUuid(),
                     name = "Cash",
                     balance = 1_000_000.0,
                     description = "Cash in hand",
                 ),
                 AccountUi(
-                    id = 2,
+                    id = randomUuid(),
                     name = "Bank",
                     balance = 1_000_000.0,
                     description = "Bank account",
                     target = TargetUi(
+                        id = randomUuid(),
                         targetAmount = 5_000_000.0,
                         duration = 6,
                     )
