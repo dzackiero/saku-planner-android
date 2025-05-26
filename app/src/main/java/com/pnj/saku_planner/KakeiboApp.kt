@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,6 +47,7 @@ import androidx.navigation.toRoute
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.AccountTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.BudgetDetailRoute
@@ -60,11 +63,58 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.OnboardingScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.AuthViewModel
+import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.UserState
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
 import kotlinx.serialization.Serializable
+import timber.log.Timber
 
 @Composable
-fun KakeiboApp() {
+fun KakeiboApp(authViewModel: AuthViewModel = hiltViewModel()) {
+    val userLoginState by authViewModel.userState.collectAsStateWithLifecycle()
+    Timber.tag("KakeiboApp").d("User login state: $userLoginState")
+    when (userLoginState) {
+        UserState.UNKNOWN -> {
+            LoadingScreen()
+        }
+
+        UserState.LOGGED_OUT -> {
+            AuthNavigation()
+        }
+
+        UserState.LOGGED_IN -> {
+            MainAppNavigation()
+        }
+    }
+}
+
+@Composable
+fun AuthNavigation() {
+    val navController = rememberNavController()
+    Scaffold { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Onboarding,
+            modifier = Modifier.padding(innerPadding),
+        ) {
+            composable<Onboarding> {
+                OnboardingScreen(
+                    onLoginClicked = { navController.navigate(Login) },
+                    onRegisterClicked = { navController.navigate(Register) },
+                )
+            }
+            composable<Login> {
+                LoginRoute(navController)
+            }
+            composable<Register> {
+                RegisterRoute(navController)
+            }
+        }
+    }
+}
+
+@Composable
+fun MainAppNavigation() {
     val navController = rememberNavController()
 
     val fabItems = listOf(
@@ -124,35 +174,12 @@ fun KakeiboApp() {
     ) { innerPadding ->
         val contentModifier = if (showScaffold) Modifier.padding(innerPadding) else Modifier
         NavHost(
-            startDestination = Start,
+            startDestination = Home,
             navController = navController,
             enterTransition = { fadeIn(animationSpec = tween(0)) },
             exitTransition = { fadeOut(animationSpec = tween(0)) },
             modifier = contentModifier
         ) {
-            composable<Start> {
-                OnboardingScreen(
-                    onLoginClicked = {
-                        navController.navigate(Login) {
-                            popUpTo(Start) { inclusive = true }
-                        }
-                    },
-                    onRegisterClicked = {
-                        navController.navigate(Register) {
-                            popUpTo(Start) { inclusive = true }
-                        }
-                    },
-                )
-            }
-
-            composable<Login> {
-                LoginRoute(navController)
-            }
-
-            composable<Register> {
-                RegisterRoute(navController)
-            }
-
             composable<Home> { backStackEntry ->
                 HomeTabRoute(navController, backStackEntry)
             }
@@ -383,7 +410,7 @@ data class BottomNavItem(
 )
 
 @Serializable
-data object Start
+data object Onboarding
 
 @Serializable
 data object Login

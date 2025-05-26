@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
-import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.TargetEntity
 
 @Dao
@@ -33,10 +32,10 @@ interface TargetDao {
 
     // --- Sync Methods ---
     @Query("SELECT * FROM targets WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
-    suspend fun getTargetsToUpsert(): List<AccountEntity>
+    suspend fun getTargetsToUpsert(): List<TargetEntity>
 
     @Query("SELECT id FROM targets WHERE isDeleted = 1")
-    suspend fun getDeletedAccountIds(): List<String>
+    suspend fun getDeletedTargetIds(): List<String>
 
     @Query("UPDATE targets SET syncedAt = :timestamp WHERE id IN (:ids)")
     suspend fun markTargetsAsSynced(ids: List<String>, timestamp: Long)

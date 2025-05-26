@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
 class SakuPlannerApplication : Application()
@@ -16,6 +17,10 @@ class SakuPlannerApplication : Application()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Timber.plant(Timber.DebugTree())
+        Timber.d("Timber initialized!")
+
         enableEdgeToEdge()
         setContent {
             KakeiboTheme {

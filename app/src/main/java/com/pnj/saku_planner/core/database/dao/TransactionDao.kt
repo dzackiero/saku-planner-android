@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.TransactionDetail
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.core.database.entity.TransactionCategorySummary
@@ -145,10 +144,10 @@ interface TransactionDao {
 
     // --- Sync Methods ---
     @Query("SELECT * FROM transactions WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
-    suspend fun getTransactionsToUpsert(): List<AccountEntity>
+    suspend fun getTransactionsToUpsert(): List<TransactionEntity>
 
     @Query("SELECT id FROM transactions WHERE isDeleted = 1")
-    suspend fun getDeletedAccountIds(): List<String>
+    suspend fun getDeletedTransactionsIds(): List<String>
 
     @Query("UPDATE transactions SET syncedAt = :timestamp WHERE id IN (:ids)")
     suspend fun markTransactionsAsSynced(ids: List<String>, timestamp: Long)

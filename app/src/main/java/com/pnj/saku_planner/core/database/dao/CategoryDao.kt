@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.CategoryEntity
 
 @Dao
@@ -41,15 +40,15 @@ interface CategoryDao {
 
     // --- Sync Methods ---
     @Query("SELECT * FROM categories WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
-    suspend fun getBudgetsToUpsert(): List<AccountEntity>
+    suspend fun getCategoriesToUpsert(): List<CategoryEntity>
 
     @Query("SELECT id FROM categories WHERE isDeleted = 1")
-    suspend fun getDeletedAccountIds(): List<String>
+    suspend fun getDeletedCategoryIds(): List<String>
 
     @Query("UPDATE categories SET syncedAt = :timestamp WHERE id IN (:ids)")
-    suspend fun markBudgetsAsSynced(ids: List<String>, timestamp: Long)
+    suspend fun markCategoriesAsSynced(ids: List<String>, timestamp: Long)
 
     @Query("DELETE FROM categories WHERE id IN (:ids)")
-    suspend fun hardDeleteBudgets(ids: List<String>)
+    suspend fun hardDeleteCategories(ids: List<String>)
 
 }

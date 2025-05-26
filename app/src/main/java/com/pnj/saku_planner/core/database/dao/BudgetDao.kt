@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.BudgetDetail
 
@@ -88,10 +87,10 @@ interface BudgetDao {
 
     // --- Sync Methods ---
     @Query("SELECT * FROM budgets WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
-    suspend fun getBudgetsToUpsert(): List<AccountEntity>
+    suspend fun getBudgetsToUpsert(): List<BudgetEntity>
 
     @Query("SELECT id FROM budgets WHERE isDeleted = 1")
-    suspend fun getDeletedAccountIds(): List<String>
+    suspend fun getDeletedBudgetIds(): List<String>
 
     @Query("UPDATE budgets SET syncedAt = :timestamp WHERE id IN (:ids)")
     suspend fun markBudgetsAsSynced(ids: List<String>, timestamp: Long)

@@ -4,9 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.pnj.saku_planner.core.database.entity.AccountEntity
-import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
+import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 
 @Dao
 interface MonthBudgetDao {
@@ -121,10 +120,10 @@ interface MonthBudgetDao {
 
     // --- Sync Methods ---
     @Query("SELECT * FROM month_budgets WHERE (syncedAt IS NULL OR updatedAt > syncedAt) AND isDeleted = 0")
-    suspend fun getMonthBudgetsToUpsert(): List<AccountEntity>
+    suspend fun getMonthBudgetsToUpsert(): List<MonthBudgetEntity>
 
     @Query("SELECT id FROM month_budgets WHERE isDeleted = 1")
-    suspend fun getDeletedAccountIds(): List<String>
+    suspend fun getDeletedMonthBudgetIds(): List<String>
 
     @Query("UPDATE month_budgets SET syncedAt = :timestamp WHERE id IN (:ids)")
     suspend fun markMonthBudgetsAsSynced(ids: List<String>, timestamp: Long)

@@ -33,7 +33,6 @@ class UserStorage @Inject constructor(@ApplicationContext context: Context) {
         }
     }
 
-
     suspend fun saveUser(token: String, name: String, email: String) {
         dataStore.edit {
             it[UserPreferencesKeys.TOKEN] = token
@@ -43,7 +42,7 @@ class UserStorage @Inject constructor(@ApplicationContext context: Context) {
         cachedToken = token
     }
 
-    private val token: Flow<String?> = dataStore.data.map { it[UserPreferencesKeys.TOKEN] }
+    val token: Flow<String?> = dataStore.data.map { it[UserPreferencesKeys.TOKEN] }
     val name: Flow<String?> = dataStore.data.map { it[UserPreferencesKeys.NAME] }
     val email: Flow<String?> = dataStore.data.map { it[UserPreferencesKeys.EMAIL] }
 
