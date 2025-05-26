@@ -104,7 +104,7 @@ class DataRepositoryImpl @Inject constructor(
                         && transactionsToUpsertDto.isEmpty() && transactionDeleteIds.isEmpty()
             if (nothingToSync) {
                 Timber.tag("DataRepository").d("Nothing to sync")
-                Result.success("Nothing to sync")
+                emit(Resource.Success("Nothing to sync"))
                 return@flow
             }
 
