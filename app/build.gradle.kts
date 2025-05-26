@@ -27,10 +27,8 @@ android {
             load(localProperties.inputStream())
         }
 
-        val modelUrl = properties.getProperty("MODEL_URL")
-//        val apiUrl = properties.getProperty("API_URL")
-        buildConfigField("String", "MODEL_URL", "\"$modelUrl\"")
-//        buildConfigField("String", "API_URL", "\"$apiUrl\"")
+        val baseUrl = properties.getProperty("BASE_URL")
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
