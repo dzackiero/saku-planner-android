@@ -184,17 +184,17 @@ fun HomeScreenPreview() {
                 AccountUi(
                     id = randomUuid(),
                     name = "Cash",
-                    balance = 1_000_000.0,
+                    balance = 1_000_000,
                     description = "Cash in hand",
                 ),
                 AccountUi(
                     id = randomUuid(),
                     name = "Bank",
-                    balance = 1_000_000.0,
+                    balance = 1_000_000,
                     description = "Bank account",
                     target = TargetUi(
                         id = randomUuid(),
-                        targetAmount = 5_000_000.0,
+                        targetAmount = 5_000_000,
                         duration = 6,
                     )
                 )

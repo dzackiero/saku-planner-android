@@ -29,7 +29,7 @@ fun BudgetCard(
     val formattedSpentAmount = NumberFormat
         .getCurrencyInstance(Locale("id", "ID"))
         .format(budget.currentAmount)
-    val progress = (budget.currentAmount / budget.amount).coerceIn(0.0, 1.0)
+    val progress = ((budget.currentAmount).toDouble() / budget.amount).coerceIn(0.0, 1.0)
     val percentage = "${(progress * 100).toInt()}%"
 
     Card(

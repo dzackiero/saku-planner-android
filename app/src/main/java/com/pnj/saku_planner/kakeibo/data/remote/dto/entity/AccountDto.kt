@@ -18,7 +18,7 @@ data class AccountDto(
     val name: String,
 
     @SerializedName("balance")
-    val balance: Double,
+    val balance: Long,
 
     @SerializedName("description")
     val description: String?,

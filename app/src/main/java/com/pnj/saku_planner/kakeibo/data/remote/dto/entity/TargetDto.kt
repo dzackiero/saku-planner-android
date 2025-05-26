@@ -21,7 +21,7 @@ data class TargetDto(
     val startDate: String?, // ISO 8601 String, Nullable
 
     @SerializedName("target_amount")
-    val targetAmount: Double,
+    val targetAmount: Long,
 
     @SerializedName("created_at")
     val createdAt: String, // ISO 8601 String

@@ -14,5 +14,5 @@ data class TransactionUi(
     val category: String? = null,
     val type: TransactionType,
     val kakeibo: KakeiboCategoryType? = null,
-    val amount: Double
+    val amount: Long
 )

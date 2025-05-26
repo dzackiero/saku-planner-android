@@ -103,8 +103,8 @@ class BudgetFormViewModel @Inject constructor(
 data class BudgetFormState(
     val id: String? = null,
 
-    val initialAmount: Double? = null,
-    val amount: Double? = null,
+    val initialAmount: Long? = null,
+    val amount: Long? = null,
     val amountError: String? = null,
 
     val selectedCategory: CategoryUi? = null,
@@ -123,5 +123,5 @@ fun BudgetFormState.hasError(): Boolean {
 
 data class BudgetFormCallbacks(
     val onCategorySelected: (CategoryUi) -> Unit = {},
-    val onAmountChange: (Double?) -> Unit = {},
+    val onAmountChange: (Long?) -> Unit = {},
 )

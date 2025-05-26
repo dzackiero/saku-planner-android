@@ -33,7 +33,7 @@ data class TransactionEntity(
     val type: String,
     val kakeiboCategory: String? = null,
 
-    val amount: Double,
+    val amount: Long,
     val description: String,
 
     val transactionAt: Long,

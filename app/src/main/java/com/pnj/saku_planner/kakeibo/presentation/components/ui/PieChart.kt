@@ -29,14 +29,14 @@ import kotlin.math.*
 @Composable
 fun PieChartWithText(
     chartDataList: List<ChartData> = listOf(
-        ChartData("Utilities", TailwindColor.Yellow400, 200000.0),
-        ChartData("Utilities", TailwindColor.Red400, 200000.0),
-        ChartData("Utilities", TailwindColor.Blue400, 200000.0),
-        ChartData("Utilities", TailwindColor.Green400, 200000.0)
+        ChartData("Utilities", TailwindColor.Yellow400, 200000),
+        ChartData("Utilities", TailwindColor.Red400, 200000),
+        ChartData("Utilities", TailwindColor.Blue400, 200000),
+        ChartData("Utilities", TailwindColor.Green400, 200000)
     ),
     startupAnimation: Boolean = true,
     totalLabel: String? = null,
-    totalFormatter: (Double) -> String = { it.toInt().toString() },
+    totalFormatter: (Long) -> String = { it.toString() },
     onSegmentClick: (ChartData) -> Unit = {}
 ) {
     // remember selected segment index
@@ -246,7 +246,7 @@ private fun getTextOffsets(startAngle: Float, textSize: IntSize): Offset {
 }
 
 @Immutable
-data class ChartData(val label: String?, val color: Color, val value: Double)
+data class ChartData(val label: String?, val color: Color, val value: Long)
 
 @Preview(showBackground = true)
 @Composable

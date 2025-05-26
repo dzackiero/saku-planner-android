@@ -138,7 +138,7 @@ class TransactionFormViewModel @Inject constructor(
                 toAccountId = state.selectedToAccount?.id,
                 categoryId = categoryId,
                 type = state.transactionType.toString().lowercase(),
-                amount = state.amount ?: 0.0,
+                amount = state.amount ?: 0,
                 description = state.description,
                 kakeiboCategory = kakeibo,
                 transactionAt = state.transactionAt,
@@ -208,7 +208,7 @@ data class TransactionFormState(
     val transactionAt: Long = System.currentTimeMillis(),
     val transactionAtError: String? = null,
 
-    val amount: Double? = null,
+    val amount: Long? = null,
     val amountError: String? = null,
 
     val description: String = "",
@@ -223,7 +223,7 @@ data class TransactionFormCallbacks(
     val onAccountChange: (AccountUi) -> Unit,
     val onToAccountChange: (AccountUi) -> Unit,
     val onKakeiboChange: (KakeiboCategoryType) -> Unit,
-    val onAmountChange: (Double?) -> Unit,
+    val onAmountChange: (Long?) -> Unit,
     val onDescriptionChange: (String) -> Unit,
     val onSubmit: () -> Boolean
 )

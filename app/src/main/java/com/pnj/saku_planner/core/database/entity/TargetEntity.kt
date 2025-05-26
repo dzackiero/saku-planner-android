@@ -11,7 +11,7 @@ data class TargetEntity(
 
     val duration: Int = 1,
     val startDate: Long? = null,
-    val targetAmount: Double = 0.0,
+    val targetAmount: Long = 0,
 
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
@@ -33,6 +33,6 @@ data class TargetUi(
     val id: String,
     val duration: Int = 1,
     val startDate: Long? = null,
-    val targetAmount: Double = 0.0,
+    val targetAmount: Long = 0,
     val createdAt: Long = System.currentTimeMillis(),
 )

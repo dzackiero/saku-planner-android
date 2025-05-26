@@ -63,10 +63,10 @@ class DatabaseSeeder @Inject constructor(
         }
 
         appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Cash", balance = 50_000.0)
+            AccountEntity(name = "Cash", balance = 50_000)
         )
         appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Account B", balance = 12_000_000.0)
+            AccountEntity(name = "Account B", balance = 12_000_000)
         )
 
 //        val transactions = listOf(
@@ -74,21 +74,21 @@ class DatabaseSeeder @Inject constructor(
 //            TransactionEntity(
 //                accountId = accountBank,
 //                type = "income",
-//                amount = 1_000_000.0,
+//                amount = 1_000_000,
 //                description = "Salary",
 //                transactionAt = monthsAgo(0)
 //            ),
 //            TransactionEntity(
 //                accountId = accountCash.toInt(),
 //                type = "income",
-//                amount = 250_000.0,
+//                amount = 250_000,
 //                description = "Gift from Aunt",
 //                transactionAt = monthsAgo(0)
 //            ),
 //            TransactionEntity(
 //                accountId = accountBank.toInt(),
 //                type = "income",
-//                amount = 150_000.0,
+//                amount = 150_000,
 //                description = "Allowance",
 //                transactionAt = monthsAgo(0),
 //            ),
@@ -97,7 +97,7 @@ class DatabaseSeeder @Inject constructor(
 //            TransactionEntity(
 //                accountId = accountCash.toInt(),
 //                type = "expense",
-//                amount = 120_000.0,
+//                amount = 120_000,
 //                description = "Groceries",
 //                categoryId = expenseCategoryIds.entries.first { it.key.name == "Foods" }.value.toInt(),
 //                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
@@ -106,7 +106,7 @@ class DatabaseSeeder @Inject constructor(
 //            TransactionEntity(
 //                accountId = accountCash.toInt(),
 //                type = "expense",
-//                amount = 300_000.0,
+//                amount = 300_000,
 //                description = "School Supplies",
 //                categoryId = expenseCategoryIds.entries.first { it.key.name == "School" }.value.toInt(),
 //                kakeiboCategory = KakeiboCategoryType.CULTURE.name.lowercase(),
@@ -115,7 +115,7 @@ class DatabaseSeeder @Inject constructor(
 //            TransactionEntity(
 //                accountId = accountCash.toInt(),
 //                type = "expense",
-//                amount = 90_000.0,
+//                amount = 90_000,
 //                description = "Internet Bill",
 //                categoryId = expenseCategoryIds.entries.first { it.key.name == "Internet" }.value.toInt(),
 //                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
@@ -124,7 +124,7 @@ class DatabaseSeeder @Inject constructor(
 //            TransactionEntity(
 //                accountId = accountCash.toInt(),
 //                type = "expense",
-//                amount = 55_000.0,
+//                amount = 55_000,
 //                description = "Bus fare",
 //                categoryId = expenseCategoryIds.entries.first { it.key.name == "Transport" }.value.toInt(),
 //                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
@@ -136,7 +136,7 @@ class DatabaseSeeder @Inject constructor(
 //                accountId = accountBank.toInt(),
 //                toAccountId = accountCash.toInt(),
 //                type = "transfer",
-//                amount = 500_000.0,
+//                amount = 500_000,
 //                description = "Monthly cash withdrawal",
 //                transactionAt = monthsAgo(0)
 //            ),
@@ -144,7 +144,7 @@ class DatabaseSeeder @Inject constructor(
 //                accountId = accountCash.toInt(),
 //                toAccountId = accountBank.toInt(),
 //                type = "transfer",
-//                amount = 100_000.0,
+//                amount = 100_000,
 //                description = "Saving to bank",
 //                transactionAt = monthsAgo(0)
 //            ),
@@ -152,7 +152,7 @@ class DatabaseSeeder @Inject constructor(
 //                accountId = accountBank.toInt(),
 //                toAccountId = accountCash.toInt(),
 //                type = "transfer",
-//                amount = 300_000.0,
+//                amount = 300_000,
 //                description = "Backup fund",
 //                transactionAt = monthsAgo(0)
 //            ),

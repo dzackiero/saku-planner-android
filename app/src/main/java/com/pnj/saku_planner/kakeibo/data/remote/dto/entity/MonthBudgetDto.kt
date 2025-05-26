@@ -24,7 +24,7 @@ data class MonthBudgetDto(
     val year: Int,
 
     @SerializedName("amount")
-    val amount: Double,
+    val amount: Long,
 
     @SerializedName("created_at")
     val createdAt: String, // ISO 8601 String

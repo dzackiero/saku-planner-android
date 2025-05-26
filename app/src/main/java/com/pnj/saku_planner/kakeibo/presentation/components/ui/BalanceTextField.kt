@@ -16,10 +16,10 @@ import java.util.Locale
 
 @Composable
 fun BalanceTextField(
-    value: Double?,
+    value: Long?,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
-    onValueChange: (Double?) -> Unit,
+    onValueChange: (Long?) -> Unit,
     label: String = "Balance",
     placeholder: String = "0.0",
     locale: Locale = Locale("id", "ID")
@@ -41,7 +41,7 @@ fun BalanceTextField(
         onValueChange = { newText ->
             val cleaned = newText.replace(Regex("[^\\d.,]"), "").replace(".", "").replace(",", ".")
             text = newText
-            onValueChange(cleaned.toDoubleOrNull())
+            onValueChange(cleaned.toLongOrNull())
         },
         label = { Text(label) },
         placeholder = { Text(placeholder) },

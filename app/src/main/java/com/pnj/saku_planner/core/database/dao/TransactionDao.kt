@@ -75,10 +75,10 @@ interface TransactionDao {
     // ==== Balance Update Helpers ====
 
     @Query("UPDATE accounts SET balance = balance + :amount WHERE id = :accountId")
-    suspend fun increaseBalance(accountId: String, amount: Double)
+    suspend fun increaseBalance(accountId: String, amount: Long)
 
     @Query("UPDATE accounts SET balance = balance - :amount WHERE id = :accountId")
-    suspend fun decreaseBalance(accountId: String, amount: Double)
+    suspend fun decreaseBalance(accountId: String, amount: Long)
 
 
     // ==== Save Transaction (Handles Insert/Update + Balance) ====

@@ -26,8 +26,8 @@ import java.util.Locale
 
 @Composable
 fun MonthlyBudgetCard(
-    totalBudget: Double,
-    spentAmount: Double,
+    totalBudget: Long,
+    spentAmount: Long,
     yearMonth: YearMonth = YearMonth.now(),
 ) {
     val formattedTotalBudget = NumberFormat
@@ -99,8 +99,8 @@ fun MonthlyBudgetCard(
 fun PreviewMonthlyBudgetCard() {
     KakeiboTheme {
         MonthlyBudgetCard(
-            totalBudget = 1_000_000.0,
-            spentAmount = 100_000.0,
+            totalBudget = 1_000_000,
+            spentAmount = 100_000,
         )
     }
 }

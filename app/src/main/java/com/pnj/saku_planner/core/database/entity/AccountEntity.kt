@@ -12,7 +12,7 @@ data class AccountEntity(
     @PrimaryKey
     val id: String = randomUuid(),
     val name: String,
-    val balance: Double = 0.0,
+    val balance: Long = 0,
     val description: String? = null,
 
     val targetId: String? = null,
