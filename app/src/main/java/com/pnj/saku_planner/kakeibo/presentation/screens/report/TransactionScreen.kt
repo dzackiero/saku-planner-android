@@ -147,6 +147,18 @@ fun TransactionScreen(
             }
         }
 
+        if (transactions.isEmpty()) {
+            Text(
+                text = stringResource(R.string.you_don_t_have_any_transactions_yet),
+                style = Typography.bodyMedium,
+                color = AppColor.MutedForeground,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
         // —— GROUPED LIST ——
         grouped.forEach { (key, txs) ->
             // Render a human‑readable header
