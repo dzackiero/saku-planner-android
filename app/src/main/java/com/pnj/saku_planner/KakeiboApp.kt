@@ -70,7 +70,14 @@ fun KakeiboApp() {
     )
     val items = fabItems + listOf(
         BottomNavItem(Report, Icons.Outlined.Analytics),
+        BottomNavItem(Settings, Icons.Outlined.Settings),
+    )
+
+    val bottomNavItems = listOf(
+        BottomNavItem(Home, Icons.Outlined.Home),
+        BottomNavItem(Account, Icons.Outlined.Wallet),
         BottomNavItem(Scan, Icons.Outlined.CameraAlt),
+        BottomNavItem(Report, Icons.Outlined.Analytics),
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
 
@@ -98,7 +105,7 @@ fun KakeiboApp() {
                 BottomNavigationBar(
                     navController = navController,
                     currentRoute = currentSimpleRoute,
-                    items = items,
+                    items = bottomNavItems,
                     show = showScaffold
                 )
             }
@@ -203,7 +210,20 @@ fun KakeiboApp() {
             }
 
             //Read Receipt or Scan
-            composable<Scan> {
+            composable<Scan>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
                 ScanRoute(navController)
             }
 

@@ -12,10 +12,12 @@ import com.pnj.saku_planner.core.database.dao.TransactionDao
 import com.pnj.saku_planner.kakeibo.data.repository.AccountRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
+import com.pnj.saku_planner.kakeibo.data.repository.ScanRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.ScanRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
@@ -77,6 +79,11 @@ object AppModule {
     @Provides
     fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
         return CategoryRepositoryImpl(categoryDao)
+    }
+
+    @Provides
+    fun provideScanRepository(): ScanRepository {
+        return ScanRepositoryImpl()
     }
 
     @Provides

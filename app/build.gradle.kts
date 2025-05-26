@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +21,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = project.rootProject.file("local.properties")
+        val properties = Properties().apply {
+            load(localProperties.inputStream())
+        }
+
+        val modelUrl = properties.getProperty("MODEL_URL")
+//        val apiUrl = properties.getProperty("API_URL")
+        buildConfigField("String", "MODEL_URL", "\"$modelUrl\"")
+//        buildConfigField("String", "API_URL", "\"$apiUrl\"")
     }
 
     buildTypes {
@@ -40,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

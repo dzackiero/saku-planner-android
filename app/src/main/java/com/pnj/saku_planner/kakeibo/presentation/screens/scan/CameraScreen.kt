@@ -120,7 +120,7 @@ fun CameraScreen(
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
                 Text(
                     text = context.getString(R.string.camera_permission_rejected),
@@ -152,10 +152,8 @@ fun CameraScreen(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(bottom = 80.dp)
-                    .align(Alignment.Center)
+                    .padding(top = 80.dp)
                     .fillMaxWidth()
             ) {
                 val flashAnimation by rememberInfiniteTransition(label = "").animateFloat(
@@ -194,14 +192,14 @@ fun CameraScreen(
                 contentPadding = PaddingValues(16.dp),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
                 modifier = Modifier
-                    .padding(vertical = 44.dp)
+                    .padding(vertical = 90.dp)
                     .padding(start = 40.dp, end = 8.dp)
                     .align(Alignment.BottomStart),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ArtTrack,
                     contentDescription = "Open Gallery",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(35.dp)
                 )
@@ -209,7 +207,7 @@ fun CameraScreen(
 
             OutlinedButton(
                 modifier = Modifier
-                    .padding(vertical = 32.dp)
+                    .padding(vertical = 80.dp)
                     .align(Alignment.BottomCenter),
                 shape = CircleShape,
                 border = BorderStroke(2.dp, MaterialTheme.colorScheme.background),
