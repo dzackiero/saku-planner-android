@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Wallet
@@ -54,7 +55,9 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.HomeTabRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.LoginRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.RegisterRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.OnboardingScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
@@ -69,6 +72,14 @@ fun KakeiboApp() {
         BottomNavItem(Account, Icons.Outlined.Wallet),
     )
     val items = fabItems + listOf(
+        BottomNavItem(Report, Icons.Outlined.Analytics),
+        BottomNavItem(Settings, Icons.Outlined.Settings),
+    )
+
+    val bottomNavItems = listOf(
+        BottomNavItem(Home, Icons.Outlined.Home),
+        BottomNavItem(Account, Icons.Outlined.Wallet),
+        BottomNavItem(Scan, Icons.Outlined.CameraAlt),
         BottomNavItem(Report, Icons.Outlined.Analytics),
         BottomNavItem(Settings, Icons.Outlined.Settings),
     )
@@ -97,7 +108,7 @@ fun KakeiboApp() {
                 BottomNavigationBar(
                     navController = navController,
                     currentRoute = currentSimpleRoute,
-                    items = items,
+                    items = bottomNavItems,
                     show = showScaffold
                 )
             }
@@ -221,6 +232,36 @@ fun KakeiboApp() {
             // Report
             composable<Report> {
                 ReportPagerScreen(navController)
+            }
+
+            //Read Receipt or Scan
+            composable<Scan>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
+                ScanRoute(navController)
+            }
+
+            composable<SummaryScan> {
+                ScanSummaryRoute(navController)
+            }
+
+            composable<DetailScan> {
+                ScanRoute(navController)
+            }
+
+            composable<EditScan> {
+                ScanRoute(navController)
             }
 
             // Settings
@@ -388,6 +429,24 @@ data class BudgetDetail(
 
 @Serializable
 data object Report
+
+@Serializable
+data object Scan
+
+@Serializable
+data class SummaryScan(
+    val data: String? = null
+)
+
+@Serializable
+data class DetailScan(
+    val data: String? = null
+)
+
+@Serializable
+data class EditScan(
+    val data: String? = null
+)
 
 @Serializable
 data object Settings

@@ -1,5 +1,10 @@
 [versions]
 agp = "8.9.3"
+accompanistPermissions = "0.18.0"
+agp = "8.9.2"
+cameraCamera2 = "1.2.1"
+cameraLifecycle = "1.2.1"
+cameraView = "1.2.1"
 composeCharts = "0.1.7"
 composeEmojiPicker = "1.0.0-alpha16"
 converterGson = "2.9.0"
@@ -26,6 +31,10 @@ timber = "5.0.1"
 workRuntimeKtx = "2.10.1"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraView" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraLifecycle" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
