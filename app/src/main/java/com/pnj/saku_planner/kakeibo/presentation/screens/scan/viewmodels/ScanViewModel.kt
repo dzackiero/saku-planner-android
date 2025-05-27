@@ -29,6 +29,9 @@ class ScanViewModel @Inject constructor(
     private val _totalPrice: MutableStateFlow<String?> = MutableStateFlow("")
     val totalPrice: StateFlow<String?> = _totalPrice
 
+    private val _tax: MutableStateFlow<String?> = MutableStateFlow("")
+    val tax: StateFlow<String?> = _tax
+
     fun loadItems(image: File) {
         viewModelScope.launch {
             scanRepository.predict(image)
@@ -47,6 +50,7 @@ class ScanViewModel @Inject constructor(
 
                             _items.value = scanUiList
                             _totalPrice.value = total.toString()
+                            _tax.value = resource.data?.tax.toString()
                         }
 
                         is Resource.Error -> {

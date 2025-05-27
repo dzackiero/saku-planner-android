@@ -16,9 +16,19 @@ fun SummaryResultScreen(
     navigateToEdit: () -> Unit = {}
 ){
     val totalPrice by scanViewModel.totalPrice.collectAsState()
+    val tax by scanViewModel.tax.collectAsState()
+    val items by scanViewModel.items.collectAsState()
     Column(
 
     ){
         totalPrice?.let { Text(it) }
+        tax?.let { Text(it) }
+        items?.let { itemList ->
+            Column {
+                itemList.forEach { item ->
+                    Text(text = "${item.itemName}: Rp${item.price}")
+                }
+            }
+        }
     }
 }
