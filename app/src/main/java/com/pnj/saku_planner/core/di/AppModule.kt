@@ -136,8 +136,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideScanRepository(): ScanRepository {
-        return ScanRepositoryImpl()
+    fun provideScanRepository(appApi: AppApi): ScanRepository {
+        return ScanRepositoryImpl(appApi)
     }
 
     @Provides
