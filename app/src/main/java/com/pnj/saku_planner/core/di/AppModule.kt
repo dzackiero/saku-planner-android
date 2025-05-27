@@ -2,6 +2,7 @@ package com.pnj.saku_planner.core.di
 
 import android.content.Context
 import androidx.room.Room
+import com.pnj.saku_planner.BuildConfig
 import com.pnj.saku_planner.core.database.AppDatabase
 import com.pnj.saku_planner.core.database.dao.AccountDao
 import com.pnj.saku_planner.core.database.dao.BudgetDao
@@ -76,7 +77,7 @@ object AppModule {
         client: okhttp3.OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://kakeibo-api.dzakynashshar.me/api/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

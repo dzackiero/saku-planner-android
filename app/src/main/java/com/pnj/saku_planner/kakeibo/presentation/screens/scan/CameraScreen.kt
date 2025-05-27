@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -68,6 +67,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.executor
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
 import com.pnj.saku_planner.kakeibo.presentation.components.DeleteTempFile
 import com.pnj.saku_planner.kakeibo.presentation.components.CreateCustomTempFile
+import timber.log.Timber
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -106,10 +107,16 @@ fun CameraScreen(
     { uri: Uri? ->
         if (uri != null) {
             isLoading = true
-            //SEND FOTO TO API
+            val file = uri.path?.let { File(it) }
+            if (file != null) {
+                scanViewModel.loadItems(file)
+            }
+            if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
+                navigateToSummary()
+            }
         } else {
             isLoading = false
-            Log.d("Photo Picker", "No media selected")
+            Timber.tag("Photo Picker").d("No media selected")
         }
     }
 
@@ -124,7 +131,7 @@ fun CameraScreen(
             ) {
                 Text(
                     text = context.getString(R.string.camera_permission_rejected),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
@@ -135,7 +142,7 @@ fun CameraScreen(
                     }) {
                     Text(
                         text = stringResource(R.string.open_settings),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -237,6 +244,12 @@ fun CameraScreen(
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                         imageUri = output.savedUri!!
+                                        val file = File(imageUri.path ?: return)
+
+                                        scanViewModel.loadItems(file)
+                                        if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
+                                            navigateToSummary()
+                                        }
                                     }
 
 
@@ -248,7 +261,7 @@ fun CameraScreen(
                                             "Failed to capture image.",
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        Log.e(ContentValues.TAG, "onError: ${ex.message}")
+                                        Timber.tag(ContentValues.TAG).e("onError: ${ex.message}")
                                     }
                                 }
                             )
@@ -278,12 +291,14 @@ fun CameraScreen(
                     isCameraReady = true
 
                 } catch (ex: Exception) {
-                    Log.e("CameraCapture", "Failed to bind camera use cases", ex)
+                    Timber.tag("CameraCapture").e(ex, "Failed to bind camera use cases")
                 }
             }
         }
         if (isLoading) {
-            Box(modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)) {
+            Box(
+//                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+            ) {
                 LoadingScreen()
             }
         }
