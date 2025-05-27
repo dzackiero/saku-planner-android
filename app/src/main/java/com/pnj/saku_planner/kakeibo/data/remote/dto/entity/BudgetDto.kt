@@ -18,10 +18,10 @@ data class BudgetDto(
     val categoryId: String,
 
     @SerializedName("amount")
-    val amount: Double,
+    val amount: Long,
 
     @SerializedName("initial_amount")
-    val initialAmount: Double,
+    val initialAmount: Long,
 
     @SerializedName("created_at")
     val createdAt: String, // ISO 8601 String

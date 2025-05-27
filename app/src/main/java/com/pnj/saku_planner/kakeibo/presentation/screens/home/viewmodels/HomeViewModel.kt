@@ -2,7 +2,6 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pnj.saku_planner.core.database.DatabaseSeeder
 import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
@@ -15,7 +14,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val databaseSeeder: DatabaseSeeder,
     private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
@@ -32,12 +30,6 @@ class HomeViewModel @Inject constructor(
                 _homeState.value.copy(
                     transactions = transactionRepository.getAllTransactions().map { it.toUi() },
                 )
-        }
-    }
-
-    fun resetDatabase() {
-        viewModelScope.launch(Dispatchers.IO) {
-            databaseSeeder.resetDatabase()
         }
     }
 }

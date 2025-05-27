@@ -10,7 +10,6 @@ import com.pnj.saku_planner.kakeibo.domain.enum.AccountType
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -59,7 +58,7 @@ class AccountFormViewModel @Inject constructor(
     )
 
     fun loadAccount(accountId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val account = accountRepository.getAccountById(accountId)?.toUi() ?: return@launch
 
             _formState.value = _formState.value.copy(
@@ -77,7 +76,7 @@ class AccountFormViewModel @Inject constructor(
 
     fun deleteAccount() {
         val accountId = _formState.value.accountId ?: return
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             accountRepository.deleteAccount(accountId)
         }
     }
@@ -85,12 +84,12 @@ class AccountFormViewModel @Inject constructor(
     private fun submit(): Boolean {
         if (validateForm()) return false
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val values = _formState.value
             val accountEntity = AccountEntity(
                 id = values.accountId ?: UUID.randomUUID().toString(),
                 name = values.accountName,
-                balance = values.currentBalance ?: 0.0,
+                balance = values.currentBalance ?: 0,
                 description = values.description,
             )
 
@@ -100,7 +99,7 @@ class AccountFormViewModel @Inject constructor(
                     id = randomUuid(),
                     duration = values.targetDuration ?: 0,
                     startDate = values.targetStartDate ?: 0,
-                    targetAmount = values.targetAmount ?: 0.0,
+                    targetAmount = values.targetAmount ?: 0,
                 )
             }
 
@@ -140,13 +139,13 @@ data class AccountFormState(
     val accountName: String = "",
     val accountNameError: String? = null,
 
-    val currentBalance: Double? = null,
+    val currentBalance: Long? = null,
     val currentBalanceError: String? = null,
 
     val accountType: AccountType = AccountType.Checking,
     val accountTypeError: String? = null,
 
-    val targetAmount: Double? = null,
+    val targetAmount: Long? = null,
     val targetAmountError: String? = null,
 
     val targetDuration: Int? = null,
@@ -174,9 +173,9 @@ fun AccountFormState.hasError(): Boolean {
 
 data class AccountFormCallback(
     val onAccountNameChange: (String) -> Unit,
-    val onCurrentBalanceChange: (Double?) -> Unit,
+    val onCurrentBalanceChange: (Long?) -> Unit,
     val onDescriptionChange: (String) -> Unit,
-    val onTargetAmountChange: (Double?) -> Unit,
+    val onTargetAmountChange: (Long?) -> Unit,
     val onTargetDurationChange: (Int?) -> Unit,
     val onTargetStartDateChange: (Long?) -> Unit,
     val onSubmit: (() -> Unit) -> Unit,

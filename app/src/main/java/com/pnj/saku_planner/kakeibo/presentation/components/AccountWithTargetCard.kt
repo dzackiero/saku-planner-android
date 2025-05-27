@@ -24,8 +24,8 @@ import java.util.Locale
 @Composable
 fun AccountWithTargetCard(
     account: String,
-    amount: Double,
-    targetAmount: Double,
+    amount: Long,
+    targetAmount: Long,
     duration: Int,
     modifier: Modifier = Modifier ,
     onClick: () -> Unit = {},
@@ -43,7 +43,7 @@ fun AccountWithTargetCard(
         .format(monthlyAmount)
 
     val progress =
-        if (targetAmount == 0.0) 0f else (amount / targetAmount).toFloat().coerceIn(0f, 1f)
+            if (targetAmount == 0.toLong()) 0f else (amount / targetAmount).toFloat().coerceIn(0f, 1f)
     val percentage = "${String.format(Locale.getDefault(), "%.0f", progress * 100)}%"
 
 
@@ -117,8 +117,8 @@ fun AccountWithTargetCard(
 fun AccountWithTargetCardPreview() {
     AccountWithTargetCard(
         account = "BCA",
-        amount = 1000000.0,
-        targetAmount = 5000000.0,
+        amount = 1000000,
+        targetAmount = 5000000,
         duration = 5
     )
 }

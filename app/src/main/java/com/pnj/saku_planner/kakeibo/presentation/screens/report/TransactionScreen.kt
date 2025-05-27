@@ -147,6 +147,18 @@ fun TransactionScreen(
             }
         }
 
+        if (transactions.isEmpty()) {
+            Text(
+                text = stringResource(R.string.you_don_t_have_any_transactions_yet),
+                style = Typography.bodyMedium,
+                color = AppColor.MutedForeground,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
         // —— GROUPED LIST ——
         grouped.forEach { (key, txs) ->
             // Render a human‑readable header
@@ -239,7 +251,7 @@ fun TransactionScreenPreview() {
             category = "Coffee",
             account = "Wallet A",
             type = TransactionType.EXPENSE,
-            amount = 350.0,
+            amount = 350,
             kakeibo = KakeiboCategoryType.NEEDS,
             date = now.minusDays(1),
         ),
@@ -249,7 +261,7 @@ fun TransactionScreenPreview() {
             category = "Groceries",
             account = "Wallet A",
             type = TransactionType.EXPENSE,
-            amount = 45.0,
+            amount = 45,
             kakeibo = KakeiboCategoryType.WANTS,
             date = now.minusWeeks(1).plusDays(2)
         ),
@@ -259,7 +271,7 @@ fun TransactionScreenPreview() {
             category = "Salary",
             account = "Wallet A",
             type = TransactionType.INCOME,
-            amount = 1200.0,
+            amount = 1200,
             date = now.minusMonths(1),
         ),
         TransactionUi(
@@ -268,7 +280,7 @@ fun TransactionScreenPreview() {
             category = "Dinner",
             account = "Wallet A",
             type = TransactionType.EXPENSE,
-            amount = 25.0,
+            amount = 25,
             kakeibo = KakeiboCategoryType.NEEDS,
             date = now.minusMonths(2)
         ),

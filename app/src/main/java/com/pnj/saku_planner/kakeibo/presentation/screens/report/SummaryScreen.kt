@@ -273,7 +273,7 @@ fun SummaryScreen(
 data class SummaryData(
     val name: String,
     val color: Color = TailwindColor.Orange400,
-    val amount: Double,
+    val amount: Long,
     val icon: String? = null,
 )
 
@@ -289,10 +289,10 @@ fun ReflectionScreenPreview() {
         SummaryScreen(
             state = SummaryState(
                 summaryData = listOf(
-                    SummaryData("Food", TailwindColor.Orange400, 1000.0),
-                    SummaryData("Transport", TailwindColor.Green400, 2000.0),
-                    SummaryData("Entertainment", TailwindColor.Blue400, 3000.0),
-                    SummaryData("Shopping", TailwindColor.Purple400, 4000.0),
+                    SummaryData("Food", TailwindColor.Orange400, 1000),
+                    SummaryData("Transport", TailwindColor.Green400, 2000),
+                    SummaryData("Entertainment", TailwindColor.Blue400, 3000),
+                    SummaryData("Shopping", TailwindColor.Purple400, 4000),
                 )
             ),
         )

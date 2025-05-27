@@ -48,8 +48,8 @@ fun OnboardingScreen(
 
     // 1s scale animation
     val scale by animateFloatAsState(
-        targetValue = if (showTitle) 1f else 0.6f,
-        animationSpec = tween(durationMillis = 1000),
+        targetValue = if (showTitle) 1f else 0.4f,
+        animationSpec = tween(durationMillis = 1000, easing = { it * it }),
     )
 
     // move title up once scale is done
@@ -62,11 +62,11 @@ fun OnboardingScreen(
         showTitle = true
         delay(1200)
         finishedScale = true
-        delay(1200)
+        delay(1500)
         showSubtitle = true
-        delay(2000)
+        delay(1000)
         showDescription = true
-        delay(2000)
+        delay(1000)
         showButtons = true
     }
 

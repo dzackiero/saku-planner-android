@@ -20,7 +20,6 @@ class AccountRepositoryImpl @Inject constructor(
         account: AccountEntity,
         target: TargetEntity?,
     ): Unit = db.withTransaction {
-        val now = System.currentTimeMillis()
         if (target != null) {
             targetDao.saveTarget(target)
             accountDao.saveAccount(account.copy(targetId = target.id))

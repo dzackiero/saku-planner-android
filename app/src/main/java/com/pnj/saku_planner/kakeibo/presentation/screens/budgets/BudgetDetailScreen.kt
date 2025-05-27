@@ -180,9 +180,9 @@ fun BudgetDetailScreenPreview() {
     KakeiboTheme {
         val budget = BudgetUi(
             id = randomUuid(),
-            amount = 100.0,
+            amount = 100,
             category = "Food",
-            currentAmount = 100.0,
+            currentAmount = 100,
         )
         val monthlyBudgets = (1..12).map { month ->
             MonthBudgetDetail(
@@ -190,7 +190,7 @@ fun BudgetDetailScreenPreview() {
                 budgetId = randomUuid(),
                 month = month,
                 year = 2023,
-                amount = 100.0,
+                amount = 100,
                 categoryId = randomUuid(),
             )
         }

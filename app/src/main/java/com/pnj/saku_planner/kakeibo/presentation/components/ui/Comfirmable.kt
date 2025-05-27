@@ -1,7 +1,6 @@
 package com.pnj.saku_planner.kakeibo.presentation.components.ui
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -10,15 +9,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 
 @Composable
 fun Confirmable(
     onConfirmed: () -> Unit,
-    confirmTitle: String = "Are you sure?",
-    confirmMessage: String = "This action cannot be undone.",
-    confirmText: String = "Yes",
-    cancelText: String = "Cancel",
+    confirmTitle: String = stringResource(R.string.are_you_sure),
+    confirmMessage: String = stringResource(R.string.this_action_cannot_be_undone),
+    confirmText: String = stringResource(R.string.yes),
+    cancelText: String = stringResource(R.string.cancel),
     content: @Composable (onClick: () -> Unit) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }

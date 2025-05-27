@@ -47,6 +47,6 @@ fun TransactionDetail.toUi() = TransactionUi(
 
 data class TransactionCategorySummary(
     val name: String,
-    val amount: Double,
+    val amount: Long,
     val icon: String? = null
 )

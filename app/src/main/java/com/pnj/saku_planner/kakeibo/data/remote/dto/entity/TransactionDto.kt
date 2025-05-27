@@ -21,7 +21,7 @@ data class TransactionDto(
     @SerializedName("kakeibo_category")
     val kakeiboCategory: String?,
 
-    val amount: Double,
+    val amount: Long,
     val description: String,
 
     @SerializedName("transaction_at")

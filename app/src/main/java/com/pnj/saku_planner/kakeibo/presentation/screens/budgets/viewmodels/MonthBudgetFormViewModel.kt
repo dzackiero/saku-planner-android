@@ -61,7 +61,7 @@ class MonthBudgetFormViewModel @Inject constructor(
             val monthBudgetEntity = MonthBudgetEntity(
                 id = stateValue.id ?: randomUuid(),
                 budgetId = stateValue.budgetId ?: randomUuid(),
-                amount = stateValue.amount ?: 0.0,
+                amount = stateValue.amount ?: 0,
                 month = stateValue.month,
                 year = stateValue.year,
             )
@@ -74,12 +74,12 @@ class MonthBudgetFormViewModel @Inject constructor(
 data class MonthBudgetFormState(
     val id: String? = null,
     val budgetId: String? = null,
-    val amount: Double? = null,
+    val amount: Long? = null,
     val year: Int = YearMonth.now().year,
     val month: Int = YearMonth.now().monthValue,
     val selectedCategory: CategoryUi? = null,
 )
 
 data class MonthBudgetFormCallbacks(
-    val onAmountChange: (Double?) -> Unit = {},
+    val onAmountChange: (Long?) -> Unit = {},
 )

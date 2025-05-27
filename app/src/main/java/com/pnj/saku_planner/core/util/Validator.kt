@@ -11,7 +11,7 @@ fun <T> validateRequired(value: T?, message: String = "This field is required"):
 
 // Positive number validation (> 0)
 fun validatePositiveNumber(
-    value: Double?,
+    value: Long?,
     message: String = "Value must be greater than 0"
 ): String? {
     return if (value == null || value <= 0.0) message else null
@@ -19,7 +19,7 @@ fun validatePositiveNumber(
 
 // Non-negative number validation (>= 0)
 fun validateNonNegativeNumber(
-    value: Double?,
+    value: Long?,
     message: String = "Value must be zero or greater"
 ): String? {
     return if (value == null || value < 0.0) message else null
@@ -39,9 +39,9 @@ fun validateMaxLength(value: String?, maxLength: Int, message: String? = null): 
 
 // Validate number range (inclusive)
 fun validateNumberRange(
-    value: Double?,
-    min: Double,
-    max: Double,
+    value: Long?,
+    min: Long,
+    max: Long,
     message: String? = null
 ): String? {
     val error = message ?: "Value must be between $min and $max"

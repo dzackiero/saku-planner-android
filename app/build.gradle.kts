@@ -80,9 +80,9 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.timber)
 
-    implementation(libs.converter.gson)
-    implementation(libs.retrofit)
     implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
     //camera
@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.accompanist.permissions)
 
+    ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)
 

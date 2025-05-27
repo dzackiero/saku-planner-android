@@ -1,7 +1,7 @@
 package com.pnj.saku_planner.kakeibo.data.repository
 
 import com.pnj.saku_planner.core.util.Resource
-import com.pnj.saku_planner.kakeibo.data.local.UserStorage
+import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
 import com.pnj.saku_planner.kakeibo.data.remote.api.AppApi
 import com.pnj.saku_planner.kakeibo.data.remote.dto.AuthResponse
 import com.pnj.saku_planner.kakeibo.data.remote.dto.LoginRequest
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val api: AppApi,
-    private val userStorage: UserStorage
+    private val settingsDataStore: SettingsDataStore
 ) : AuthRepository {
     override suspend fun login(email: String, password: String): Flow<Resource<AuthResponse>> =
         flow {
@@ -23,7 +23,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Resource.Loading())
                 val response = api.login(LoginRequest(email, password))
                 response.data?.let {
-                    userStorage.saveUser(
+                    settingsDataStore.saveUserSession(
                         token = it.token,
                         name = it.user.name,
                         email = it.user.email,
@@ -49,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Loading())
             val response = api.register(RegisterRequest(name, email, password, confirmPassword))
             response.data?.let {
-                userStorage.saveUser(
+                settingsDataStore.saveUserSession(
                     token = it.token,
                     name = it.user.name,
                     email = it.user.email,
@@ -69,7 +69,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             emit(Resource.Loading())
             val response = api.logout()
-            userStorage.clear()
+            settingsDataStore.clear()
             emit(Resource.Success(response.message ?: "Logout successful"))
         } catch (e: HttpException) {
             emit(Resource.Error(e.extractApiMessage() ?: "An unexpected error occurred"))

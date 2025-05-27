@@ -22,8 +22,8 @@ data class BudgetEntity(
     @PrimaryKey
     val id: String = randomUuid(),
     val categoryId: String,
-    val amount: Double = 0.0,
-    val initialAmount: Double,
+    val amount: Long = 0,
+    val initialAmount: Long,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -35,9 +35,9 @@ data class BudgetDetail(
     val categoryId: String,
     val categoryIcon: String? = "💵",
     val categoryName: String,
-    val amount: Double,
-    val currentAmount: Double,
-    val initialAmount: Double,
+    val amount: Long,
+    val currentAmount: Long,
+    val initialAmount: Long,
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
@@ -47,8 +47,8 @@ data class BudgetUi(
     val id: String,
     val category: String,
     val categoryIcon: String = "💵",
-    val amount: Double,
-    val currentAmount: Double,
+    val amount: Long,
+    val currentAmount: Long,
 )
 
 fun BudgetDetail.toUi() = BudgetUi(
