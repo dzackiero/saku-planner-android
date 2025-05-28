@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -114,39 +113,26 @@ fun RegisterScreen(
             }
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        PrimaryButton(
+            onClick = onRegister,
+            enabled = !state.isLoading,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            TextButton(onClick = onNavigateToLogin) {
-                Text(text = stringResource(R.string.login), style = Typography.bodyLarge)
-            }
-            PrimaryButton(
-                onClick = onRegister,
-                enabled = !state.isLoading
-            ) {
-                if (state.isLoading) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .align(Alignment.CenterVertically),
-                            strokeWidth = 2.dp
-                        )
-                        Text(
-                            text = stringResource(R.string.loading),
-                            style = Typography.titleMedium
-                        )
-                    }
-                } else {
+            if (state.isLoading) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
-                        text = stringResource(R.string.create_new_account),
+                        text = stringResource(R.string.loading),
                         style = Typography.titleMedium
                     )
                 }
+            } else {
+                Text(
+                    text = stringResource(R.string.create_new_account),
+                    style = Typography.titleMedium
+                )
             }
         }
     }

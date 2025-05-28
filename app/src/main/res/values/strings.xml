@@ -132,4 +132,15 @@
     <string name="sync_description">Manage your data synchronization time and frequency</string>
     <string name="sync_title">Sync Settings</string>
     <string name="manual_sync_desc">Manually sync your data to the cloud</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="email_address">Email Address</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="schedule">Schedule</string>
+    <string name="select_date">Select Date</string>
+    <string name="daily_sync">Daily Sync</string>
+    <string name="daily_sync_desc">Sync your data daily to backup your data to the cloud</string>
+    <string name="monthly_reflection_notification">Monthly Reflection Notification</string>
+    <string name="month_reflection_desc">Receive a reminder to reflect on your monthly expenses</string>
+    <string name="monthly_reflection_date">Monthly Reflection Date</string>
+    <string name="reminder_on_day_of_each_month">Reminder on day %1$s of each month</string>
 </resources>

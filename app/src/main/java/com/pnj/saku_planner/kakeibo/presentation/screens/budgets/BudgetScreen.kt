@@ -29,8 +29,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 @Composable
 fun BudgetScreen(
     budgets: List<BudgetUi>,
-    onAddBudgetClicked: () -> Unit,
-    onBudgetClicked: (BudgetUi) -> Unit
+    onAddBudgetClicked: () -> Unit = {},
+    onBudgetClicked: (BudgetUi) -> Unit = {},
 ) {
     val totalBudget = budgets.sumOf { it.amount }
     val spentAmount = budgets.sumOf { it.currentAmount }
@@ -79,6 +79,9 @@ fun BudgetScreen(
 @Composable
 fun PreviewBudgetScreen() {
     KakeiboTheme {
+        BudgetScreen(
+            budgets = emptyList()
+        ) { }
     }
 }
 

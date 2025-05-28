@@ -17,8 +17,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -45,6 +44,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
 fun SettingsScreen(
     workInfo: WorkInfo? = null,
     navigateToCategories: () -> Unit = {},
+    navigateToSchedule: () -> Unit = {},
+    navigateToProfile: () -> Unit = {},
     onManualSyncing: () -> Unit = {},
     onResetAppData: () -> Unit = {},
     onLogout: () -> Unit = {},
@@ -98,11 +99,6 @@ fun SettingsScreen(
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SettingCard(
-                    title = stringResource(R.string.sync_title),
-                    description = stringResource(R.string.sync_description),
-                    icon = Icons.Outlined.Sync
-                )
-                SettingCard(
                     title = stringResource(R.string.manual_sync),
                     description = stringResource(R.string.manual_sync_desc),
                     icon = Icons.Outlined.CloudUpload,
@@ -112,6 +108,7 @@ fun SettingsScreen(
                     WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
                         LinearProgressIndicator(Modifier.fillMaxWidth())
                     }
+
                     else -> {}
                 }
             }
@@ -126,12 +123,14 @@ fun SettingsScreen(
                 SettingCard(
                     title = stringResource(R.string.profile),
                     description = stringResource(R.string.profile_desc),
-                    icon = Icons.Outlined.AccountCircle
+                    icon = Icons.Outlined.AccountCircle,
+                    onClick = navigateToProfile
                 )
                 SettingCard(
-                    title = stringResource(R.string.notifications),
+                    title = stringResource(R.string.schedule),
                     description = stringResource(R.string.notification_desc),
-                    icon = Icons.Outlined.Notifications
+                    icon = Icons.Outlined.Settings,
+                    onClick = navigateToSchedule
                 )
                 Confirmable(onConfirmed = onLogout) {
                     SettingCard(
