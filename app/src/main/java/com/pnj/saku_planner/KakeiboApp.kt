@@ -279,11 +279,12 @@ fun MainAppNavigation() {
 
             // Report
             composable<Report> {
-                ReportPagerScreen(navController)
+                ReportPagerScreen(navController, it)
             }
 
             composable<Reflection> {
-                ReflectionRoute(navController)
+                val reflectionId = it.toRoute<Reflection>().reflectionId
+                ReflectionRoute(navController, reflectionId)
             }
 
             //Read Receipt or Scan

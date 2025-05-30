@@ -8,6 +8,7 @@ import com.pnj.saku_planner.core.database.dao.AccountDao
 import com.pnj.saku_planner.core.database.dao.BudgetDao
 import com.pnj.saku_planner.core.database.dao.CategoryDao
 import com.pnj.saku_planner.core.database.dao.MonthBudgetDao
+import com.pnj.saku_planner.core.database.dao.ReflectionDao
 import com.pnj.saku_planner.core.database.dao.TargetDao
 import com.pnj.saku_planner.core.database.dao.TransactionDao
 import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
@@ -18,12 +19,14 @@ import com.pnj.saku_planner.kakeibo.data.repository.AuthRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.DataRepositoryImpl
+import com.pnj.saku_planner.kakeibo.data.repository.ReflectionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.ReflectionRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
@@ -127,6 +130,11 @@ object AppModule {
     }
 
     @Provides
+    fun provideReflectionDao(appDatabase: AppDatabase): ReflectionDao {
+        return appDatabase.reflectionDao()
+    }
+
+    @Provides
     fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository {
         return TransactionRepositoryImpl(transactionDao)
     }
@@ -137,8 +145,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideScanRepository(appApi: AppApi): ScanRepository {
-        return ScanRepositoryImpl(appApi)
+    fun provideReflectionRepository(reflectionDao: ReflectionDao): ReflectionRepository {
+        return ReflectionRepositoryImpl(reflectionDao)
     }
 
     @Provides

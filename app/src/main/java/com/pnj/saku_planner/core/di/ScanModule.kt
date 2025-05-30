@@ -34,9 +34,9 @@ object ScanModule {
         }
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .connectTimeout(30, TimeUnit.SECONDS) // Waktu untuk membuat koneksi
-            .readTimeout(30, TimeUnit.SECONDS)    // Waktu untuk membaca data dari server
-            .writeTimeout(30, TimeUnit.SECONDS)   // Waktu untuk mengirim data ke server
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 

@@ -20,10 +20,14 @@ import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
+import com.pnj.saku_planner.kakeibo.presentation.models.ReflectionUi
+import java.time.format.TextStyle
 
 @Composable
 fun ReflectionListScreen(
     modifier: Modifier = Modifier,
+    reflections: List<ReflectionUi> = emptyList(),
     onCreateReflectionClick: () -> Unit = {},
     onReflectionClick: (String) -> Unit = {},
 ) {
@@ -49,12 +53,12 @@ fun ReflectionListScreen(
                     Text(stringResource(R.string.create_reflection))
                 }
             }
-            repeat(5) { index ->
+            reflections.forEach { reflection ->
                 Card(
-                    modifier = Modifier.clickable { onReflectionClick(index.toString()) }
+                    modifier = Modifier.clickable { onReflectionClick(reflection.id) }
                 ) {
                     Text(
-                        text = "May 2025",
+                        text = yearMonthToString(reflection.yearMonth, TextStyle.FULL),
                         style = Typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                     )

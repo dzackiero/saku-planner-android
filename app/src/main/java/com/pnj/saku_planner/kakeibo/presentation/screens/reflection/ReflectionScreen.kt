@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
@@ -38,40 +36,36 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.Overvi
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.ReflectionPage
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.SavingPage
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.StartPage
-import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionViewModel
-
-// Assuming ReflectionState has properties like 'budgets' and 'savings'
-// e.g., data class ReflectionState(..., val budgets: List<Any>?, val savings: List<Any>?)
+import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
+import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 
 @Composable
 fun ReflectionScreen(
+    state: ReflectionState = ReflectionState(),
+    callbacks: ReflectionCallbacks = ReflectionCallbacks(),
     navigateBack: () -> Unit = {},
     navigateOnFinish: () -> Unit = {}
 ) {
-    val viewModel = hiltViewModel<ReflectionViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val steps = listOf(
         FormStep("Start") { StartPage(state) },
         FormStep("Overview") { OverviewPage(state) },
         FormStep("Category") { CategoryPage(state) },
-        FormStep("Kakeibo") { KakeiboPage(state, viewModel.callbacks) },
-        FormStep("Budget") { BudgetPage(state) }, // Remains in list for progress calculation
-        FormStep("Saving") { SavingPage(state, viewModel.callbacks) }, // Remains in list
-        FormStep("Reflection") { ReflectionPage(state, viewModel.callbacks) },
+        FormStep("Kakeibo") { KakeiboPage(state, callbacks) },
+        FormStep("Budget") { BudgetPage(state) },
+        FormStep("Saving") { SavingPage(state, callbacks) },
+        FormStep("Reflection") { ReflectionPage(state, callbacks) },
         FormStep("Finish") { FinishPage() }
     )
 
     fun addStep() {
-        if (currentStep >= steps.size - 1) { // Already at the last step ("Finish")
+        if (currentStep >= steps.size - 1) {
             navigateOnFinish()
             return
         }
 
         var nextActualStep = currentStep + 1
 
-        // Loop to find the next non-skippable step, but don't skip the "Finish" page
         while (nextActualStep < steps.size - 1) {
             val stepName = steps[nextActualStep].name
 
@@ -91,7 +85,7 @@ fun ReflectionScreen(
     }
 
     fun removeStep() {
-        if (currentStep <= 0) { // Already at the first step ("Start")
+        if (currentStep <= 0) {
             navigateBack()
             return
         }
@@ -118,7 +112,6 @@ fun ReflectionScreen(
 
     val animatedProgress by animateFloatAsState(
         targetValue = (currentStep + 1).toFloat() / steps.size.toFloat(),
-        label = "ProgressAnimation"
     )
 
     Scaffold {
@@ -142,7 +135,6 @@ fun ReflectionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                label = "StepCrossfade"
             ) { stepIndex ->
                 Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -186,7 +178,7 @@ data class FormStep(
     val content: @Composable () -> Unit
 )
 
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
+@Preview(showBackground = true)
 @Composable
 fun ReflectionScreenPreview() {
     KakeiboTheme {

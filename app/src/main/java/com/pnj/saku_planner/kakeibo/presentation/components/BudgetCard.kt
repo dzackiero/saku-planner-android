@@ -10,11 +10,11 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color // Import Color for text color
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
-import com.pnj.saku_planner.core.theme.AppColor // Ensure AppColor.Destructive and a default progress color (e.g., AppColor.Primary) are defined
+import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import java.util.Locale

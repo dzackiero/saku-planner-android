@@ -35,6 +35,7 @@ import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.TransactionScreen
+import timber.log.Timber
 
 enum class DialogContentType {
     FAVORITE_TRANSACTION,
@@ -46,6 +47,7 @@ fun KakeiboPage(
     state: ReflectionState = ReflectionState(),
     callbacks: ReflectionCallbacks = ReflectionCallbacks()
 ) {
+    Timber.d("KakeiboPage: Rendering with state: $state")
     val chartData = state.kakeiboTransactions.map {
         ChartData(
             label = it.name,

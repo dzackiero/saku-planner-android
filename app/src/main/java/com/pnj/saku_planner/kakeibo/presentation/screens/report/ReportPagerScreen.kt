@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.routes.ReflectionListRoute
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ReportPagerScreen(
     navController: NavController,
+    navBackStackEntry: NavBackStackEntry
 ) {
     val tabs = listOf(
         TabItem(label = stringResource(R.string.insight)) {
@@ -32,7 +34,7 @@ fun ReportPagerScreen(
             TransactionRoute(navController)
         },
         TabItem(label = stringResource(R.string.reflection)) {
-            ReflectionListRoute(navController)
+            ReflectionListRoute(navController, navBackStackEntry)
         }
     )
 
