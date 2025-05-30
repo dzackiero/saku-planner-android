@@ -12,7 +12,7 @@ fun ScanRoute(navController: NavController) {
     CameraScreen(
         scanViewModel = hiltViewModel <ScanViewModel>(),
         navigateToSummary = {
-            navController.navigate(SummaryScan())
+            navController.navigate(SummaryScan)
         }
     )
 }

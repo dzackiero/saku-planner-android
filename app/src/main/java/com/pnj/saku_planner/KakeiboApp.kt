@@ -66,6 +66,8 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.MonthBudgetFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ProfileRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ReflectionRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.RegisterRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanDetailRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.ScanEditRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
@@ -302,16 +304,17 @@ fun MainAppNavigation() {
                 ScanRoute(navController)
             }
 
-            composable<SummaryScan> {
-                ScanSummaryRoute(navController)
+            composable<SummaryScan> { navBackStackEntry ->
+                ScanSummaryRoute(navController, navBackStackEntry)
             }
 
-            composable<DetailScan> {
-                ScanRoute(navController)
+            composable<DetailScan> { navBackStackEntry ->
+                val transactionIds = navBackStackEntry.toRoute<DetailScan>().transactionIds
+                ScanDetailRoute(navController, navBackStackEntry, transactionIds)
             }
 
-            composable<EditScan> {
-                ScanRoute(navController)
+            composable<EditScan> { navBackStackEntry ->
+                ScanEditRoute(navController, navBackStackEntry)
             }
 
             // Settings
@@ -560,19 +563,15 @@ data object Report
 data object Scan
 
 @Serializable
-data class SummaryScan(
-    val data: String? = null
-)
+data object SummaryScan
 
 @Serializable
 data class DetailScan(
-    val data: String? = null
+    val transactionIds: List<String>
 )
 
 @Serializable
-data class EditScan(
-    val data: String? = null
-)
+data object EditScan
 
 @Serializable
 data class Reflection(

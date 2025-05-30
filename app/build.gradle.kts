@@ -29,6 +29,8 @@ android {
 
         val baseUrl = properties.getProperty("BASE_URL")
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        val modelUrl = properties.getProperty("MODEL_URL")
+        buildConfigField("String", "MODEL_URL", "\"$modelUrl\"")
     }
 
     buildTypes {
@@ -90,6 +92,8 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.accompanist.permissions)
+
+    implementation(libs.androidx.foundation)
 
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)

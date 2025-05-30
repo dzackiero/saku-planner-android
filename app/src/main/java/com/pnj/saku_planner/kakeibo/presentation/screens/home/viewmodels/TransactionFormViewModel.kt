@@ -17,7 +17,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,6 +82,7 @@ class TransactionFormViewModel @Inject constructor(
             submitTransaction()
         })
 
+
     fun loadTransaction(transactionId: String) {
         viewModelScope.launch {
             loadProperties()
@@ -112,6 +116,49 @@ class TransactionFormViewModel @Inject constructor(
             if (transactionId != null) {
                 transactionRepository.deleteTransaction(transactionId)
             }
+        }
+    }
+
+    suspend fun onSubmitLooping(
+        itemAmount: Long,
+        itemDescription: String,
+        categoryId: String
+    ): String? {
+        val newTransactionIdForItem = randomUuid()
+
+        if (itemAmount <= 0) {
+            println("Error in onSubmitLoopingWithDetails: Amount for '${itemDescription}' must be greater than zero.")
+            return null
+        }
+
+        val state = _transactionFormState.value
+        val kakeibo = if (state.transactionType == TransactionType.EXPENSE) {
+            state.selectedKakeibo!!.name.lowercase()
+        } else {
+            null
+        }
+
+        val transactionEntity = TransactionEntity(
+            id = newTransactionIdForItem,
+            accountId = state.selectedAccount!!.id,
+            toAccountId = null,
+            categoryId = categoryId,
+            type = TransactionType.EXPENSE.toString().lowercase(),
+            amount = itemAmount,
+            description = itemDescription,
+            kakeiboCategory = kakeibo,
+            transactionAt = state.transactionAt,
+        )
+
+        return try {
+            withContext(Dispatchers.IO) {
+                transactionRepository.saveTransaction(transactionEntity)
+            }
+            newTransactionIdForItem
+        } catch (e: Exception) {
+            println("Error in onSubmitLoopingWithDetails for '${itemDescription}': ${e.message}")
+            _transactionFormState.update { it.copy(descriptionError = "Failed to save: ${itemDescription}. ${e.message}") }
+            null
         }
     }
 

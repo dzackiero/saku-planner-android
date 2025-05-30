@@ -45,6 +45,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -63,15 +65,13 @@ import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.Permission
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CameraPreview
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.InvalidAlertDialog
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.executor
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
-import com.pnj.saku_planner.kakeibo.presentation.components.DeleteTempFile
-import com.pnj.saku_planner.kakeibo.presentation.components.CreateCustomTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.deleteTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.createCustomTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.uriToFile
 import timber.log.Timber
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun CameraScreen(
@@ -99,20 +99,35 @@ fun CameraScreen(
     val isPressed by interactionSource.collectIsPressedAsState()
     var isLoading by remember { mutableStateOf(false) }
 
-    val timeStamp: String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+    val shouldNavigateToSummary by scanViewModel.navigateToSummaryEvent.collectAsStateWithLifecycle()
+    var showInvalidImageDialog by remember { mutableStateOf(false) }
+    var showErrorMessage by remember { mutableStateOf(false) }
+
+    val errorMsg by scanViewModel.errorMsg.collectAsState()
+
+    LaunchedEffect(errorMsg) {
+        if (errorMsg != "") {
+            isLoading = false
+            showErrorMessage = true
+        }
+    }
+
+    LaunchedEffect(shouldNavigateToSummary) {
+        if (shouldNavigateToSummary) {
+            navigateToSummary()
+            scanViewModel.onSummaryNavigationConsumed()
+        }
+    }
 
     val launcherGallery = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     )
     { uri: Uri? ->
         if (uri != null) {
-            isLoading = true
-            val file = uri.path?.let { File(it) }
+            Timber.tag("Uri: ").d(uri.toString())
+            val file = uriToFile(context, uri)
             if (file != null) {
                 scanViewModel.loadItems(file)
-            }
-            if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
-                navigateToSummary()
             }
         } else {
             isLoading = false
@@ -235,7 +250,7 @@ fun CameraScreen(
                     onClick = {
                         isLoading = true
                         if (isCameraReady) {
-                            val photoFile = CreateCustomTempFile(context)
+                            val photoFile = createCustomTempFile(context)
                             val outputOptions =
                                 ImageCapture.OutputFileOptions.Builder(photoFile).build()
                             imageCaptureUseCase.takePicture(
@@ -244,18 +259,17 @@ fun CameraScreen(
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                         imageUri = output.savedUri!!
-                                        val file = File(imageUri.path ?: return)
-
-                                        scanViewModel.loadItems(file)
-                                        if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
-                                            navigateToSummary()
+                                        val file = uriToFile(context, imageUri)
+                                        if (file != null) {
+                                            scanViewModel.loadItems(file)
                                         }
+
                                     }
 
 
                                     override fun onError(ex: ImageCaptureException) {
                                         isLoading = false
-                                        DeleteTempFile(photoFile)
+                                        deleteTempFile(photoFile)
                                         Toast.makeText(
                                             context,
                                             "Failed to capture image.",
@@ -297,10 +311,31 @@ fun CameraScreen(
         }
         if (isLoading) {
             Box(
-//                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                modifier = Modifier.background(
+                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
             ) {
                 LoadingScreen()
             }
+
         }
+
+        InvalidAlertDialog(
+            showDialog = showInvalidImageDialog,
+            title = "Invalid Image",
+            text = "The image you entered is not a receipt or invoice, please enter a valid image.",
+            onDismiss = {
+                showInvalidImageDialog = false
+            }
+        )
+
+        InvalidAlertDialog(
+            showDialog = showErrorMessage,
+            title = "There Are Something Wrong",
+            text = errorMsg.toString(),
+            onDismiss = {
+                showErrorMessage = false
+            }
+        )
     }
 }

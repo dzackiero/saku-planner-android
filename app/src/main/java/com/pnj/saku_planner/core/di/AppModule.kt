@@ -18,14 +18,12 @@ import com.pnj.saku_planner.kakeibo.data.repository.AuthRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.BudgetRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.CategoryRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.DataRepositoryImpl
-import com.pnj.saku_planner.kakeibo.data.repository.ScanRepositoryImpl
 import com.pnj.saku_planner.kakeibo.data.repository.TransactionRepositoryImpl
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
-import com.pnj.saku_planner.kakeibo.domain.repository.ScanRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
@@ -35,6 +33,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -54,6 +53,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("OkHttpClientDefault")
     fun provideOkHttpClient(
         authInterceptor: AuthInterceptor
     ): okhttp3.OkHttpClient {
@@ -73,8 +73,9 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("RetrofitDefault")
     fun provideRetrofit(
-        client: okhttp3.OkHttpClient
+        @Named("OkHttpClientDefault") client: okhttp3.OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -85,7 +86,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppApi(retrofit: Retrofit): AppApi {
+    fun provideAppApi(@Named("RetrofitDefault") retrofit: Retrofit): AppApi {
         return retrofit.create(AppApi::class.java)
     }
 
