@@ -18,9 +18,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.models.EditableScanUi
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
-import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryViewModel // Tambahkan ini
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
@@ -29,23 +27,26 @@ import java.util.Locale
 fun EditResultScreen(
     modifier: Modifier = Modifier,
     scanViewModel: ScanViewModel,
-    transactionFormViewModel: TransactionFormViewModel,
-    categoryViewModel: CategoryViewModel,
     navigateToDetail: (List<String>) -> Unit = {},
 ) {
     val originalItems by scanViewModel.items.collectAsStateWithLifecycle()
     val originalTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
 
-    val allCategories by categoryViewModel.categories.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        scanViewModel.loadProperties()
+    }
+
+    val allCategories by scanViewModel.categories.collectAsStateWithLifecycle()
 
     val expenseCategories = remember(allCategories) {
         allCategories.filter { it.categoryType == TransactionType.EXPENSE }
     }
 
+    val transactionCallbacks = scanViewModel.callbacks
+    val transactionState by scanViewModel.scanFormState.collectAsStateWithLifecycle()
+
     var editableItems by remember { mutableStateOf<List<EditableScanUi>>(emptyList()) }
     val savedTransactionIds = remember { mutableStateListOf<String>() }
-
-    val transactionFormState by transactionFormViewModel.transactionFormState.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(false) }
@@ -61,7 +62,7 @@ fun EditResultScreen(
                 itemName = scanUi.itemName,
                 price = scanUi.price.toString().toDoubleOrNull() ?: 0.0,
                 taxPerItem = taxPerItemValue,
-                selectedCategory = transactionFormState.selectedCategory
+                selectedCategory = transactionState.selectedCategory
             )
         } ?: emptyList()
     }
@@ -142,11 +143,13 @@ fun EditResultScreen(
 
                             val finalAmount = item.price + item.taxPerItem
 
-                            val transactionId = transactionFormViewModel.onSubmitLooping(
-                                itemAmount = finalAmount.toLong(),
-                                itemDescription = item.itemName,
-                                categoryId = item.selectedCategory!!.id
-                            )
+                            transactionCallbacks.onAmountChange(finalAmount.toLong())
+                            transactionCallbacks.onDescriptionChange(item.itemName)
+                            item.selectedCategory?.let { category ->
+                                transactionCallbacks.onCategoryChange(category)
+                            }
+
+                            val transactionId = scanViewModel.onSubmitLooping()
 
                             if (transactionId != null) {
                                 savedTransactionIds.add(transactionId)
@@ -220,8 +223,7 @@ fun EditableItemRow(
                 label = { Text("Category") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryExpanded) },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(),
+                    .fillMaxWidth(),
                 isError = item.selectedCategory == null
             )
             ExposedDropdownMenu(

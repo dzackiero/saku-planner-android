@@ -33,29 +33,20 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CustomPagerIndicator
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountViewModel
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormState
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
-import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.CategoryViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun SummaryResultScreen(
     scanViewModel: ScanViewModel,
-    categoryViewModel: CategoryViewModel,
-    accountViewModel: AccountViewModel,
-    transactionViewModel: TransactionFormViewModel,
     navigateToDetail: (List<String>) -> Unit = {},
     navigateToEdit: () -> Unit
 ) {
     val pagerState = rememberPagerState(initialPage = 0) { 2 }
-    val transactionCallbacks = transactionViewModel.callbacks
-    val transactionState by transactionViewModel.transactionFormState.collectAsStateWithLifecycle()
+    val transactionCallbacks = scanViewModel.callbacks
+    val transactionState by scanViewModel.scanFormState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -73,10 +64,7 @@ fun SummaryResultScreen(
                 1 -> TransactionFormPage(
                     formState = transactionState,
                     callbacks = transactionCallbacks,
-                    categoryViewModel = categoryViewModel,
-                    accountViewModel = accountViewModel,
                     scanViewModel = scanViewModel,
-                    transactionViewModel = transactionViewModel,
                     navigateToDetail = navigateToDetail,
                     navigateToEdit = navigateToEdit
                 )
@@ -249,24 +237,20 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
 
 @Composable
 fun TransactionFormPage(
-    formState: TransactionFormState,
-    callbacks: TransactionFormCallbacks,
+    formState: ScanViewModel.ScanFormState,
+    callbacks: ScanViewModel.ScanFormCallbacks,
     scanViewModel: ScanViewModel,
-    transactionViewModel: TransactionFormViewModel,
-    categoryViewModel: CategoryViewModel,
-    accountViewModel: AccountViewModel,
     navigateToDetail: (List<String>) -> Unit = {},
     navigateToEdit: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        categoryViewModel.loadCategories()
-        accountViewModel.loadAccounts()
+        scanViewModel.loadProperties()
     }
 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
     val originalTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
-    val categories = categoryViewModel.categories.collectAsState()
-    val accounts = accountViewModel.accounts.collectAsState()
+    val categories = scanViewModel.categories.collectAsState()
+    val accounts = scanViewModel.accounts.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     var allItemsProcessed by remember { mutableStateOf(false) }
@@ -298,10 +282,8 @@ fun TransactionFormPage(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Category Selection using BottomSheetField
-        Field(formState.selectedCategoryError) { isError ->
             BottomSheetField(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                isError = isError,
                 options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
                 label = { Text(stringResource(R.string.category)) },
                 selectedItem = formState.selectedCategory,
@@ -320,7 +302,6 @@ fun TransactionFormPage(
                 },
                 itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
             )
-        }
         Spacer(modifier = Modifier.height(20.dp))
 
         // Account Chips Selection
@@ -433,7 +414,6 @@ fun TransactionFormPage(
         ) {
             Button(
                 onClick = {
-                    callbacks.onTransactionTypeChange(TransactionType.EXPENSE)
                     navigateToEdit()
                 },
                 shape = RectangleShape,
@@ -445,7 +425,6 @@ fun TransactionFormPage(
             }
             Button(
                 onClick = {
-                    callbacks.onTransactionTypeChange(TransactionType.EXPENSE)
                     coroutineScope.launch {
                         isLoading = true
                         savedTransactionIds.clear()
@@ -457,14 +436,9 @@ fun TransactionFormPage(
                             val taxPerItemValue = if (itemsCount > 0) taxDouble / itemsCount else 0.0
 
                             val finalAmount = item.price + taxPerItemValue
-
-                            val transactionId = formState.selectedCategory?.let {
-                                transactionViewModel.onSubmitLooping(
-                                    itemAmount = finalAmount.toLong(),
-                                    itemDescription = item.itemName,
-                                    categoryId = it.id
-                                )
-                            }
+                            callbacks.onAmountChange(finalAmount.toLong())
+                            callbacks.onDescriptionChange(item.itemName)
+                            val transactionId = scanViewModel.onSubmitLooping()
 
                             if (transactionId != null) {
                                 savedTransactionIds.add(transactionId)

@@ -2,6 +2,7 @@ package com.pnj.saku_planner.kakeibo.data.repository
 
 import com.pnj.saku_planner.core.util.Resource
 import com.pnj.saku_planner.kakeibo.data.remote.api.AppApi
+import com.pnj.saku_planner.kakeibo.data.remote.api.ScanApi
 import com.pnj.saku_planner.kakeibo.data.remote.dto.ScanResponse
 import com.pnj.saku_planner.kakeibo.domain.repository.ScanRepository
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.compressImageFile
@@ -18,7 +19,7 @@ import java.io.File
 import javax.inject.Inject
 
 class ScanRepositoryImpl @Inject constructor(
-    private val api: AppApi
+    private val api: ScanApi
 ) : ScanRepository {
 
     override suspend fun predict(image: File): Flow<Resource<ScanResponse>> = flow {
