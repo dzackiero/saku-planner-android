@@ -5,9 +5,11 @@ import com.pnj.saku_planner.kakeibo.data.remote.dto.LoginRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.RegisterRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.Response
 import com.pnj.saku_planner.kakeibo.data.remote.dto.SyncRequest
-import com.pnj.saku_planner.kakeibo.data.remote.dto.ScanRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.ScanResponse
+import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.Multipart
+import retrofit2.http.Part
 import retrofit2.http.POST
 
 interface AppApi {
@@ -27,9 +29,11 @@ interface AppApi {
     @POST("sync")
     suspend fun sync(@Body request: SyncRequest): Response<Unit>
 
+    @Multipart
     @POST("predict")
     suspend fun predict(
-        @Body request: ScanRequest
-    ): Response<ScanResponse>
+        @Part image: MultipartBody.Part
+    ): ScanResponse
+
 
 }

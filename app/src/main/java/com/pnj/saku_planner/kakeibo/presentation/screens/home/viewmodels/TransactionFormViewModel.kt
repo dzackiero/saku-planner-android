@@ -115,6 +115,31 @@ class TransactionFormViewModel @Inject constructor(
         }
     }
 
+    fun addTransactionItem(
+        amount: Long,
+        description: String,
+//        selectedKakeibo: KakeiboCategoryType
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val state = transactionFormState.value
+
+            val transactionEntity = TransactionEntity(
+                id = randomUuid(),
+                accountId = state.selectedAccount!!.id,
+                toAccountId = state.selectedToAccount?.id,
+                categoryId = state.selectedCategory?.id,
+                type = state.transactionType.toString().lowercase(),
+                amount = amount,
+                description = description,
+                kakeiboCategory = if (state.transactionType == TransactionType.EXPENSE)
+                    state.selectedKakeibo!!.name.lowercase() else null,
+                transactionAt = state.transactionAt
+            )
+
+            transactionRepository.saveTransaction(transactionEntity)
+        }
+    }
+
     private fun submitTransaction(): Boolean {
         if (validateForm()) return false
 

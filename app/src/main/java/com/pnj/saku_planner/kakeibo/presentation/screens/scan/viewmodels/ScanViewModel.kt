@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ class ScanViewModel @Inject constructor(
 
                             val scanUiList = items.map { item ->
                                 ScanUi(
-                                    itemName = item.itemName,
+                                    itemName = item.item_name,
                                     price = item.price
                                 )
                             }
@@ -51,16 +52,23 @@ class ScanViewModel @Inject constructor(
                             _items.value = scanUiList
                             _totalPrice.value = total.toString()
                             _tax.value = resource.data?.tax.toString()
+                            Timber.d("Received success with items: ${resource.data?.items?.size}")
                         }
 
                         is Resource.Error -> {
+                            Timber.e("Error received: ${resource.message}")
                             _errorMsg.value = resource.message ?: "Unknown error"
                         }
 
                         is Resource.Loading<*> -> {
+                            Timber.d("Loading...")
                             _isLoading.value = true
                         }
                     }
+                }
+                .collect {
+                    // Setelah selesai, set isLoading ke false
+                    _isLoading.value = false
                 }
         }
     }

@@ -45,6 +45,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,10 +64,12 @@ import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.Permission
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CameraPreview
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.InvalidImageAlertDialog
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.executor
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
-import com.pnj.saku_planner.kakeibo.presentation.components.DeleteTempFile
-import com.pnj.saku_planner.kakeibo.presentation.components.CreateCustomTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.deleteTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.createCustomTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.uriToFile
 import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
@@ -97,22 +100,31 @@ fun CameraScreen(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    var isLoading by remember { mutableStateOf(false) }
+    var isLoading = false
 
-    val timeStamp: String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+    var showInvalidImageDialog by remember { mutableStateOf(false) }
+
+    val errorMsg by scanViewModel.errorMsg.collectAsState()
+    val totalPrice by scanViewModel.totalPrice.collectAsState()
+
+    LaunchedEffect(totalPrice, errorMsg) {
+        if (totalPrice != null && totalPrice != "") {
+            navigateToSummary()
+        }
+        if (totalPrice == null && errorMsg == null) {
+            showInvalidImageDialog = true
+        }
+    }
 
     val launcherGallery = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     )
     { uri: Uri? ->
         if (uri != null) {
-            isLoading = true
-            val file = uri.path?.let { File(it) }
+            Timber.tag("Uri: ").d(uri.toString())
+            val file = uriToFile(context, uri)
             if (file != null) {
                 scanViewModel.loadItems(file)
-            }
-            if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
-                navigateToSummary()
             }
         } else {
             isLoading = false
@@ -235,7 +247,7 @@ fun CameraScreen(
                     onClick = {
                         isLoading = true
                         if (isCameraReady) {
-                            val photoFile = CreateCustomTempFile(context)
+                            val photoFile = createCustomTempFile(context)
                             val outputOptions =
                                 ImageCapture.OutputFileOptions.Builder(photoFile).build()
                             imageCaptureUseCase.takePicture(
@@ -244,18 +256,17 @@ fun CameraScreen(
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                         imageUri = output.savedUri!!
-                                        val file = File(imageUri.path ?: return)
-
-                                        scanViewModel.loadItems(file)
-                                        if (scanViewModel.isLoading.value == false && scanViewModel.errorMsg.value != ""){
-                                            navigateToSummary()
+                                        val file = uriToFile(context, imageUri)
+                                        if (file != null) {
+                                            scanViewModel.loadItems(file)
                                         }
+
                                     }
 
 
                                     override fun onError(ex: ImageCaptureException) {
                                         isLoading = false
-                                        DeleteTempFile(photoFile)
+                                        deleteTempFile(photoFile)
                                         Toast.makeText(
                                             context,
                                             "Failed to capture image.",
@@ -297,10 +308,20 @@ fun CameraScreen(
         }
         if (isLoading) {
             Box(
-//                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                modifier = Modifier.background(
+                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
             ) {
                 LoadingScreen()
             }
+
         }
+
+        InvalidImageAlertDialog(
+            showDialog = showInvalidImageDialog,
+            onDismiss = {
+                showInvalidImageDialog = false
+            }
+        )
     }
 }

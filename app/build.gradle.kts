@@ -91,6 +91,8 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.accompanist.permissions)
 
+    implementation(libs.androidx.foundation)
+
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hilt.compiler)
