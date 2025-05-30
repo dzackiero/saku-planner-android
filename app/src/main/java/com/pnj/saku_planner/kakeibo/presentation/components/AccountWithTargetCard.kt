@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
-import android.icu.text.NumberFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import java.util.Locale
 
 @Composable
@@ -30,17 +30,11 @@ fun AccountWithTargetCard(
     modifier: Modifier = Modifier ,
     onClick: () -> Unit = {},
 ) {
-    val formattedAmount = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(amount)
-    val formattedTargetAmount = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(targetAmount)
+    val formattedAmount = formatToCurrency(amount)
+    val formattedTargetAmount = formatToCurrency(targetAmount)
 
     val monthlyAmount = if (duration == 0) 0.0 else targetAmount / duration
-    val formattedMonthlyAmount = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(monthlyAmount)
+    val formattedMonthlyAmount = formatToCurrency(monthlyAmount)
 
     val progress =
             if (targetAmount == 0.toLong()) 0f else (amount / targetAmount).toFloat().coerceIn(0f, 1f)

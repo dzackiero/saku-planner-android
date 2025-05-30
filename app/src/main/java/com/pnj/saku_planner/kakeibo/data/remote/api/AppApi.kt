@@ -22,6 +22,10 @@ interface AppApi {
     @POST("auth/logout")
     suspend fun logout(): Response<Unit>
 
+    @POST("auth/update")
+    suspend fun updateProfile(@Body request: UpdateRequest): Response<AuthResponse>
+
+
     @POST("sync")
     suspend fun sync(@Body request: SyncRequest): Response<Unit>
 }

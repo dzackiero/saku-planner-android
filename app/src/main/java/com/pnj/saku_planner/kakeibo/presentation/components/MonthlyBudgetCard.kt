@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
-import android.icu.text.NumberFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,11 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
 import java.time.YearMonth
 import java.util.Locale
 
@@ -30,14 +30,21 @@ fun MonthlyBudgetCard(
     spentAmount: Long,
     yearMonth: YearMonth = YearMonth.now(),
 ) {
-    val formattedTotalBudget = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(totalBudget)
-    val formattedSpentAmount = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(spentAmount)
+    val formattedTotalBudget = formatToCurrency(totalBudget)
+    val formattedSpentAmount = formatToCurrency(spentAmount)
+
     val progress = (spentAmount.toFloat() / totalBudget.toFloat()).coerceIn(0f, 1f)
-    val percentage = "${(progress * 100).toInt()}%"
+    val actualProgress = if (totalBudget > 0) {
+        spentAmount.toDouble() / totalBudget
+    } else {
+        if (spentAmount > 0) Double.POSITIVE_INFINITY else 0.0
+    }
+    val percentageString = String.format(Locale.getDefault(), "%.2f%%", actualProgress * 100)
+    val isOverBudget = actualProgress > 1.0
+
+    val progressIndicatorColor = if (isOverBudget) AppColor.Destructive else AppColor.Primary
+    val percentageTextColor =
+        if (isOverBudget) AppColor.Destructive else AppColor.Foreground
 
     Card {
         Column(
@@ -53,7 +60,7 @@ fun MonthlyBudgetCard(
                     style = Typography.titleMedium,
                 )
                 Text(
-                    text = yearMonthToShortString(yearMonth),
+                    text = yearMonthToString(yearMonth),
                     style = Typography.titleMedium,
                 )
             }
@@ -71,6 +78,7 @@ fun MonthlyBudgetCard(
                     modifier = Modifier
                         .height(6.dp)
                         .fillMaxWidth(),
+                    color = progressIndicatorColor,
                     trackColor = AppColor.Muted,
                 )
                 Row(
@@ -78,15 +86,15 @@ fun MonthlyBudgetCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "$formattedSpentAmount/$formattedTotalBudget",
+                        text = stringResource(R.string.per_month, formattedTotalBudget),
                         style = Typography.labelSmall,
                         color = AppColor.MutedForeground,
                     )
 
                     Text(
-                        text = percentage,
+                        text = percentageString,
+                        color = percentageTextColor,
                         style = Typography.labelSmall,
-                        color = AppColor.MutedForeground,
                     )
                 }
             }
@@ -100,7 +108,7 @@ fun PreviewMonthlyBudgetCard() {
     KakeiboTheme {
         MonthlyBudgetCard(
             totalBudget = 1_000_000,
-            spentAmount = 100_000,
+            spentAmount = 1000_000,
         )
     }
 }

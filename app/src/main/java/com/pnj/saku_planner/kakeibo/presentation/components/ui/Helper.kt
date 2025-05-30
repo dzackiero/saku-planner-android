@@ -26,10 +26,13 @@ fun convertMillisToDate(millis: Long): String {
     return formatter.format(Date(millis))
 }
 
-fun yearMonthToShortString(yearMonth: YearMonth): String {
+fun yearMonthToString(
+    yearMonth: YearMonth,
+    textStyle: TextStyle = TextStyle.SHORT
+): String {
     return "${
         yearMonth.month.getDisplayName(
-            TextStyle.SHORT,
+            textStyle,
             Locale.getDefault()
         )
     } ${yearMonth.year}"

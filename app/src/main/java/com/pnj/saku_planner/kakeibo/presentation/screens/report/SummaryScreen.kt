@@ -174,6 +174,7 @@ fun SummaryScreen(
             chartDataList = chartData,
             totalFormatter = { formatToCurrency(it) },
             totalLabel = typeOptions[selectedOptionIndex].label,
+            startupAnimation = false,
         )
 
         Row(
@@ -224,7 +225,7 @@ fun SummaryScreen(
                     }
 
                     state.summaryData.forEachIndexed { index, data ->
-                        val pct = data.amount / total * 100
+                        val pct = data.amount / total * 100.0
                         val formatted = String.format(Locale.getDefault(), "%.2f", pct)
 
                         Row(

@@ -36,7 +36,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.MonthSelector
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionDateDivider
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.HomeState
 import java.time.YearMonth
@@ -124,7 +124,7 @@ fun HomeScreen(
                 ) {
                     Text(text = stringResource(R.string.income), style = Typography.titleMedium)
                     Text(
-                        text = yearMonthToShortString(selectedMonth),
+                        text = yearMonthToString(selectedMonth),
                         color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )
@@ -153,9 +153,9 @@ fun HomeScreen(
                         .padding(8.dp)
                         .fillMaxWidth()
                 ) {
-                    Text(text = stringResource(R.string.expenses), style = Typography.titleMedium)
+                    Text(text = stringResource(R.string.expense), style = Typography.titleMedium)
                     Text(
-                        text = yearMonthToShortString(selectedMonth),
+                        text = yearMonthToString(selectedMonth),
                         color = AppColor.MutedForeground,
                         style = Typography.labelSmall
                     )

@@ -6,6 +6,7 @@ import com.pnj.saku_planner.kakeibo.data.remote.api.AppApi
 import com.pnj.saku_planner.kakeibo.data.remote.dto.AuthResponse
 import com.pnj.saku_planner.kakeibo.data.remote.dto.LoginRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.RegisterRequest
+import com.pnj.saku_planner.kakeibo.data.remote.dto.UpdateRequest
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.extractApiMessage
 import kotlinx.coroutines.flow.Flow
@@ -58,6 +59,19 @@ class AuthRepositoryImpl @Inject constructor(
             } ?: run {
                 emit(Resource.Error("Registration failed, no data received"))
             }
+        } catch (e: HttpException) {
+            emit(Resource.Error(e.extractApiMessage() ?: "An unexpected error occurred"))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        }
+    }
+
+    override suspend fun update(name: String, email: String): Flow<Resource<String>> = flow {
+        try {
+            emit(Resource.Loading())
+            val response = api.updateProfile(UpdateRequest(name, email))
+            settingsDataStore.updateUserProfile(name, email)
+            emit(Resource.Success(response.message ?: "Logout successful"))
         } catch (e: HttpException) {
             emit(Resource.Error(e.extractApiMessage() ?: "An unexpected error occurred"))
         } catch (e: Exception) {

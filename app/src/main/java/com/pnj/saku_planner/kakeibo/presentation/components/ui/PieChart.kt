@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.pnj.saku_planner.core.theme.TailwindColor
 import com.pnj.saku_planner.core.theme.Typography
+import timber.log.Timber
 import java.util.Locale
 import kotlin.math.*
 
@@ -78,7 +79,8 @@ fun PieChartWithText(
         }
         val percentLayouts = remember(chartDataList, total) {
             chartDataList.map { data ->
-                val pct = data.value / total * 100
+                val pct = data.value.toDouble() / total.toDouble() * 100.0
+                Timber.d("Calculating percentage for: ${data.label} with value: ${data.value} and total: $total = $pct")
                 val formatted = String.format(Locale.getDefault(), "%.2f", pct)
                 textMeasurer.measure(
                     text = "$formatted%",
@@ -92,7 +94,7 @@ fun PieChartWithText(
                 style = if (total > 10_000_000) Typography.titleSmall else Typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                constraints = Constraints(maxWidth = (radius*2).toInt())
+                constraints = Constraints(maxWidth = (radius * 2).toInt())
             )
         }
         val totalLabelLayout = remember(totalLabel) {
@@ -132,7 +134,11 @@ fun PieChartWithText(
         ) {
             var startAngle = 0f
             chartDataList.forEachIndexed { index, data ->
-                val fullSweep = (data.value / total * 360).toFloat()
+                val fullSweep = if (total != 0L) {
+                    (data.value.toDouble() / total.toDouble() * 360.0).toFloat()
+                } else {
+                    0f
+                }
                 val sweepAngle = fullSweep * progress
 
                 // draw arc
@@ -146,8 +152,13 @@ fun PieChartWithText(
                     style = Stroke(width = strokeWidth)
                 )
 
+                val percentageOfTotal = if (total != 0L) {
+                    data.value.toDouble() / total.toDouble()
+                } else {
+                    0.0
+                }
                 // draw label/percentage only if none selected or this is selected
-                if ((selectedIndex == null || selectedIndex == index) && animationProgress.value >= 1f && data.value / total > 0.02) {
+                if ((selectedIndex == null || selectedIndex == index) && animationProgress.value >= 1f && percentageOfTotal > 0.02) {
                     val midAngle = startAngle + sweepAngle / 2
                     val angleRad = midAngle.degreeToAngle
                     val blockCenter = Offset(
