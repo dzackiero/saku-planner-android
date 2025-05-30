@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.pnj.saku_planner.R
+import com.pnj.saku_planner.kakeibo.presentation.routes.ReflectionListRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.TabItem
@@ -30,6 +31,9 @@ fun ReportPagerScreen(
         TabItem(label = stringResource(R.string.transactions)) {
             TransactionRoute(navController)
         },
+        TabItem(label = stringResource(R.string.reflection)) {
+            ReflectionListRoute(navController)
+        }
     )
 
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }

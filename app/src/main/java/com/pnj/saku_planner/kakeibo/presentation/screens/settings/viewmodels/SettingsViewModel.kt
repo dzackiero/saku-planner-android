@@ -12,6 +12,7 @@ import com.pnj.saku_planner.core.sync.SyncScheduler
 import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
@@ -29,7 +30,7 @@ class SettingsViewModel @Inject constructor(
 
     private val workManager = WorkManager.getInstance(appContext)
     val manualSyncWorkInfoState: StateFlow<WorkInfo?> =
-        workManager.getWorkInfosForUniqueWorkLiveData(SyncScheduler.MANUAL_SYNC_WORK_NAME) // Use the unique name
+        workManager.getWorkInfosForUniqueWorkLiveData(SyncScheduler.MANUAL_SYNC_WORK_NAME)
             .asFlow()
             .mapNotNull { workInfoList ->
                 workInfoList.firstOrNull()
@@ -53,7 +54,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun resetDatabase() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             databaseSeeder.resetDatabase()
         }
     }

@@ -12,14 +12,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn // Added for max height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
@@ -44,176 +42,201 @@ import com.pnj.saku_planner.core.theme.TailwindColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
+import java.util.Locale
 
 @Composable
-fun BudgetPage() {
+fun BudgetPage(
+    state: ReflectionState = ReflectionState()
+) {
     var showReflectionForm by remember { mutableStateOf(true) }
 
+    val totalBudget = state.budgets.sumOf { it.amount }
+    val spentAmount = state.budgets.sumOf { it.currentAmount }
+    val actualProgress = if (totalBudget > 0) {
+        spentAmount.toDouble() / totalBudget
+    } else {
+        if (spentAmount > 0) Double.POSITIVE_INFINITY else 0.0
+    }
+    val percentageString = String.format(Locale.getDefault(), "%.2f%%", actualProgress * 100)
+
+    val isOverBudget = actualProgress > 1.0
+
+    val progressIndicatorColor = if (isOverBudget) AppColor.Destructive else AppColor.Primary
+    val percentageTextColor =
+        if (isOverBudget) AppColor.Destructive else Color.Unspecified
+
+
     Column(
-        modifier = Modifier
-            .padding(24.dp)
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Spacer(Modifier.size(1.dp)) // Minimal spacer for top alignment with SpaceBetween
-
         Column(
-            modifier = Modifier.fillMaxWidth(), // This column groups title, overall card, conditional section, and button
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Page Title and Subtitle
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Text(
-                    text = "How your Budgeting Went",
-                    style = Typography.displayMedium,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "Here's a summary of your budgeting for this month.",
-                    style = Typography.titleMedium,
-                    color = AppColor.MutedForeground,
-                    textAlign = TextAlign.Center,
-                )
-            }
+            Text(
+                text = stringResource(R.string.budget_title),
+                style = Typography.displayMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = stringResource(R.string.budget_desc),
+                style = Typography.titleMedium,
+                color = AppColor.MutedForeground,
+                textAlign = TextAlign.Center,
+            )
+        }
 
-            // Overall Budgets Summary Card (Always Visible)
-            Card {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+        Card {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text(
+                        text = stringResource(R.string.overall_budgets),
+                        style = Typography.titleMedium,
+                    )
+                }
+                Text(
+                    text = formatToCurrency(totalBudget),
+                    style = Typography.headlineMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    LinearProgressIndicator(
+                        progress = { actualProgress.toFloat().coerceAtMost(1.0f) },
+                        modifier = Modifier
+                            .height(6.dp)
+                            .fillMaxWidth(),
+                        trackColor = AppColor.Muted,
+                        color = progressIndicatorColor,
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Overall Budgets",
-                            style = Typography.titleMedium,
+                            text = stringResource(
+                                R.string.per_month,
+                                formatToCurrency(spentAmount)
+                            ),
+                            style = Typography.labelSmall,
+                            color = AppColor.MutedForeground,
                         )
-                    }
-                    Text(
-                        text = "Rp500.000", // Example Data
-                        style = Typography.headlineMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        LinearProgressIndicator(
-                            progress = { 0.5f }, // Example Data
-                            modifier = Modifier
-                                .height(6.dp)
-                                .fillMaxWidth(),
-                            trackColor = AppColor.Muted,
+                        Text(
+                            text = percentageString,
+                            color = percentageTextColor,
+                            style = Typography.labelSmall,
                         )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                "Rp500.000/Rp1.000.000", // Example Data
-                                style = Typography.labelSmall,
-                                color = AppColor.MutedForeground,
-                            )
-                            Text(
-                                text = "50%", // Example Data
-                                style = Typography.labelSmall,
-                                color = AppColor.MutedForeground,
-                            )
-                        }
                     }
                 }
             }
+        }
 
-            AnimatedVisibility(
-                visible = showReflectionForm,
-                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Top)
+        AnimatedVisibility(
+            visible = showReflectionForm,
+            enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+            exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Top)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Text(
+                    text = stringResource(R.string.overbudget_desc),
+                    textAlign = TextAlign.Center,
+                    style = Typography.titleMedium,
+                    color = AppColor.MutedForeground,
+                )
+
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp) // Space between text and the list
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 240.dp)
+                        .verticalScroll(rememberScrollState()),
                 ) {
-                    Text(
-                        text = "You spent more than planned in these categories",
-                        textAlign = TextAlign.Center,
-                        style = Typography.titleMedium,
-                        color = AppColor.MutedForeground,
-                    )
+                    state.budgets.forEach { budget ->
+                        val budgetPct = if (budget.amount > 0) {
+                            budget.currentAmount.toDouble() / budget.amount
+                        } else {
+                            if (budget.currentAmount > 0) Double.POSITIVE_INFINITY else 0.0
+                        }
+                        val pctString = String.format(
+                            Locale.getDefault(),
+                            "%.2f%%",
+                            budgetPct * 100
+                        )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 240.dp)
-                            .verticalScroll(rememberScrollState()),
-                    ) {
-                        repeat(30) {
-                            Card(padding = PaddingValues(horizontal = 4.dp)) {
-                                Row {
+                        Card(padding = PaddingValues(horizontal = 4.dp)) {
+                            Row {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
                                     Row(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp, horizontal = 8.dp)
-                                            .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            Text(
-                                                text = "120%",
-                                                style = Typography.bodySmall,
-                                                color = Color.White,
-                                                modifier = Modifier
-                                                    .background(
-                                                        TailwindColor.Yellow500,
-                                                        shape = RoundedCornerShape(2.dp)
-                                                    )
-                                                    .padding(4.dp)
-                                            )
-
-                                            Text(
-                                                text = "Entertainment",
-                                                style = Typography.bodyMedium,
-                                            )
-                                        }
                                         Text(
-                                            text = formatToCurrency(50_000),
+                                            text = pctString,
+                                            style = Typography.bodySmall,
+                                            color = Color.White,
+                                            modifier = Modifier
+                                                .background(
+                                                    TailwindColor.Yellow500,
+                                                    shape = RoundedCornerShape(2.dp)
+                                                )
+                                                .padding(4.dp)
+                                        )
+
+                                        Text(
+                                            text = budget.category,
                                             style = Typography.bodyMedium,
-                                            modifier = Modifier.padding(start = 8.dp)
                                         )
                                     }
+                                    Text(
+                                        text = formatToCurrency(budget.currentAmount),
+                                        style = Typography.bodyMedium,
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            // Toggle Button
-            SecondaryButton(
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                onClick = {
-                    showReflectionForm = !showReflectionForm
-                }
-            ) {
-                Text(
-                    text = if (showReflectionForm) "View Budget Details" else "Hide Budget Details",
-                    style = Typography.titleMedium,
-                    color = AppColor.Foreground,
-                )
+        // Toggle Button
+        SecondaryButton(
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+            onClick = {
+                showReflectionForm = !showReflectionForm
             }
+        ) {
+            Text(
+                text = if (showReflectionForm)
+                    stringResource(R.string.view_budget_details)
+                else
+                    stringResource(R.string.hide_budget_details),
+                style = Typography.titleMedium,
+                color = AppColor.Foreground,
+            )
         }
 
         AnimatedVisibility(
@@ -232,39 +255,16 @@ fun BudgetPage() {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                repeat(20) {
+                state.budgets.forEach {
                     BudgetCard(
                         budget = BudgetUi(
-                            id = "lorem-ipsum",
-                            category = "Entertainment",
-                            amount = 100_000,
-                            currentAmount = 500_000,
+                            id = it.id,
+                            amount = it.amount,
+                            category = it.category,
+                            currentAmount = it.currentAmount,
                         )
                     ) { }
                 }
-            }
-        }
-
-
-        // Bottom Navigation Buttons
-        Row(
-            modifier = Modifier
-                .padding(top = 24.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            SecondaryButton(
-                onClick = {},
-                modifier = Modifier
-                    .width(120.dp)
-            ) {
-                Text("Previous")
-            }
-            PrimaryButton(
-                onClick = {},
-                modifier = Modifier.width(120.dp)
-            ) {
-                Text("Next")
             }
         }
     }
@@ -274,7 +274,30 @@ fun BudgetPage() {
 @Composable
 fun BudgetPagePreview() {
     KakeiboTheme {
-        BudgetPage()
+        BudgetPage(
+            ReflectionState(
+                budgets = listOf(
+                    BudgetUi(
+                        id = "1",
+                        amount = 50000,
+                        category = "Food",
+                        currentAmount = 160000
+                    ),
+                    BudgetUi(
+                        id = "2",
+                        amount = 30000,
+                        category = "Transport",
+                        currentAmount = 525000
+                    ),
+                    BudgetUi(
+                        id = "3",
+                        amount = 20000,
+                        category = "Entertainment",
+                        currentAmount = 115000
+                    )
+                )
+            )
+        )
     }
 }
 

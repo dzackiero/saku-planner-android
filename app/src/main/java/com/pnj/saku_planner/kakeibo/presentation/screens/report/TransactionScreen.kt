@@ -14,6 +14,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -66,7 +68,10 @@ enum class TimeOptions {
 fun TransactionScreen(
     modifier: Modifier = Modifier,
     onTransactionClicked: (String) -> Unit = {},
-    transactions: List<TransactionUi> = emptyList()
+    transactions: List<TransactionUi> = emptyList(),
+    searchable: Boolean = false,
+    searchQuery: String = "",
+    onSearchQueryChange: (String) -> Unit = {},
 ) {
     var selectedOption by remember { mutableIntStateOf(0) }
     val options = TimeOptions.entries.toTypedArray()
@@ -91,6 +96,12 @@ fun TransactionScreen(
         }
     }
     val grouped: Map<PeriodKey, List<TransactionUi>> = transactions
+        .filter { tx ->
+            searchQuery.isBlank() || tx.description.contains(searchQuery, ignoreCase = true)
+                    || tx.toAccount?.contains(searchQuery, ignoreCase = true) == true
+                    || tx.category?.contains(searchQuery, ignoreCase = true) == true
+                    || tx.account.contains(searchQuery, ignoreCase = true)
+        }
         .groupBy(groupKeySelector)
         .toSortedMap(compareByDescending { key ->
             when (key) {
@@ -106,43 +117,58 @@ fun TransactionScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 8.dp)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.transactions),
-                    style = Typography.displaySmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                options.forEachIndexed { index, option ->
-                    val label = when (option) {
-                        TimeOptions.WEEK -> stringResource(R.string.week)
-                        TimeOptions.MONTH -> stringResource(R.string.month)
-                        TimeOptions.YEAR -> stringResource(R.string.year)
-                    }
-
-                    FilterChip(
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = AppColor.AccentForeground,
-                            selectedLabelColor = AppColor.Accent,
-                        ),
-                        selected = options[selectedOption] == option,
-                        onClick = { selectedOption = index },
-                        label = { Text(label) },
+        if (searchable) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChange,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
+                placeholder = {
+                    Text(stringResource(R.string.search_for_a_transaction))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            Column {
+                Row(
+                    modifier = Modifier
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.transactions),
+                        style = Typography.displaySmall,
+                        fontWeight = FontWeight.Bold
                     )
+                }
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    options.forEachIndexed { index, option ->
+                        val label = when (option) {
+                            TimeOptions.WEEK -> stringResource(R.string.week)
+                            TimeOptions.MONTH -> stringResource(R.string.month)
+                            TimeOptions.YEAR -> stringResource(R.string.year)
+                        }
+
+                        FilterChip(
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = AppColor.AccentForeground,
+                                selectedLabelColor = AppColor.Accent,
+                            ),
+                            selected = options[selectedOption] == option,
+                            onClick = { selectedOption = index },
+                            label = { Text(label) },
+                        )
+                    }
                 }
             }
         }
