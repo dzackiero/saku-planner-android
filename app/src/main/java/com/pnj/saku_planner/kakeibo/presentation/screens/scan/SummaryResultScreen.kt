@@ -94,12 +94,12 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
-            .verticalScroll(rememberScrollState()), // Tambahkan scroll jika konten panjang
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
     ) {
+        Spacer(modifier = Modifier.height(24.dp)) 
         Text("Expense Summary", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         AnimatedVisibility(
             visible = items?.isNotEmpty() == true,
@@ -160,7 +160,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
+                        .padding(vertical = 4.dp, horizontal=8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -184,7 +184,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
+                        .padding(vertical = 4.dp, horizontal=8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -256,11 +256,9 @@ fun TransactionFormPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            // .padding(horizontal = 16.dp, vertical = 24.dp) // Padding keseluruhan untuk halaman ini
-            .verticalScroll(rememberScrollState()) // Aktifkan scroll vertikal
-            .padding(bottom = 16.dp), // Padding bawah untuk memberi ruang pada tombol
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        // verticalArrangement = Arrangement.Center dihapus agar konten mulai dari atas
     ) {
         Spacer(modifier = Modifier.height(24.dp)) // Spacer di atas judul
         Text("Choose Category", style = MaterialTheme.typography.titleLarge)
