@@ -80,7 +80,14 @@ fun BudgetScreen(
 fun PreviewBudgetScreen() {
     KakeiboTheme {
         BudgetScreen(
-            budgets = emptyList()
+            budgets = listOf(
+                BudgetUi(
+                    id = "1",
+                    amount = 50000,
+                    currentAmount = 20000,
+                    category = "Food",
+                )
+            )
         ) { }
     }
 }
