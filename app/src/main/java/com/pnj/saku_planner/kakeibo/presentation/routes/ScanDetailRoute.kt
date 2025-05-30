@@ -11,10 +11,11 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.Transac
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.DetailResultScreen
 
 @Composable
-fun ScanDetailRoute(navController: NavController, navBackStackEntry: NavBackStackEntry) {
+fun ScanDetailRoute(navController: NavController, navBackStackEntry: NavBackStackEntry, transactionIds: List<String>) {
     val parentEntry = remember(navBackStackEntry) { navController.getBackStackEntry(SummaryScan) }
     val transactionFormViewModel: TransactionFormViewModel = hiltViewModel(parentEntry)
     DetailResultScreen(
+        transactionIds = transactionIds,
         navigateToHome = {
             navController.navigate(Home)
         },

@@ -23,8 +23,8 @@ fun ScanSummaryRoute(navController: NavController, navBackStackEntry: NavBackSta
         accountViewModel = hiltViewModel<AccountViewModel>(),
         categoryViewModel = hiltViewModel<CategoryViewModel>(),
         transactionViewModel = hiltViewModel<TransactionFormViewModel>(),
-        navigateToDetail = {
-            navController.navigate(DetailScan)
+        navigateToDetail = { transactionIds ->
+            navController.navigate(DetailScan(transactionIds))
         },
         navigateToEdit = {
             navController.navigate(EditScan)

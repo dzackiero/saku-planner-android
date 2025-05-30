@@ -286,7 +286,8 @@ fun MainAppNavigation() {
             }
 
             composable<DetailScan> { navBackStackEntry ->
-                ScanDetailRoute(navController, navBackStackEntry)
+                val transactionIds = navBackStackEntry.toRoute<DetailScan>().transactionIds
+                ScanDetailRoute(navController, navBackStackEntry, transactionIds)
             }
 
             composable<EditScan> { navBackStackEntry ->
@@ -466,7 +467,9 @@ data object Scan
 data object SummaryScan
 
 @Serializable
-data object DetailScan
+data class DetailScan(
+    val transactionIds: List<String>
+)
 
 @Serializable
 data object EditScan

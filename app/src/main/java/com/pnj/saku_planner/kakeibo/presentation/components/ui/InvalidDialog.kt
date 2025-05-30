@@ -6,15 +6,17 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
 @Composable
-fun InvalidImageAlertDialog(
+fun InvalidAlertDialog(
     showDialog: Boolean,
+    title: String,
+    text: String,
     onDismiss: () -> Unit
 ) {
     if (showDialog) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Invalid Image") },
-            text = { Text("The image you entered is not a receipt or invoice, please enter a valid image.") },
+            title = { Text(title) },
+            text = { Text(text) },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
                     Text("OK")

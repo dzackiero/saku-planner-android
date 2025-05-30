@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -64,17 +65,13 @@ import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.Permission
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CameraPreview
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.InvalidImageAlertDialog
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.InvalidAlertDialog
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.executor
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.deleteTempFile
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.createCustomTempFile
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.uriToFile
 import timber.log.Timber
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun CameraScreen(
@@ -100,19 +97,25 @@ fun CameraScreen(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    var isLoading = false
+    var isLoading by remember { mutableStateOf(false) }
 
+    val shouldNavigateToSummary by scanViewModel.navigateToSummaryEvent.collectAsStateWithLifecycle()
     var showInvalidImageDialog by remember { mutableStateOf(false) }
+    var showErrorMessage by remember { mutableStateOf(false) }
 
     val errorMsg by scanViewModel.errorMsg.collectAsState()
-    val totalPrice by scanViewModel.totalPrice.collectAsState()
 
-    LaunchedEffect(totalPrice, errorMsg) {
-        if (totalPrice != null && totalPrice != "") {
-            navigateToSummary()
+    LaunchedEffect(errorMsg) {
+        if (errorMsg != "") {
+            isLoading = false
+            showErrorMessage = true
         }
-        if (totalPrice == null && errorMsg == null) {
-            showInvalidImageDialog = true
+    }
+
+    LaunchedEffect(shouldNavigateToSummary) {
+        if (shouldNavigateToSummary) {
+            navigateToSummary()
+            scanViewModel.onSummaryNavigationConsumed()
         }
     }
 
@@ -317,10 +320,21 @@ fun CameraScreen(
 
         }
 
-        InvalidImageAlertDialog(
+        InvalidAlertDialog(
             showDialog = showInvalidImageDialog,
+            title = "Invalid Image",
+            text = "The image you entered is not a receipt or invoice, please enter a valid image.",
             onDismiss = {
                 showInvalidImageDialog = false
+            }
+        )
+
+        InvalidAlertDialog(
+            showDialog = showErrorMessage,
+            title = "There Are Something Wrong",
+            text = errorMsg.toString(),
+            onDismiss = {
+                showErrorMessage = false
             }
         )
     }

@@ -12,7 +12,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.Transac
 @Composable
 fun DetailResultScreen(
     modifier: Modifier = Modifier,
-    items: List<ScanUi> = emptyList(),
+    transactionIds: List<String>,
     transactionFormViewModel: TransactionFormViewModel,
     navigateToHome: () -> Unit = {}
 ){

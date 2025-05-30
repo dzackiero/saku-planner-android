@@ -15,14 +15,16 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.Cat
 
 @Composable
 fun ScanEditRoute(navController: NavController, navBackStackEntry: NavBackStackEntry) {
-    val parentEntry = remember(navBackStackEntry) { navController.getBackStackEntry(SummaryScan) }
-    val transactionFormViewModel: TransactionFormViewModel = hiltViewModel(parentEntry)
+    val parentScan = remember(navBackStackEntry) { navController.getBackStackEntry(Scan) }
+    val parentTransaction = remember(navBackStackEntry) { navController.getBackStackEntry(SummaryScan) }
+    val transactionFormViewModel: TransactionFormViewModel = hiltViewModel(parentTransaction)
+    val scanViewModel: ScanViewModel = hiltViewModel(parentScan)
     EditResultScreen(
-        scanViewModel = hiltViewModel <ScanViewModel>(),
+        scanViewModel = scanViewModel,
+        categoryViewModel = hiltViewModel<CategoryViewModel>(),
         transactionFormViewModel = transactionFormViewModel,
-        categoryViewModel = hiltViewModel <CategoryViewModel>(),
-        navigateToDetail = {
-            navController.navigate(DetailScan)
+        navigateToDetail = { transactionIds ->
+            navController.navigate(DetailScan(transactionIds))
         },
     )
 }
