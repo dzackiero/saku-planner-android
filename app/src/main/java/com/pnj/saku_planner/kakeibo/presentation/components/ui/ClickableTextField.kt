@@ -5,6 +5,8 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -19,9 +21,10 @@ fun ClickableTextField(
     label: @Composable () -> Unit = {},
     placeholder: @Composable () -> Unit = {},
     trailingIcon: (@Composable () -> Unit)? = null,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     enabled: Boolean = true,
+    readOnly: Boolean = true,
     singleLine: Boolean = false,
-    readOnly: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,
@@ -32,14 +35,12 @@ fun ClickableTextField(
         label = label,
         placeholder = placeholder,
         trailingIcon = trailingIcon,
+        colors = colors,
         enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .pointerInput(value) {
                 awaitEachGesture {
-                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
-                    // in the Initial pass to observe events before the text field consumes them
-                    // in the Main pass.
                     awaitFirstDown(pass = PointerEventPass.Initial)
                     val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
                     if (upEvent != null && enabled) {

@@ -50,14 +50,14 @@ val Typography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         lineHeight = 24.sp,
-        letterSpacing = (-0.1).sp
+        letterSpacing = (-0.1).sp,
     ),
     titleMedium = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.25.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = Inter,
@@ -78,7 +78,7 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.25.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = Inter,

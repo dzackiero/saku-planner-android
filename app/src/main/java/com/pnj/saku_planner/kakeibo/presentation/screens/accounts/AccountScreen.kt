@@ -54,13 +54,13 @@ fun AccountScreen(
         stringResource(R.string.saving),
     )
     var selectedFilter by remember { mutableStateOf(filters[0]) }
-    val totalBalance = accounts.sumOf { it.balance }
 
     val filteredAccounts = when (selectedFilter) {
         stringResource(R.string.spending) -> accounts.filter { it.target == null }
         stringResource(R.string.saving) -> accounts.filter { it.target != null }
         else -> accounts
     }
+    val totalBalance = filteredAccounts.sumOf { it.balance }
 
 
     Column(

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToShortString
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
 import java.time.YearMonth
 
 @Composable
@@ -28,7 +28,7 @@ fun MonthSelector(
             Icon(Icons.Default.ArrowBackIosNew, "previous month")
         }
         Text(
-            text = yearMonthToShortString(selectedMonth),
+            text = yearMonthToString(selectedMonth),
             style = Typography.titleMedium
         )
 

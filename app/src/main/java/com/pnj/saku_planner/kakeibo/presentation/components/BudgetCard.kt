@@ -1,6 +1,5 @@
 package com.pnj.saku_planner.kakeibo.presentation.components
 
-import android.icu.text.NumberFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +10,13 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color // Import Color for text color
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
-import com.pnj.saku_planner.core.theme.AppColor
+import com.pnj.saku_planner.core.theme.AppColor // Ensure AppColor.Destructive and a default progress color (e.g., AppColor.Primary) are defined
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import java.util.Locale
 
 @Composable
@@ -23,14 +24,21 @@ fun BudgetCard(
     budget: BudgetUi,
     onEditClick: () -> Unit
 ) {
-    val formattedTotalBudget = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(budget.amount)
-    val formattedSpentAmount = NumberFormat
-        .getCurrencyInstance(Locale("id", "ID"))
-        .format(budget.currentAmount)
-    val progress = ((budget.currentAmount).toDouble() / budget.amount).coerceIn(0.0, 1.0)
-    val percentage = "${(progress * 100).toInt()}%"
+    val formattedTotalBudget = formatToCurrency(budget.amount)
+    val formattedSpentAmount = formatToCurrency(budget.currentAmount)
+
+    val actualProgress = if (budget.amount > 0) {
+        budget.currentAmount.toDouble() / budget.amount
+    } else {
+        if (budget.currentAmount > 0) Double.POSITIVE_INFINITY else 0.0
+    }
+    val percentageString = String.format(Locale.getDefault(), "%.2f%%", actualProgress * 100)
+
+    val isOverBudget = actualProgress > 1.0
+
+    val progressIndicatorColor = if (isOverBudget) AppColor.Destructive else AppColor.Primary
+    val percentageTextColor =
+        if (isOverBudget) AppColor.Destructive else Color.Unspecified
 
     Card(
         modifier = Modifier.clickable { onEditClick() }
@@ -50,8 +58,9 @@ fun BudgetCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = percentage,
+                        text = percentageString,
                         style = Typography.bodyMedium,
+                        color = percentageTextColor // Apply conditional color
                     )
                     Text(
                         text = "$formattedSpentAmount / $formattedTotalBudget",
@@ -59,10 +68,11 @@ fun BudgetCard(
                     )
                 }
                 LinearProgressIndicator(
-                    progress = { progress.toFloat() },
+                    progress = { actualProgress.toFloat().coerceAtMost(1.0f) },
                     modifier = Modifier
                         .height(6.dp)
                         .fillMaxWidth(),
+                    color = progressIndicatorColor,
                     trackColor = AppColor.Muted,
                 )
             }

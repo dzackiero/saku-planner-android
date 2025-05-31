@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AccountPagerScreen(
-    navController: NavController ,
+    navController: NavController,
     navBackStackEntry: NavBackStackEntry,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +60,11 @@ fun AccountPagerScreen(
                 .fillMaxWidth()
                 .weight(1f)
         ) { page ->
-            tabs[page].content()
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                tabs[page].content()
+            }
         }
     }
 }

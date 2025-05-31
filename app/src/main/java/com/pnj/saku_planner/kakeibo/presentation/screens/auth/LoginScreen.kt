@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -99,31 +98,24 @@ fun LoginScreen(
                 }
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(onClick = onForgotPassword) {
+        Column {
+            TextButton(
+                onClick = onForgotPassword,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = stringResource(R.string.forgot_password), style = Typography.bodyMedium)
             }
 
             PrimaryButton(
                 onClick = onLoginAttempt,
                 enabled = !state.isLoading,
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 if (state.isLoading) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .align(Alignment.CenterVertically)
-                                .then(Modifier),
-                            strokeWidth = 2.dp
-                        )
                         Text(
                             text = stringResource(R.string.loading),
                             style = Typography.titleMedium,
