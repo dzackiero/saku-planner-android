@@ -6,19 +6,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.pnj.saku_planner.Home
-import com.pnj.saku_planner.SummaryScan
-import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormViewModel
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.DetailResultScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 
 @Composable
-fun ScanDetailRoute(navController: NavController, navBackStackEntry: NavBackStackEntry, transactionIds: List<String>) {
-    val parentEntry = remember(navBackStackEntry) { navController.getBackStackEntry(SummaryScan) }
-    val transactionFormViewModel: TransactionFormViewModel = hiltViewModel(parentEntry)
+fun ScanDetailRoute(navController: NavController, navBackStackEntry: NavBackStackEntry, transactionIds: List<String>)
+{
     DetailResultScreen(
         transactionIds = transactionIds,
         navigateToHome = {
             navController.navigate(Home)
         },
-        transactionFormViewModel = transactionFormViewModel
+        scanViewModel = hiltViewModel <ScanViewModel>(),
     )
 }

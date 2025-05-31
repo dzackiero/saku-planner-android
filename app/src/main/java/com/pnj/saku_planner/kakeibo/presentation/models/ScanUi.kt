@@ -10,7 +10,7 @@ data class ScanUi(
 data class EditableScanUi(
     val id: String = UUID.randomUUID().toString(),
     var itemName: String,
-    var price: Double,
-    var taxPerItem: Double,
+    var price: Long,
+    var taxPerItem: Long,
     var selectedCategory: CategoryUi? = null,
 )

@@ -53,21 +53,21 @@ fun EditResultScreen(
     var allItemsProcessed by remember { mutableStateOf(false) }
 
     LaunchedEffect(originalItems, originalTaxString) {
-        val taxDouble = originalTaxString?.toDoubleOrNull() ?: 0.0
+        val taxLong = originalTaxString?.toLongOrNull() ?: 0
         val itemsCount = originalItems?.size ?: 0
-        val taxPerItemValue = if (itemsCount > 0) taxDouble / itemsCount else 0.0
+        val taxPerItemValue = if (itemsCount > 0) taxLong / itemsCount else 0
 
         editableItems = originalItems?.map { scanUi ->
             EditableScanUi(
                 itemName = scanUi.itemName,
-                price = scanUi.price.toString().toDoubleOrNull() ?: 0.0,
+                price = scanUi.price.toString().toLongOrNull() ?: 0,
                 taxPerItem = taxPerItemValue,
                 selectedCategory = transactionState.selectedCategory
             )
         } ?: emptyList()
     }
 
-    fun formatRupiah(amount: Double): String {
+    fun formatRupiah(amount: Long): String {
         val localeID = Locale("in", "ID")
         val numberFormat = NumberFormat.getCurrencyInstance(localeID)
         numberFormat.maximumFractionDigits = 0
@@ -102,13 +102,13 @@ fun EditResultScreen(
                             }
                         },
                         onPriceChange = { newPriceString ->
-                            val newPrice = newPriceString.toDoubleOrNull() ?: 0.0
+                            val newPrice = newPriceString.toLongOrNull() ?: 0
                             editableItems = editableItems.toMutableList().also {
                                 it[index] = item.copy(price = newPrice)
                             }
                         },
                         onTaxPerItemChange = { newTaxString ->
-                            val newTax = newTaxString.toDoubleOrNull() ?: 0.0
+                            val newTax = newTaxString.toLongOrNull() ?: 0
                             editableItems = editableItems.toMutableList().also {
                                 it[index] = item.copy(taxPerItem = newTax)
                             }
@@ -143,7 +143,7 @@ fun EditResultScreen(
 
                             val finalAmount = item.price + item.taxPerItem
 
-                            transactionCallbacks.onAmountChange(finalAmount.toLong())
+                            transactionCallbacks.onAmountChange(finalAmount)
                             transactionCallbacks.onDescriptionChange(item.itemName)
                             item.selectedCategory?.let { category ->
                                 transactionCallbacks.onCategoryChange(category)
@@ -197,7 +197,7 @@ fun EditableItemRow(
     onPriceChange: (String) -> Unit,
     onTaxPerItemChange: (String) -> Unit,
     onCategoryChange: (CategoryUi?) -> Unit,
-    formatRupiah: (Double) -> String
+    formatRupiah: (Long) -> String
 ) {
     var categoryExpanded by remember { mutableStateOf(false) }
 
