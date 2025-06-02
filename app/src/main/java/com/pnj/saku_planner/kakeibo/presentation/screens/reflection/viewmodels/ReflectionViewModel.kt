@@ -6,6 +6,7 @@ import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.core.database.entity.ReflectionEntity
 import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.ReflectionRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class ReflectionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val reflectionRepository: ReflectionRepository,
+    private val accountRepository: AccountRepository,
     private val budgetRepository: BudgetRepository,
 ) : ViewModel() {
     private val _state: MutableStateFlow<ReflectionState> = MutableStateFlow(ReflectionState())
@@ -52,8 +54,15 @@ class ReflectionViewModel @Inject constructor(
     )
 
     init {
-        loadTransactions()
-        loadBudgets()
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModelScope.launch {
+            loadTransactions()
+            loadSavings()
+            loadBudgets()
+        }
     }
 
     fun loadReflection(reflectionId: String) {
@@ -71,6 +80,8 @@ class ReflectionViewModel @Inject constructor(
                 currentMonthNote = reflection.currentMonthNote,
                 nextMonthNote = reflection.nextMonthNote
             )
+
+            loadData()
         }
     }
 
@@ -80,6 +91,15 @@ class ReflectionViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 budgets = budgets.map { it.toUi() }
             )
+        }
+    }
+
+    private fun loadSavings() {
+        viewModelScope.launch {
+            val savings = accountRepository.getAllAccounts()
+                .filter { it.target != null }
+                .map { it.toUi() }
+            _state.value = _state.value.copy(savings = savings)
         }
     }
 
@@ -100,7 +120,10 @@ class ReflectionViewModel @Inject constructor(
                 .toInstant()
                 .toEpochMilli()
 
-            val transactions = transactionRepository.getAllTransactions().map { it.toUi() }
+            val transactions = transactionRepository.getAllTransactionsByRange(
+                startDate = startDate,
+                endDate = endDate,
+            ).map { it.toUi() }
             _state.value = _state.value.copy(transactions = transactions)
 
             val kakeiboTransactions =

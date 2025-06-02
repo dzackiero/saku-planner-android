@@ -27,5 +27,11 @@ class ReflectionListViewModel @Inject constructor(
         }
     }
 
+    fun deleteReflection(reflectionId: String) {
+        viewModelScope.launch {
+            reflectionRepository.deleteReflection(reflectionId)
+            loadReflections()
+        }
+    }
 
 }

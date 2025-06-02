@@ -187,4 +187,10 @@
     <string name="reflection">Reflection</string>
     <string name="reflections">Reflections</string>
     <string name="create_reflection">Create Reflection</string>
+    <string name="next_month_plan">Next Month Plan</string>
+    <string name="month_reflection">Month Reflection</string>
+    <string name="delete">Delete</string>
+    <string name="you_don_t_have_any_reflection_yet">You don\'t have any reflection yet</string>
+    <string name="collapse">collapse</string>
+    <string name="expand">expand</string>
 </resources>

@@ -44,6 +44,9 @@ fun ReflectionListRoute(
         onCreateReflectionClick = {
             navController.navigate(Reflection())
         },
+        onDeleteReflectionClick = {
+            viewModel.deleteReflection(it)
+        },
         onReflectionClick = { reflectionId ->
             navController.navigate(Reflection(reflectionId = reflectionId))
         }

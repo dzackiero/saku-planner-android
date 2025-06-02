@@ -34,6 +34,4 @@ fun ReflectionEntity.toUi() = ReflectionUi(
     regretTransactionId = regretTransactionId,
     currentMonthNote = currentMonthNote,
     nextMonthNote = nextMonthNote,
-    createdAt = createdAt,
-    updatedAt = updatedAt
 )

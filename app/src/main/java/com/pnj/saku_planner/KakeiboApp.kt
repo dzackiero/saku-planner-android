@@ -282,7 +282,20 @@ fun MainAppNavigation() {
                 ReportPagerScreen(navController, it)
             }
 
-            composable<Reflection> {
+            composable<Reflection>(
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(300)
+                    )
+                },
+            ) {
                 val reflectionId = it.toRoute<Reflection>().reflectionId
                 ReflectionRoute(navController, reflectionId)
             }

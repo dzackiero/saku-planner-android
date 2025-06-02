@@ -1,9 +1,11 @@
 package com.pnj.saku_planner.core.database.entity
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 
 @Entity(
@@ -30,6 +32,17 @@ data class BudgetEntity(
     val isDeleted: Boolean = false,
 )
 
+data class BudgetWithCategory(
+    @Embedded
+    val budget: BudgetEntity,
+
+    @Relation(
+        parentColumn = "categoryId",
+        entityColumn = "id",
+    )
+    val category: CategoryEntity,
+)
+
 data class BudgetDetail(
     val id: String = randomUuid(),
     val categoryId: String,
@@ -41,6 +54,14 @@ data class BudgetDetail(
     val syncedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
+)
+
+fun BudgetWithCategory.toUi() = BudgetUi(
+    id = budget.id,
+    categoryIcon = category.icon ?: "💵",
+    category = category.name,
+    amount = budget.amount,
+    currentAmount = 0,
 )
 
 data class BudgetUi(

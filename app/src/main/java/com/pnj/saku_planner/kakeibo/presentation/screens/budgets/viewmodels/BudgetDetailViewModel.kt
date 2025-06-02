@@ -17,20 +17,19 @@ import javax.inject.Inject
 @HiltViewModel
 class BudgetDetailViewModel @Inject constructor(
     private val budgetRepository: BudgetRepository,
-    private val monthBudgetRepository: BudgetRepository,
 ) : ViewModel() {
     private val _state: MutableStateFlow<BudgetDetailState> = MutableStateFlow(BudgetDetailState())
     val state: StateFlow<BudgetDetailState> = _state
 
     fun loadYearBudget(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            val monthBudgets = budgetRepository
+                .getMonthlyBudgetsByYear(id, _state.value.selectedYear)
+                .reversed()
+
             _state.value = BudgetDetailState(
-                budget = budgetRepository.getBudgetById(id)?.toUi(),
-                monthBudgets = monthBudgetRepository
-                    .getMonthlyBudgetsByYear(
-                        id,
-                        _state.value.selectedYear
-                    ).reversed()
+                budget = budgetRepository.getBudgetWithCategoryById(id)?.toUi(),
+                monthBudgets = monthBudgets
             )
         }
     }

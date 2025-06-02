@@ -19,6 +19,7 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import timber.log.Timber
 import java.util.Locale
 
 @Composable
@@ -27,7 +28,7 @@ fun AccountWithTargetCard(
     amount: Long,
     targetAmount: Long,
     duration: Int,
-    modifier: Modifier = Modifier ,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     val formattedAmount = formatToCurrency(amount)
@@ -36,9 +37,14 @@ fun AccountWithTargetCard(
     val monthlyAmount = if (duration == 0) 0.0 else targetAmount / duration
     val formattedMonthlyAmount = formatToCurrency(monthlyAmount)
 
-    val progress =
-            if (targetAmount == 0.toLong()) 0f else (amount / targetAmount).toFloat().coerceIn(0f, 1f)
+
+    val progress = if (targetAmount == 0L) {
+        0f
+    } else {
+        (amount / targetAmount.toFloat()).coerceIn(0f, 1f)
+    }
     val percentage = "${String.format(Locale.getDefault(), "%.0f", progress * 100)}%"
+    Timber.d("amount: $amount, targetAmount: $targetAmount, duration: $duration, monthlyAmount: $monthlyAmount progress: $progress, percentage: $percentage")
 
 
 

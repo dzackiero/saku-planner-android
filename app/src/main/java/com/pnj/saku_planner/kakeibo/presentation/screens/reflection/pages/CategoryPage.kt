@@ -2,6 +2,7 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
@@ -68,6 +70,7 @@ fun CategoryPage(
                     yearMonthToString(state.yearMonth, TextStyle.FULL)
                 ),
                 style = Typography.displayMedium,
+                textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
             )
             Text(
@@ -76,12 +79,16 @@ fun CategoryPage(
                 color = AppColor.MutedForeground
             )
         }
-        PieChartWithText(
-            chartDataList = chartData,
-            totalFormatter = { formatToCurrency(it) },
-            startupAnimation = false,
-            totalLabel = stringResource(R.string.total),
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            PieChartWithText(
+                chartDataList = chartData,
+                totalFormatter = { formatToCurrency(it) },
+                totalLabel = stringResource(R.string.total),
+            )
+        }
         topSpending?.let {
             Text(
                 text = stringResource(R.string.top_spending),

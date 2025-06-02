@@ -14,6 +14,4 @@ data class ReflectionUi(
 
     val currentMonthNote: String? = null,
     val nextMonthNote: String? = null,
-    val createdAt: Long,
-    val updatedAt: Long
 )

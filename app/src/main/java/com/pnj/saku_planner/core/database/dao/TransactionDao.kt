@@ -17,6 +17,18 @@ interface TransactionDao {
     suspend fun getAllTransactions(): List<TransactionDetail>
 
     @Transaction
+    @Query("""
+        SELECT * FROM transactions 
+        WHERE isDeleted = 0 
+            AND transactionAt BETWEEN :startDate AND :endDate 
+        ORDER BY transactionAt DESC
+    """)
+    suspend fun getTransactionsByDateRange(
+        startDate: Long,
+        endDate: Long,
+    ): List<TransactionDetail>
+
+    @Transaction
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getTransactionDetailById(id: String): TransactionDetail?
 

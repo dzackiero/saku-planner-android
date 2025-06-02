@@ -26,6 +26,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ClickableTextField
@@ -35,7 +36,6 @@ import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.TransactionScreen
-import timber.log.Timber
 
 enum class DialogContentType {
     FAVORITE_TRANSACTION,
@@ -47,7 +47,6 @@ fun KakeiboPage(
     state: ReflectionState = ReflectionState(),
     callbacks: ReflectionCallbacks = ReflectionCallbacks()
 ) {
-    Timber.d("KakeiboPage: Rendering with state: $state")
     val chartData = state.kakeiboTransactions.map {
         ChartData(
             label = it.name,
@@ -146,7 +145,7 @@ fun KakeiboPage(
     // Conditionally display the dialog
     if (showDialog.value) {
         TransactionDialog(
-            transactions = state.transactions,
+            transactions = state.transactions.filter { it.type == TransactionType.EXPENSE },
             onDismiss = {
                 showDialog.value = false
             },

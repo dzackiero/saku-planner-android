@@ -61,12 +61,13 @@ interface MonthBudgetDao {
         ON mb.budgetId = b.id
        AND mb.year    = :year
        AND mb.month   = months.m
-    
-      WHERE LOWER(c.categoryType) = 'expense' AND b.id = :id AND mb.isDeleted = 0
+       AND mb.isDeleted = 0
+       
+      WHERE LOWER(c.categoryType) = 'expense' AND b.id = :id
       ORDER BY b.id, months.m
     """
     )
-    suspend fun getYearlyMonthBudgets(id: String, year: Int): List<MonthBudgetDetail>
+    suspend fun getYearlyMonthBudgets(id: String, year: String): List<MonthBudgetDetail>
 
     @Transaction
     @Query(
@@ -106,14 +107,15 @@ interface MonthBudgetDao {
         ON mb.budgetId = b.id
        AND mb.year    = :year
        AND mb.month   = :month
+       AND mb.isDeleted = 0
     
       WHERE LOWER(c.categoryType) = 'expense' 
-        AND b.id = :id AND mb.isDeleted = 0
+        AND b.id = :id
       ORDER BY b.id, months.m
       LIMIT 1
     """
     )
-    suspend fun getSingleMonthBudget(id: String, month: Int, year: Int): MonthBudgetDetail
+    suspend fun getSingleMonthBudget(id: String, month: String, year: String): MonthBudgetDetail
 
     @Query("UPDATE month_budgets SET isDeleted = 1, updatedAt = :timestamp WHERE id = :id")
     suspend fun deleteMonthBudget(id: String, timestamp: Long = System.currentTimeMillis())
