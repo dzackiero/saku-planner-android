@@ -145,6 +145,7 @@ object AppModule {
     }
 
     @Provides
+
     fun provideReflectionRepository(reflectionDao: ReflectionDao): ReflectionRepository {
         return ReflectionRepositoryImpl(reflectionDao)
     }
