@@ -26,6 +26,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ClickableTextField
@@ -144,7 +145,7 @@ fun KakeiboPage(
     // Conditionally display the dialog
     if (showDialog.value) {
         TransactionDialog(
-            transactions = state.transactions,
+            transactions = state.transactions.filter { it.type == TransactionType.EXPENSE },
             onDismiss = {
                 showDialog.value = false
             },

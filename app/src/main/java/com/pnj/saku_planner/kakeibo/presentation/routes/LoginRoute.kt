@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pnj.saku_planner.Home
+import com.pnj.saku_planner.Register
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.LoginScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.LoginViewModel
 
@@ -33,8 +34,8 @@ fun LoginRoute(
         onLoginAttempt = {
             viewModel.login()
         },
-        onForgotPassword = {
-            navController.navigate("forgot_password")
+        onNavigateToRegister = {
+            navController.navigate(Register)
         },
     )
 }

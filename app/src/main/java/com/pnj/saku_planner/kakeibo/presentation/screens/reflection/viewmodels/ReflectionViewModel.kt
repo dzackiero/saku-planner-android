@@ -3,10 +3,14 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pnj.saku_planner.core.database.entity.BudgetUi
+import com.pnj.saku_planner.core.database.entity.ReflectionEntity
 import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.ReflectionRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryData
@@ -21,6 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ReflectionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
+    private val reflectionRepository: ReflectionRepository,
+    private val accountRepository: AccountRepository,
     private val budgetRepository: BudgetRepository,
 ) : ViewModel() {
     private val _state: MutableStateFlow<ReflectionState> = MutableStateFlow(ReflectionState())
@@ -48,8 +54,35 @@ class ReflectionViewModel @Inject constructor(
     )
 
     init {
-        loadTransactions()
-        loadBudgets()
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModelScope.launch {
+            loadTransactions()
+            loadSavings()
+            loadBudgets()
+        }
+    }
+
+    fun loadReflection(reflectionId: String) {
+        viewModelScope.launch {
+            val reflection =
+                reflectionRepository.getReflectionById(reflectionId)?.toUi() ?: return@launch
+
+            _state.value = _state.value.copy(
+                reflectionId = reflection.id,
+                yearMonth = reflection.yearMonth,
+                favoriteTransactionId = reflection.favoriteTransactionId,
+                regretTransactionId = reflection.regretTransactionId,
+                savingFeeling = reflection.savingFeeling,
+                savingNote = reflection.savingNote,
+                currentMonthNote = reflection.currentMonthNote,
+                nextMonthNote = reflection.nextMonthNote
+            )
+
+            loadData()
+        }
     }
 
     private fun loadBudgets() {
@@ -58,6 +91,15 @@ class ReflectionViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 budgets = budgets.map { it.toUi() }
             )
+        }
+    }
+
+    private fun loadSavings() {
+        viewModelScope.launch {
+            val savings = accountRepository.getAllAccounts()
+                .filter { it.target != null }
+                .map { it.toUi() }
+            _state.value = _state.value.copy(savings = savings)
         }
     }
 
@@ -78,7 +120,10 @@ class ReflectionViewModel @Inject constructor(
                 .toInstant()
                 .toEpochMilli()
 
-            val transactions = transactionRepository.getAllTransactions().map { it.toUi() }
+            val transactions = transactionRepository.getAllTransactionsByRange(
+                startDate = startDate,
+                endDate = endDate,
+            ).map { it.toUi() }
             _state.value = _state.value.copy(transactions = transactions)
 
             val kakeiboTransactions =
@@ -94,9 +139,31 @@ class ReflectionViewModel @Inject constructor(
             _state.value = _state.value.copy(categoryTransactions = categoryTransactions)
         }
     }
+
+    fun submitReflection() {
+        viewModelScope.launch {
+            val stateValue = _state.value
+
+            val reflection = ReflectionEntity(
+                id = stateValue.reflectionId,
+                year = stateValue.yearMonth.year,
+                month = stateValue.yearMonth.monthValue,
+                favoriteTransactionId = stateValue.favoriteTransactionId,
+                regretTransactionId = stateValue.regretTransactionId,
+                savingFeeling = stateValue.savingFeeling,
+                savingNote = stateValue.savingNote,
+                currentMonthNote = stateValue.currentMonthNote,
+                nextMonthNote = stateValue.nextMonthNote,
+            )
+
+            reflectionRepository.saveReflection(reflection)
+        }
+    }
 }
 
 data class ReflectionState(
+    val reflectionId: String = randomUuid(),
+
     val yearMonth: YearMonth = YearMonth.now(),
 
     val budgets: List<BudgetUi> = emptyList(),

@@ -31,7 +31,7 @@ fun LoginScreen(
     state: LoginState = LoginState(),
     callback: LoginCallback = LoginCallback(),
     onLoginAttempt: () -> Unit = {},
-    onForgotPassword: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -89,7 +89,7 @@ fun LoginScreen(
                         text = stringResource(R.string.don_t_have_an_account),
                         style = Typography.labelMedium
                     )
-                    TextButton(onClick = {}) {
+                    TextButton(onClick = onNavigateToRegister) {
                         Text(
                             text = stringResource(R.string.create_new_account),
                             style = Typography.labelMedium
@@ -99,13 +99,6 @@ fun LoginScreen(
             }
         }
         Column {
-            TextButton(
-                onClick = onForgotPassword,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(R.string.forgot_password), style = Typography.bodyMedium)
-            }
-
             PrimaryButton(
                 onClick = onLoginAttempt,
                 enabled = !state.isLoading,

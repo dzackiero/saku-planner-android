@@ -26,6 +26,13 @@ class TransactionRepositoryImpl @Inject constructor(
         return transactionDao.getAllTransactions()
     }
 
+    override suspend fun getAllTransactionsByRange(
+        startDate: Long,
+        endDate: Long
+    ): List<TransactionDetail> {
+        return transactionDao.getTransactionsByDateRange(startDate, endDate)
+    }
+
     override suspend fun deleteTransaction(id: String) {
         transactionDao.deleteTransactionAndRecalculateBalance(id)
     }

@@ -4,6 +4,7 @@ import com.pnj.saku_planner.core.database.dao.BudgetDao
 import com.pnj.saku_planner.core.database.dao.MonthBudgetDao
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.BudgetDetail
+import com.pnj.saku_planner.core.database.entity.BudgetWithCategory
 import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
@@ -17,6 +18,10 @@ class BudgetRepositoryImpl @Inject constructor(
 
     override suspend fun saveBudget(budget: BudgetEntity) {
         budgetDao.saveBudget(budget)
+    }
+
+    override suspend fun getBudgetWithCategoryById(id: String): BudgetWithCategory? {
+        return budgetDao.getBudgetWithCategoryById(id)
     }
 
     override suspend fun getBudgetById(id: String, month: Int, year: Int): BudgetDetail? {
@@ -35,11 +40,15 @@ class BudgetRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMonthlyBudgetsByYear(id: String, year: Int): List<MonthBudgetDetail> {
-        return monthBudgetDao.getYearlyMonthBudgets(id, year)
+        return monthBudgetDao.getYearlyMonthBudgets(id, year.toString())
     }
 
-    override suspend fun getSingleMonthBudget(id: String, month: Int, year: Int): MonthBudgetDetail {
-        return monthBudgetDao.getSingleMonthBudget(id, month, year)
+    override suspend fun getSingleMonthBudget(
+        id: String,
+        month: Int,
+        year: Int
+    ): MonthBudgetDetail {
+        return monthBudgetDao.getSingleMonthBudget(id, month.toString(), year.toString())
     }
 
 

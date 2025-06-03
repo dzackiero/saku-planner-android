@@ -58,7 +58,6 @@ fun RegisterScreen(
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                // show error at top
                 state.errorMessage?.let { error ->
                     Text(
                         text = error,

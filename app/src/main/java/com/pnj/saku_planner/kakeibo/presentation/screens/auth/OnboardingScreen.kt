@@ -1,11 +1,16 @@
 package com.pnj.saku_planner.kakeibo.presentation.screens.auth
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,39 +41,93 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
 import kotlinx.coroutines.delay
 
+private fun <T> getAnimationSpec(
+    durationMillis: Int,
+    skipped: Boolean,
+    easing: Easing = FastOutSlowInEasing
+): FiniteAnimationSpec<T> {
+    return tween(
+        durationMillis = if (skipped) 0 else durationMillis,
+        easing = if (skipped) LinearEasing else easing
+    )
+}
+
+private fun getScaleAnimationSpec(
+    durationMillis: Int,
+    skipped: Boolean
+): FiniteAnimationSpec<Float> {
+    val customEasing = Easing { it * it }
+    return tween(
+        durationMillis = if (skipped) 0 else durationMillis,
+        easing = if (skipped) LinearEasing else customEasing
+    )
+}
+
 @Composable
 fun OnboardingScreen(
     onLoginClicked: () -> Unit = {},
     onRegisterClicked: () -> Unit = {},
 ) {
-    var showTitle by remember { mutableStateOf(false) }
-    var finishedScale by remember { mutableStateOf(false) }
-    var showSubtitle by remember { mutableStateOf(false) }
-    var showDescription by remember { mutableStateOf(false) }
-    var showButtons by remember { mutableStateOf(false) }
+    // State to track if animations should be skipped
+    var animationsSkipped by remember { mutableStateOf(false) }
 
-    // 1s scale animation
+    // State variables to drive the animation sequence if not skipped
+    var showTitleProgress by remember { mutableStateOf(false) }
+    var finishedScaleProgress by remember { mutableStateOf(false) }
+    var showSubtitleProgress by remember { mutableStateOf(false) }
+    var showDescriptionProgress by remember { mutableStateOf(false) }
+    var showButtonsProgress by remember { mutableStateOf(false) }
+
+    // Effective states for UI elements, considering the skip flag
+    // If animationsSkipped is true, these will all evaluate to true immediately
+    val showTitle = showTitleProgress || animationsSkipped
+    val finishedScale = finishedScaleProgress || animationsSkipped
+    val showSubtitle = showSubtitleProgress || animationsSkipped
+    val showDescription = showDescriptionProgress || animationsSkipped
+    val showButtons = showButtonsProgress || animationsSkipped
+
+    // Animate scale: uses 'showTitle' which incorporates 'animationsSkipped'
+    // Animation spec duration becomes 0 if 'animationsSkipped' is true
     val scale by animateFloatAsState(
         targetValue = if (showTitle) 1f else 0.4f,
-        animationSpec = tween(durationMillis = 1000, easing = { it * it }),
+        animationSpec = getScaleAnimationSpec(1000, animationsSkipped),
+        label = "onboardingTitleScale"
     )
 
-    // move title up once scale is done
+    // Animate title offset: uses 'finishedScale'
     val titleOffset by animateDpAsState(
         targetValue = if (finishedScale) (-150).dp else 0.dp,
-        animationSpec = tween(durationMillis = 1000),
+        animationSpec = getAnimationSpec(
+            1000,
+            animationsSkipped
+        ), // Uses default FastOutSlowInEasing if not skipped
+        label = "onboardingTitleOffset"
     )
 
+    // This LaunchedEffect orchestrates the sequence of animations.
+    // It runs once when the composable enters the composition.
+    // If 'animationsSkipped' becomes true, the checks within will cause it to exit early.
     LaunchedEffect(Unit) {
-        showTitle = true
-        delay(1200)
-        finishedScale = true
-        delay(1500)
-        showSubtitle = true
+        // If somehow already skipped (e.g., very fast interaction or a persisted state), do nothing.
+        if (animationsSkipped) return@LaunchedEffect
+
+        showTitleProgress = true
+        delay(1200) // Original delay for title to show and scale
+        if (animationsSkipped) return@LaunchedEffect // Check before next step
+
+        finishedScaleProgress = true // Title starts moving up
+        delay(1500) // Original delay for title to finish moving
+        if (animationsSkipped) return@LaunchedEffect
+
+        showSubtitleProgress = true
         delay(1000)
-        showDescription = true
+        if (animationsSkipped) return@LaunchedEffect
+
+        showDescriptionProgress = true
         delay(1000)
-        showButtons = true
+        if (animationsSkipped) return@LaunchedEffect
+
+        showButtonsProgress = true
     }
 
 
@@ -75,8 +135,22 @@ fun OnboardingScreen(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
+            // Add click listener to the entire screen
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    if (!animationsSkipped) {
+                        animationsSkipped = true
+                        // This state change will:
+                        // 1. Trigger recomposition.
+                        // 2. Cause derived 'showXxx' vars to become true.
+                        // 3. Change animation specs to 0 duration, snapping them to final states.
+                        // 4. Cause the LaunchedEffect to exit on its next 'if (animationsSkipped)' check.
+                    }
+                })
+            }
     ) {
-        // 1) Title Block: only this is scaled + offset
+        // 1) Title Block: Scaled and offset
+        // Uses 'scale' and 'titleOffset' which are already aware of 'animationsSkipped'
         Column(
             Modifier
                 .align(Alignment.Center)
@@ -98,13 +172,15 @@ fun OnboardingScreen(
             )
         }
 
-        // 2) Subtitle: fixed position below center
+        // 2) Subtitle: Fades in
+        // 'visible' uses 'showSubtitle' (derived from 'animationsSkipped')
+        // 'enter' animation spec duration becomes 0 if skipped
         AnimatedVisibility(
             visible = showSubtitle,
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = (-72).dp),
-            enter = fadeIn(tween(500))
+            enter = fadeIn(animationSpec = getAnimationSpec(500, animationsSkipped))
         ) {
             Text(
                 stringResource(R.string.onboarding_subtitle),
@@ -113,13 +189,13 @@ fun OnboardingScreen(
             )
         }
 
-        // 3) Description: fixed a bit further down
+        // 3) Description: Fades in
         AnimatedVisibility(
             visible = showDescription,
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = (24).dp),
-            enter = fadeIn(tween(500))
+            enter = fadeIn(animationSpec = getAnimationSpec(500, animationsSkipped))
         ) {
             Text(
                 stringResource(R.string.onboarding_description),
@@ -129,12 +205,12 @@ fun OnboardingScreen(
             )
         }
 
+        // 4) Buttons: Slide in from bottom
         AnimatedVisibility(
             visible = showButtons,
             enter = slideInVertically(
-                // start the slide from the full height of the container
                 initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(durationMillis = 500)
+                animationSpec = getAnimationSpec(500, animationsSkipped)
             ),
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {

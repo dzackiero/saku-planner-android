@@ -14,6 +14,11 @@ interface TransactionRepository {
 
     suspend fun getAllTransactions(): List<TransactionDetail>
 
+    suspend fun getAllTransactionsByRange(
+        startDate: Long,
+        endDate: Long,
+    ): List<TransactionDetail>
+
     suspend fun deleteTransaction(id: String)
 
     suspend fun getTransactionSummaryByCategory(

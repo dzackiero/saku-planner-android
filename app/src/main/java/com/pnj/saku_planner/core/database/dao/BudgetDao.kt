@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.BudgetDetail
+import com.pnj.saku_planner.core.database.entity.BudgetWithCategory
 
 @Dao
 interface BudgetDao {
@@ -24,6 +25,9 @@ interface BudgetDao {
 
     @Query("SELECT * FROM budgets WHERE id = :id")
     suspend fun getBudgetById(id: String): BudgetEntity?
+
+    @Query("SELECT * FROM budgets WHERE id = :id AND isDeleted = 0")
+    suspend fun getBudgetWithCategoryById(id: String): BudgetWithCategory?
 
     @Transaction
     @Query(

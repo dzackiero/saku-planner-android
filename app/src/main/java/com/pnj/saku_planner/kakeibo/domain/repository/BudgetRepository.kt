@@ -2,6 +2,7 @@ package com.pnj.saku_planner.kakeibo.domain.repository
 
 import com.pnj.saku_planner.core.database.entity.BudgetEntity
 import com.pnj.saku_planner.core.database.entity.BudgetDetail
+import com.pnj.saku_planner.core.database.entity.BudgetWithCategory
 import com.pnj.saku_planner.core.database.entity.MonthBudgetDetail
 import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
 import java.time.LocalDate
@@ -17,6 +18,8 @@ interface BudgetRepository {
         month: Int = LocalDate.now().monthValue,
         year: Int = LocalDate.now().year
     ): BudgetDetail?
+
+    suspend fun getBudgetWithCategoryById(id: String): BudgetWithCategory?
 
     suspend fun deleteBudget(id: String)
 
