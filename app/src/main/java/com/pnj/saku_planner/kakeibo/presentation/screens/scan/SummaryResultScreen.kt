@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +32,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CustomPagerIndicator
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
@@ -93,13 +93,14 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 8.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Text("Expense Summary", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.expense_summary),
+            style = Typography.displaySmall,
+            modifier = Modifier.padding(vertical = 16.dp),
+        )
 
         AnimatedVisibility(
             visible = items?.isNotEmpty() == true,
@@ -113,7 +114,11 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
                         Text(
                             text = "Item",
                             style = MaterialTheme.typography.titleSmall,
@@ -142,7 +147,9 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                                 modifier = Modifier.weight(1f)
                             )
                             Text(
-                                text = formatToCurrency(item.price.toString().toDoubleOrNull() ?: 0.0),
+                                text = formatToCurrency(
+                                    item.price.toString().toDoubleOrNull() ?: 0.0
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = AppColor.CardForeground,
                                 modifier = Modifier.wrapContentWidth(Alignment.End),
@@ -160,11 +167,11 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal=8.dp),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Subtotal (without tax)",
+                text = stringResource(R.string.subtotal_without_tax),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
@@ -179,37 +186,37 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal=8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Tax",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = formatToCurrency(tax),
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = AppColor.CardForeground,
-                    modifier = Modifier.wrapContentWidth(Alignment.End),
-                    textAlign = TextAlign.End
-                )
-            }
-            Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Tax",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = formatToCurrency(tax),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColor.CardForeground,
+                modifier = Modifier.wrapContentWidth(Alignment.End),
+                textAlign = TextAlign.End
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
 
 
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal=8.dp),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Total (with tax)",
+                text = stringResource(R.string.total_with_tax),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
@@ -225,7 +232,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
         Spacer(modifier = Modifier.height(36.dp))
 
         Text(
-            text = "Tax will be distributed and added to each item price when you open Detail or Edit.",
+            text = stringResource(R.string.tax_will_be_distributed_and_added_to_each_item_price_when_you_open_detail_or_edit),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -257,7 +264,7 @@ fun TransactionFormPage(
     val savedTransactionIds = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(allItemsProcessed) {
-        if (allItemsProcessed){
+        if (allItemsProcessed) {
             navigateToDetail(savedTransactionIds.toList())
         }
     }
@@ -276,37 +283,38 @@ fun TransactionFormPage(
             .verticalScroll(rememberScrollState())
             .padding(bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Text("Choose Details", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.choose_details),
+            modifier = Modifier.padding(vertical = 16.dp),
+            style = Typography.displaySmall,
+        )
 
-        // Category Selection using BottomSheetField
-            BottomSheetField(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
-                label = { Text(stringResource(R.string.category)) },
-                selectedItem = formState.selectedCategory,
-                onItemSelected = { callbacks.onCategoryChange(it) },
-                itemContent = { category ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(category.name)
-                        category.icon?.let {
-                            Text(it, fontSize = 24.sp)
-                        }
+        // category selection
+        BottomSheetField(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            options = categories.value.filter { it.categoryType == TransactionType.EXPENSE },
+            label = { Text(stringResource(R.string.category)) },
+            selectedItem = formState.selectedCategory,
+            onItemSelected = { callbacks.onCategoryChange(it) },
+            itemContent = { category ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(category.name)
+                    category.icon?.let {
+                        Text(it, fontSize = 24.sp)
                     }
-                },
-                itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
-            )
-        Spacer(modifier = Modifier.height(20.dp))
+                }
+            },
+            itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
+        )
 
         // Account Chips Selection
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp), // Padding untuk section
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -376,13 +384,10 @@ fun TransactionFormPage(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
 
-        // Kakeibo Category Selection using FlowRow
+        // Kakeibo Category Selection
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
@@ -409,21 +414,20 @@ fun TransactionFormPage(
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                onClick = {
-                    navigateToEdit()
-                },
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
-                modifier = Modifier.weight(1f).padding(end = 8.dp),
+            PrimaryButton(
+                onClick = navigateToEdit,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
                 enabled = isEditButtonEnabled
-            ) {
-                Text("Edit", color = AppColor.PrimaryForeground)
-            }
-            Button(
+            ) { Text(stringResource(R.string.edit)) }
+
+            PrimaryButton(
                 onClick = {
                     coroutineScope.launch {
                         isLoading = true
@@ -433,7 +437,8 @@ fun TransactionFormPage(
 
                             val taxDouble = originalTaxString?.toDoubleOrNull() ?: 0.0
                             val itemsCount = items?.size ?: 0
-                            val taxPerItemValue = if (itemsCount > 0) taxDouble / itemsCount else 0.0
+                            val taxPerItemValue =
+                                if (itemsCount > 0) taxDouble / itemsCount else 0.0
 
                             val finalAmount = item.price + taxPerItemValue
                             callbacks.onAmountChange(finalAmount.toLong())
@@ -458,18 +463,18 @@ fun TransactionFormPage(
                         }
                     }
                 },
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
-                modifier = Modifier.weight(1f).padding(start = 8.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
                 enabled = isEditButtonEnabled
             ) {
                 Icon(
                     Icons.Default.Info,
-                    contentDescription = "Detail",
-                    tint = AppColor.PrimaryForeground
+                    tint = AppColor.PrimaryForeground,
+                    contentDescription = stringResource(R.string.detail),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Detail", color = AppColor.PrimaryForeground)
+                Text(stringResource(R.string.detail))
             }
         }
     }

@@ -64,19 +64,16 @@ fun AccountScreen(
     }
     val totalBalance = filteredAccounts.sumOf { it.balance }
 
-    // Make LazyColumn the top-level scrollable container for the list and its surrounding elements
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize() // LazyColumn will now handle the scrolling for its content
+            .fillMaxSize()
             .background(AppColor.PrimaryForeground)
-            .padding(horizontal = 16.dp), // Apply horizontal padding once here
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Spacing between items in LazyColumn
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Item 1: Monthly Balance
         item {
             Box(
-                Modifier.padding(top = 16.dp) // Add top padding for the first item
-                // Horizontal padding is now handled by LazyColumn's modifier
+                Modifier.padding(top = 16.dp)
             ) {
                 Card(contentAlignment = Alignment.Center) {
                     Column(

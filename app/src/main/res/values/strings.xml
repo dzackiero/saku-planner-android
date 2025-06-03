@@ -73,7 +73,7 @@
     <string name="monthly_target">Monthly Target</string>
     <string name="_per_month">/month</string>
     <string name="target_end_date">Target End Date</string>
-    <string name="month">month</string>
+    <string name="month">Month</string>
     <string name="all">All</string>
     <string name="no_data_available">No data available</string>
     <string name="monthly">Monthly</string>
@@ -193,4 +193,13 @@
     <string name="you_don_t_have_any_reflection_yet">You don\'t have any reflection yet</string>
     <string name="collapse">collapse</string>
     <string name="expand">expand</string>
+    <string name="choose_details">Choose Details</string>
+    <string name="detail">Detail</string>
+    <string name="expense_summary">Expense Summary</string>
+    <string name="subtotal_without_tax">Subtotal (without tax)</string>
+    <string name="total_with_tax">Total (with tax)</string>
+    <string name="tax_will_be_distributed_and_added_to_each_item_price_when_you_open_detail_or_edit">Tax will be distributed and added to each item price when you open Detail or Edit.</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="no_transaction_details_found_or_failed_to_load_all">No transaction details found or failed to load all.</string>
+    <string name="back_to_home">Back to Home</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.core.theme.AppColor
@@ -47,13 +48,18 @@ fun KakeiboCard(
                     style = Typography.titleMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
                 Text(
                     text = style.subtext,
                     style = Typography.bodyMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    color = AppColor.MutedForeground
+                    color = AppColor.MutedForeground,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+
                 )
             }
         })
