@@ -70,6 +70,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.executor
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.getCameraProvider
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.deleteTempFile
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.createCustomTempFile
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.saveImageToGallery
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.uriToFile
 import timber.log.Timber
 
@@ -259,9 +260,28 @@ fun CameraScreen(
                                 object : ImageCapture.OnImageSavedCallback {
                                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                         imageUri = output.savedUri!!
-                                        val file = uriToFile(context, imageUri)
-                                        if (file != null) {
-                                            scanViewModel.loadItems(file)
+
+                                        if (photoFile.exists()) {
+                                            saveImageToGallery(context, photoFile, "Kakeibo")
+                                        } else {
+                                            Timber.w("File foto temporer tidak ditemukan untuk disimpan ke galeri.")
+                                        }
+
+                                        // Logika asli Anda
+//                                        val fileForViewModel = uriToFile(context, imageUri)
+//                                        if (fileForViewModel != null) {
+                                        if (photoFile.exists()) {
+                                            scanViewModel.loadItems(photoFile)
+                                        } else {
+                                            isLoading = false
+                                            Toast.makeText(
+                                                context,
+                                                "Gagal memproses referensi gambar untuk ViewModel.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            Timber.tag(ContentValues.TAG)
+                                                .e("onError: Tidak bisa mendapatkan file dari URI tersimpan untuk ViewModel")
+                                            deleteTempFile(photoFile)
                                         }
 
                                     }

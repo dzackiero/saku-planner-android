@@ -11,6 +11,12 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.content.ContentValues
+import android.os.Build
+import android.provider.MediaStore
+import java.io.FileInputStream
+import java.io.OutputStream
+import android.widget.Toast
 
 private const val TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss"
 private val timeStamp: String = SimpleDateFormat(TIMESTAMP_FORMAT, Locale.US).format(Date())
@@ -45,7 +51,7 @@ fun compressImageFile(file: File): File {
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
         byteArray = stream.toByteArray()
         quality -= 5
-    } while (byteArray.size > 600 * 1024 && quality > 10)
+    } while (byteArray.size > 1000 * 1024 && quality > 10)
 
     val out = FileOutputStream(compressedFile)
     out.write(byteArray)
@@ -70,5 +76,71 @@ fun uriToFile(context: Context, uri: Uri): File? {
     } catch (e: Exception) {
         Timber.e("Failed to convert uri to file: ${e.message}")
         null
+    }
+}
+
+fun saveImageToGallery(context: Context, imageFile: File, appName: String = "YourApp") {
+    if (!imageFile.exists()) {
+        Timber.e("Source file does not exist: ${imageFile.absolutePath}")
+        Toast.makeText(context, "File to save does not exist.", Toast.LENGTH_SHORT).show()
+        return
+    }
+
+    val resolver = context.contentResolver
+    val displayName = "${System.currentTimeMillis()}_${imageFile.name}"
+    val mimeType = if (imageFile.name.endsWith(".png", ignoreCase = true)) "image/png" else "image/jpeg"
+
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Menyimpan ke dalam folder Pictures/NamaAplikasiAnda di galeri
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/$appName")
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
+        }
+    }
+
+    val collectionUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+    } else {
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+    }
+
+    var imageUriInGallery: Uri? = null
+    try {
+        imageUriInGallery = resolver.insert(collectionUri, contentValues)
+    } catch (e: Exception) {
+        Timber.e(e, "Failed to insert image into MediaStore.")
+        Toast.makeText(context, "Error creating gallery entry.", Toast.LENGTH_SHORT).show()
+        return
+    }
+
+
+    if (imageUriInGallery != null) {
+        try {
+            resolver.openOutputStream(imageUriInGallery).use { outputStream: OutputStream? ->
+                if (outputStream == null) {
+                    throw Exception("Content resolver returned null OutputStream")
+                }
+                FileInputStream(imageFile).use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                contentValues.clear()
+                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+                resolver.update(imageUriInGallery, contentValues, null, null)
+            }
+            Timber.d("Image saved to gallery: $imageUriInGallery")
+            Toast.makeText(context, "Foto disimpan ke galeri", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to save image to gallery")
+            Toast.makeText(context, "Gagal menyimpan foto ke galeri.", Toast.LENGTH_SHORT).show()
+            // Jika gagal, hapus entry yang mungkin sudah dibuat (opsional)
+            resolver.delete(imageUriInGallery, null, null)
+        }
+    } else {
+        Timber.e("Failed to create MediaStore entry for image.")
+        Toast.makeText(context, "Gagal membuat entry di galeri.", Toast.LENGTH_SHORT).show()
     }
 }

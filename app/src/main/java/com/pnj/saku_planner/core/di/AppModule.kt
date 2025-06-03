@@ -137,11 +137,6 @@ object AppModule {
     }
 
     @Provides
-    fun provideScanRepository(appApi: AppApi): ScanRepository {
-        return ScanRepositoryImpl(appApi)
-    }
-
-    @Provides
     fun provideAccountRepository(
         accountDao: AccountDao,
         targetDao: TargetDao,
