@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
@@ -78,10 +79,11 @@ fun ReflectionListScreen(
                 Text(
                     text = stringResource(R.string.you_don_t_have_any_reflection_yet),
                     style = Typography.bodyMedium,
+                    color = AppColor.MutedForeground,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-
-                        .padding(top = 20.dp)
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
                 )
             } else {
                 reflections.forEach { reflection ->
