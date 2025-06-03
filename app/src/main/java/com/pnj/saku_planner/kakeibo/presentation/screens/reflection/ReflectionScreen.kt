@@ -43,6 +43,8 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.R
 fun ReflectionScreen(
     state: ReflectionState = ReflectionState(),
     callbacks: ReflectionCallbacks = ReflectionCallbacks(),
+    navigateToBudgetDetail: (String) -> Unit = {},
+    navigateToSavingDetail: (String) -> Unit = {},
     navigateBack: () -> Unit = {},
     navigateOnFinish: () -> Unit = {}
 ) {
@@ -52,8 +54,8 @@ fun ReflectionScreen(
         FormStep("Overview") { OverviewPage(state) },
         FormStep("Category") { CategoryPage(state) },
         FormStep("Kakeibo") { KakeiboPage(state, callbacks) },
-        FormStep("Budget") { BudgetPage(state) },
-        FormStep("Saving") { SavingPage(state, callbacks) },
+        FormStep("Budget") { BudgetPage(state, navigateToBudgetDetail) },
+        FormStep("Saving") { SavingPage(state, callbacks, navigateToSavingDetail) },
         FormStep("Reflection") { ReflectionPage(state, callbacks) },
         FormStep("Finish") { FinishPage() }
     )

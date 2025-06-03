@@ -45,6 +45,7 @@ fun StartPage(
                 yearMonthToString(state.yearMonth, TextStyle.FULL)
             ),
             style = Typography.displayMedium,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
         )
 

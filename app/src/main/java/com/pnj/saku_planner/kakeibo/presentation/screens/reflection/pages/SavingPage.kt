@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import java.util.Locale
 fun SavingPage(
     state: ReflectionState = ReflectionState(),
     callbacks: ReflectionCallbacks = ReflectionCallbacks(),
+    navigateToSavingDetail: (String) -> Unit = {},
 ) {
     var showReflectionForm by remember { mutableStateOf(true) }
     val accountNames = state.savings.map { it.name }
@@ -240,7 +242,6 @@ fun SavingPage(
             )
         }
 
-        // Savings Details Section (Visible when showReflectionForm is false)
         AnimatedVisibility(
             visible = !showReflectionForm,
             modifier = Modifier.weight(1f),
@@ -280,7 +281,9 @@ fun SavingPage(
                         if (isOverBudget) AppColor.Destructive else Color.Unspecified
 
 
-                    Card {
+                    Card(
+                        modifier = Modifier.clickable { navigateToSavingDetail(saving.id) }
+                    ) {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
