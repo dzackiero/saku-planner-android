@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType // Ditambahkan
@@ -93,7 +94,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
     val taxString by scanViewModel.tax.collectAsStateWithLifecycle() 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
 
-    val totalPrice = totalPriceString?.tLongOrNull() ?: 0
+    val totalPrice = totalPriceString?.toLongOrNull() ?: 0
     val tax = taxString?.toLongOrNull() ?: 0
 
     Column(
@@ -473,14 +474,13 @@ fun TransactionFormPage(
                 enabled = isEditButtonEnabled
             ) { Text(stringResource(R.string.edit)) }
 
-            PrimaryButton(
+            Button(
                 onClick = {
                     coroutineScope.launch {
-                        setLoading(true) // Menggunakan setLoading
+                        setLoading(true)
                         savedTransactionIds.clear()
                         var allSuccess = true
                         items?.forEach { item ->
-                            // Menggunakan currentTaxString yang sudah bisa diupdate
                             val taxDouble = currentTaxString?.toDoubleOrNull() ?: 0.0
                             val itemsCount = items?.size ?: 0
                             val taxPerItemValue =
@@ -498,13 +498,13 @@ fun TransactionFormPage(
                                 println("Failed to save transaction for item: ${item.itemName} in EditResultScreen")
                             }
                         }
-                        setLoading(false) // Menggunakan setLoading
+                        setLoading(false)
                         if (allSuccess && savedTransactionIds.isNotEmpty()) {
                             allItemsProcessed = true
                         } else if (!allSuccess) {
                             println("Some items failed to save or were skipped.")
                             if (savedTransactionIds.isNotEmpty()) {
-                                allItemsProcessed = true // Tetap navigasi jika ada yang berhasil
+                                allItemsProcessed = true
                             }
                         }
                     }
