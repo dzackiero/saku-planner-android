@@ -48,8 +48,8 @@ fun CategoryPage(
     val topSpending = state.categoryTransactions.maxByOrNull { it.amount }
     val leastSpending = state.categoryTransactions.minByOrNull { it.amount }
 
-    val topPct = topSpending?.let { it.amount / total * 100.0 } ?: 0.0
-    val leastPct = leastSpending?.let { it.amount / total * 100.0 } ?: 0.0
+    val topPct = topSpending?.let { (it.amount.toDouble() / total) * 100.0 } ?: 0.0
+    val leastPct = leastSpending?.let { (it.amount.toDouble() / total) * 100.0 } ?: 0.0
 
     fun formatPercentage(value: Double): String {
         return String.format(Locale.getDefault(), "%.2f%%", value)

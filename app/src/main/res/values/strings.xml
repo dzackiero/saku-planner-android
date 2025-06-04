@@ -73,7 +73,7 @@
     <string name="monthly_target">Monthly Target</string>
     <string name="_per_month">/month</string>
     <string name="target_end_date">Target End Date</string>
-    <string name="month">month</string>
+    <string name="month">Month</string>
     <string name="all">All</string>
     <string name="no_data_available">No data available</string>
     <string name="monthly">Monthly</string>
@@ -90,8 +90,8 @@
     <string name="across_accounts">Across %1$s accounts</string>
     <string name="app_settings_title">App Settings</string>
     <string name="app_settings_subtitle">Manage your app preferences and data</string>
-    <string name="reset_app_data">Reset App Data</string>
-    <string name="reset_app_data_description">Remove all data on local system</string>
+    <string name="reset_app_data">Reset &amp; Seed App Data</string>
+    <string name="reset_app_data_description">Remove all data on local system and insert categories and account for testing</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="enter_your_credentials_to_sign_in_to_your_account">Enter your credentials to sign in to your account</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -193,6 +193,20 @@
     <string name="you_don_t_have_any_reflection_yet">You don\'t have any reflection yet</string>
     <string name="collapse">collapse</string>
     <string name="expand">expand</string>
+    <string name="choose_details">Choose Details</string>
+    <string name="detail">Detail</string>
+    <string name="expense_summary">Expense Summary</string>
+    <string name="subtotal_without_tax">Subtotal (without tax)</string>
+    <string name="total_with_tax">Total (with tax)</string>
+    <string name="tax_will_be_distributed_and_added_to_each_item_price_when_you_open_detail_or_edit">Tax will be distributed and added to each item price when you open Detail or Edit.</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="no_transaction_details_found_or_failed_to_load_all">No transaction details found or failed to load all.</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="skip">Skip</string>
+    <string name="create_your_first_account">Create Your First Account</string>
+    <string name="manage_your_categories">Manage your categories</string>
+    <string name="your_transaction_categories">Your Transaction Categories</string>
+    <string name="create_your_budget_for_your_category">Create Your Budget For Your Category</string>
     <string name="edit_total_tax">Edit Total Tax</string>
     <string name="input_your_total_tax">Input your total tax</string>
 </resources>

@@ -4,16 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 import kotlinx.coroutines.TimeoutCancellationException
@@ -22,6 +24,7 @@ import kotlinx.coroutines.withTimeout
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card as Card
 
 @Composable
 fun DetailResultScreen(
@@ -32,7 +35,8 @@ fun DetailResultScreen(
 ) {
     var isLoadingScreen by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val scanFormStateList = remember { mutableStateListOf<ScanViewModel.ScanFormState>() } // Menggunakan ScanFormState dari models
+    val scanFormStateList =
+        remember { mutableStateListOf<ScanViewModel.ScanFormState>() }
 
     LaunchedEffect(transactionIds, scanViewModel) {
         isLoadingScreen = true
@@ -47,7 +51,7 @@ fun DetailResultScreen(
                     scanViewModel.scanFormState.first { state ->
                         state.transactionId == id &&
                                 state.amount != null &&
-                                state.description.isNotEmpty() // Tetap seperti ini jika "" adalah invalid
+                                state.description.isNotEmpty()
                     }
                 }
                 tempLoadedList.add(loadedState)
@@ -67,17 +71,20 @@ fun DetailResultScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(WindowInsets.systemBars.asPaddingValues()) // Padding untuk system bars
-                .padding(horizontal = 16.dp), // Padding horizontal untuk konten
+                .padding(WindowInsets.systemBars.asPaddingValues())
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp) // Padding atas & bawah untuk LazyColumn
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                bottom = 16.dp
+            )
         ) {
-            // 1. Judul Halaman
             item {
                 Text(
-                    "Transaction Details",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    text = stringResource(R.string.transaction_details),
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    style = Typography.displaySmall,
                 )
             }
 
@@ -86,12 +93,11 @@ fun DetailResultScreen(
                 return sdf.format(Date(timestamp))
             }
 
-            // 2. Kondisi Error atau Empty State (jika tidak loading)
             if (!isLoadingScreen) {
                 if (errorMessage != null) {
                     item {
                         Column(
-                            modifier = Modifier.fillParentMaxSize(), // Mengisi ruang LazyColumn jika ini saja itemnya
+                            modifier = Modifier.fillParentMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -111,7 +117,7 @@ fun DetailResultScreen(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                "No transaction details found or failed to load all.",
+                                text = stringResource(R.string.no_transaction_details_found_or_failed_to_load_all),
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.padding(16.dp)
                             )
@@ -122,47 +128,49 @@ fun DetailResultScreen(
                         val firstTransactionState = scanFormStateList.first()
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Row {
-                                HeaderInfoRow(label = "Date", formatDate(firstTransactionState.transactionAt))
+                                HeaderInfoRow(
+                                    label = "Date",
+                                    formatDate(firstTransactionState.transactionAt)
+                                )
                             }
                             if (firstTransactionState.selectedKakeibo != null) {
                                 Row {
-                                    HeaderInfoRow(label = "Kakeibo", firstTransactionState.selectedKakeibo.name)
+                                    HeaderInfoRow(
+                                        label = "Kakeibo",
+                                        firstTransactionState.selectedKakeibo.name
+                                    )
                                 }
                             }
                             firstTransactionState.selectedAccount?.let {
                                 Row {
-                                    HeaderInfoRow(label = "Account", firstTransactionState.selectedAccount.name)
+                                    HeaderInfoRow(
+                                        label = "Account",
+                                        firstTransactionState.selectedAccount.name
+                                    )
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(24.dp)) // Spasi sebelum daftar item
                     }
 
-                    // 4. Daftar Item Transaksi
                     items(
                         items = scanFormStateList,
-                        key = { item -> item.transactionId ?: item.hashCode() } // Key untuk performa
+                        key = { item -> item.transactionId ?: item.hashCode() }
                     ) { detail ->
                         TransactionDetailItem(detail = detail)
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp)) // Spasi dan divider antar item
                     }
 
-                    // 5. Tombol "Back to Home"
                     item {
-                        Spacer(modifier = Modifier.height(24.dp)) // Spasi sebelum tombol
-                        Button(
+                        PrimaryButton(
                             onClick = navigateToHome,
-                            shape = RectangleShape, // Ujung tombol tajam
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Back to Home")
+                            Text(stringResource(R.string.back_to_home))
                         }
                     }
                 }
             }
         }
 
-        // Loading overlay (akan tampil di atas LazyColumn jika isLoadingScreen true)
         if (isLoadingScreen) {
             Box(
                 modifier = Modifier
@@ -188,7 +196,8 @@ fun HeaderInfoRow(label: String, name: String) {
             modifier = Modifier.width(80.dp)
         )
         Text(
-            text = ": " + name.split(" ").joinToString(" ") { name -> name.replaceFirstChar { it.uppercase() }},
+            text = ": " + name.split(" ")
+                .joinToString(" ") { name -> name.replaceFirstChar { it.uppercase() } },
             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Medium),
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
@@ -199,43 +208,42 @@ fun HeaderInfoRow(label: String, name: String) {
 fun TransactionDetailItem(
     detail: ScanViewModel.ScanFormState
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RoundedCornerShape(6.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Card {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (detail.description.isNotEmpty()) {
                 Text(
                     text = detail.description,
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold), // Lebih besar
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     fontSize = 18.sp
                 )
             }
 
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Amount:",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-                        modifier = Modifier.width(88.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Amount:",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+                    modifier = Modifier.width(88.dp)
+                )
+                Text(
+                    text = formatToCurrency(detail.amount!!.toDouble()),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = formatToCurrency(detail.amount!!.toDouble()),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
+                )
+            }
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Category:",
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                    modifier = Modifier.width(88.dp) // Samakan dengan lebar label di HeaderInfoRow
+                    modifier = Modifier.width(88.dp)
                 )
                 Text(
                     text = detail.selectedCategory?.name ?: "N/A",

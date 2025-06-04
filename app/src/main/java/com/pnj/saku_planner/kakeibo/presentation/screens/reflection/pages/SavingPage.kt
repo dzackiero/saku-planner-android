@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
+import timber.log.Timber
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -50,6 +52,7 @@ import java.util.Locale
 fun SavingPage(
     state: ReflectionState = ReflectionState(),
     callbacks: ReflectionCallbacks = ReflectionCallbacks(),
+    navigateToSavingDetail: (String) -> Unit = {},
 ) {
     var showReflectionForm by remember { mutableStateOf(true) }
     val accountNames = state.savings.map { it.name }
@@ -240,7 +243,6 @@ fun SavingPage(
             )
         }
 
-        // Savings Details Section (Visible when showReflectionForm is false)
         AnimatedVisibility(
             visible = !showReflectionForm,
             modifier = Modifier.weight(1f),
@@ -258,16 +260,19 @@ fun SavingPage(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 state.savings.forEach { saving ->
-                    val amount =
-                        transactions.filter { it.account == saving.name }.sumOf { it.amount }
+                    val amount = transactions
+                        .filter { it.account == saving.name }.sumOf { it.amount }
                     val monthlyTarget =
                         (saving.target?.targetAmount ?: 0) /
                                 (saving.target?.duration?.toDouble() ?: 1.0)
-                    val actualProgress = if (amount > 0) {
-                        monthlyTarget / amount
+
+                    val actualProgress = if (monthlyTarget > 0) {
+                        amount.toDouble() / monthlyTarget
                     } else {
-                        if (monthlyTarget > 0) Double.POSITIVE_INFINITY else 0.0
+                        if (amount > 0) 1.0
+                        else 0.0
                     }
+
                     val percentageString =
                         String.format(Locale.getDefault(), "%.2f%%", actualProgress * 100)
 
@@ -279,8 +284,11 @@ fun SavingPage(
                     val percentageTextColor =
                         if (isOverBudget) AppColor.Destructive else Color.Unspecified
 
+                    Timber.d("Saving: ${saving.name}, Amount: $amount, Monthly Target: $monthlyTarget, Actual Progress: $actualProgress")
 
-                    Card {
+                    Card(
+                        modifier = Modifier.clickable { navigateToSavingDetail(saving.id) }
+                    ) {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
@@ -295,7 +303,7 @@ fun SavingPage(
                                 )
                             }
                             Text(
-                                text = formatToCurrency(saving.balance),
+                                text = formatToCurrency(amount),
                                 style = Typography.headlineMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.fillMaxWidth(),
@@ -305,7 +313,8 @@ fun SavingPage(
                             ) {
                                 LinearProgressIndicator(
                                     progress = { actualProgress.toFloat() },
-                                    trackColor = progressIndicatorColor,
+                                    color = progressIndicatorColor,
+                                    trackColor = AppColor.Muted,
                                     modifier = Modifier
                                         .height(6.dp)
                                         .fillMaxWidth(),

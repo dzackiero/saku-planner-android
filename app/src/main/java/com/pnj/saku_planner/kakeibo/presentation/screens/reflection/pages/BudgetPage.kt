@@ -8,6 +8,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,7 +50,8 @@ import java.util.Locale
 
 @Composable
 fun BudgetPage(
-    state: ReflectionState = ReflectionState()
+    state: ReflectionState = ReflectionState(),
+    navigateToBudgetDetail: (String) -> Unit = {},
 ) {
     var showReflectionForm by remember { mutableStateOf(true) }
 
@@ -167,7 +169,7 @@ fun BudgetPage(
                         .heightIn(max = 240.dp)
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    state.budgets.forEach { budget ->
+                    state.budgets.filter { it.amount < it.currentAmount }.forEach { budget ->
                         val budgetPct = if (budget.amount > 0) {
                             budget.currentAmount.toDouble() / budget.amount
                         } else {
@@ -179,7 +181,10 @@ fun BudgetPage(
                             budgetPct * 100
                         )
 
-                        Card(padding = PaddingValues(horizontal = 4.dp)) {
+                        Card(
+                            modifier = Modifier.clickable { navigateToBudgetDetail(budget.id) },
+                            padding = PaddingValues(horizontal = 4.dp),
+                        ) {
                             Row {
                                 Row(
                                     modifier = Modifier
@@ -262,8 +267,9 @@ fun BudgetPage(
                             amount = it.amount,
                             category = it.category,
                             currentAmount = it.currentAmount,
-                        )
-                    ) { }
+                        ),
+                        onEditClick = { navigateToBudgetDetail(it.id) }
+                    )
                 }
             }
         }
@@ -296,7 +302,7 @@ fun BudgetPagePreview() {
                         currentAmount = 115000
                     )
                 )
-            )
+            ),
         )
     }
 }

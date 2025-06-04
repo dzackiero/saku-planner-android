@@ -64,19 +64,16 @@ fun AccountScreen(
     }
     val totalBalance = filteredAccounts.sumOf { it.balance }
 
-    // Make LazyColumn the top-level scrollable container for the list and its surrounding elements
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize() // LazyColumn will now handle the scrolling for its content
+            .fillMaxSize()
             .background(AppColor.PrimaryForeground)
-            .padding(horizontal = 16.dp), // Apply horizontal padding once here
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Spacing between items in LazyColumn
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Item 1: Monthly Balance
         item {
             Box(
-                Modifier.padding(top = 16.dp) // Add top padding for the first item
-                // Horizontal padding is now handled by LazyColumn's modifier
+                Modifier.padding(top = 16.dp)
             ) {
                 Card(contentAlignment = Alignment.Center) {
                     Column(
@@ -102,12 +99,9 @@ fun AccountScreen(
             }
         }
 
-        // Item 2: "Your Accounts" title and "Add Account" button
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                // Removed horizontal padding, handled by LazyColumn
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -122,13 +116,11 @@ fun AccountScreen(
             }
         }
 
-        // Item 3: Filter chips (can be in its own item or a sticky header if needed)
         item {
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .fillMaxWidth(), // Make sure the Row takes full width for scrolling
-                // Removed horizontal padding, handled by LazyColumn
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 filters.forEach { filter ->
@@ -156,21 +148,13 @@ fun AccountScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp), // Add some vertical padding
+                        .padding(vertical = 16.dp),
                 )
             }
         }
 
         // Items 5 onwards: The list of accounts
-        // Spacing between these account items can be handled by the LazyColumn's verticalArrangement
-        // or by adding padding to each item if more specific control is needed.
-        // The Arrangement.spacedBy(16.dp) on LazyColumn will apply to these items too.
-        // If you need different spacing specifically for account items, adjust accordingly.
         items(filteredAccounts, key = { it.id }) { account ->
-            // Apply a slight top padding if the LazyColumn's spacedBy isn't what you want here,
-            // or rely on the LazyColumn's global spacing.
-            // For this example, let's remove previous individual padding and rely on LazyColumn's arrangement.
-
             if (account.target != null) {
                 val actualTarget = account.target
                 AccountWithTargetCard(
@@ -190,8 +174,7 @@ fun AccountScreen(
                 )
             }
         }
-
-        // Optional: Add a spacer at the bottom for better scroll padding
+        
         item {
             Spacer(modifier = Modifier.height(16.dp))
         }

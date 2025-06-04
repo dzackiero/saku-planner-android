@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.TopAppBar
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
@@ -43,11 +42,7 @@ fun CategoryScreen(
     onAddCategoryClicked: () -> Unit = {},
     onCategoryItemClicked: (CategoryUi) -> Unit = {},
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar()
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         val tabs = listOf(
             TabItem(stringResource(R.string.expense)) {
                 CategoryList(

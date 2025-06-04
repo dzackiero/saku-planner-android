@@ -72,7 +72,7 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.ScanRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
-import com.pnj.saku_planner.kakeibo.presentation.screens.auth.OnboardingScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.auth.WelcomeScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.AuthViewModel
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.UserState
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
@@ -105,11 +105,11 @@ fun AuthNavigation() {
     Scaffold { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Onboarding,
+            startDestination = Welcome,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable<Onboarding> {
-                OnboardingScreen(
+            composable<Welcome> {
+                WelcomeScreen(
                     onLoginClicked = { navController.navigate(Login) },
                     onRegisterClicked = { navController.navigate(Register) },
                 )
@@ -297,7 +297,7 @@ fun MainAppNavigation() {
                 },
             ) {
                 val reflectionId = it.toRoute<Reflection>().reflectionId
-                ReflectionRoute(navController, reflectionId)
+                ReflectionRoute(navController, it, reflectionId)
             }
 
             //Read Receipt or Scan
@@ -526,7 +526,7 @@ data class BottomNavItem(
 )
 
 @Serializable
-data object Onboarding
+data object Welcome
 
 @Serializable
 data object Login
