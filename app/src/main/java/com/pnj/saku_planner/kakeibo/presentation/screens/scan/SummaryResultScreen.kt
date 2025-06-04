@@ -9,6 +9,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions // Ditambahkan
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType // Ditambahkan
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,13 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
 import kotlinx.coroutines.launch
 
+// Asumsikan ScanFormCallbacks di ScanViewModel telah diperbarui dengan:
+// interface ScanFormCallbacks {
+//    ...
+//    fun onTaxChange(tax: String)
+//    ...
+// }
+
 @Composable
 fun SummaryResultScreen(
     scanViewModel: ScanViewModel,
@@ -47,6 +56,10 @@ fun SummaryResultScreen(
     val pagerState = rememberPagerState(initialPage = 0) { 2 }
     val transactionCallbacks = scanViewModel.callbacks
     val transactionState by scanViewModel.scanFormState.collectAsStateWithLifecycle()
+
+    // isLoading dipindahkan ke dalam SummaryResultScreen agar bisa diakses oleh TransactionFormPage
+    var isLoading by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
@@ -66,7 +79,8 @@ fun SummaryResultScreen(
                     callbacks = transactionCallbacks,
                     scanViewModel = scanViewModel,
                     navigateToDetail = navigateToDetail,
-                    navigateToEdit = navigateToEdit
+                    navigateToEdit = navigateToEdit,
+                    setLoading = { isLoading = it } // Melewatkan setter untuk isLoading
                 )
             }
         }
@@ -84,11 +98,11 @@ fun SummaryResultScreen(
 @Composable
 fun SummaryPage(scanViewModel: ScanViewModel) {
     val totalPriceString by scanViewModel.totalPrice.collectAsStateWithLifecycle()
-    val taxString by scanViewModel.tax.collectAsStateWithLifecycle()
+    val taxString by scanViewModel.tax.collectAsStateWithLifecycle() // Ini akan update otomatis jika tax di ViewModel berubah
     val items by scanViewModel.items.collectAsStateWithLifecycle()
 
     val totalPrice = totalPriceString?.toDoubleOrNull() ?: 0.0
-    val tax = taxString?.toDoubleOrNull() ?: 0.0
+    val tax = taxString?.toDoubleOrNull() ?: 0.0 // Ini akan menggunakan nilai pajak terbaru
 
     Column(
         modifier = Modifier
@@ -113,7 +127,9 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)) {
                         Text(
                             text = "Item",
                             style = MaterialTheme.typography.titleSmall,
@@ -160,7 +176,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal=8.dp),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -179,33 +195,31 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal=8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Tax",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = formatToCurrency(tax),
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = AppColor.CardForeground,
-                    modifier = Modifier.wrapContentWidth(Alignment.End),
-                    textAlign = TextAlign.End
-                )
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Tax",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = formatToCurrency(tax), // Akan menampilkan pajak yang sudah diedit jika ada
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColor.CardForeground,
+                modifier = Modifier.wrapContentWidth(Alignment.End),
+                textAlign = TextAlign.End
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal=8.dp),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -214,7 +228,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = formatToCurrency(totalPrice + tax),
+                text = formatToCurrency(totalPrice + tax), // Akan menggunakan pajak yang sudah diedit
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 color = AppColor.Wants,
                 modifier = Modifier.wrapContentWidth(Alignment.End),
@@ -241,14 +255,16 @@ fun TransactionFormPage(
     callbacks: ScanViewModel.ScanFormCallbacks,
     scanViewModel: ScanViewModel,
     navigateToDetail: (List<String>) -> Unit = {},
-    navigateToEdit: () -> Unit
+    navigateToEdit: () -> Unit,
+    setLoading: (Boolean) -> Unit // Terima setter untuk isLoading
 ) {
     LaunchedEffect(Unit) {
         scanViewModel.loadProperties()
     }
 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
-    val originalTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
+    // Menggunakan scanViewModel.tax yang merupakan StateFlow agar selalu update
+    val currentTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
     val categories = scanViewModel.categories.collectAsState()
     val accounts = scanViewModel.accounts.collectAsState()
 
@@ -282,26 +298,26 @@ fun TransactionFormPage(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Category Selection using BottomSheetField
-            BottomSheetField(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
-                label = { Text(stringResource(R.string.category)) },
-                selectedItem = formState.selectedCategory,
-                onItemSelected = { callbacks.onCategoryChange(it) },
-                itemContent = { category ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(category.name)
-                        category.icon?.let {
-                            Text(it, fontSize = 24.sp)
-                        }
+        BottomSheetField(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
+            label = { Text(stringResource(R.string.category)) },
+            selectedItem = formState.selectedCategory,
+            onItemSelected = { callbacks.onCategoryChange(it) },
+            itemContent = { category ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(category.name)
+                    category.icon?.let {
+                        Text(it, fontSize = 24.sp)
                     }
-                },
-                itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
-            )
+                }
+            },
+            itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         // Account Chips Selection
@@ -406,10 +422,42 @@ fun TransactionFormPage(
                 }
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(20.dp)) // Spacer sebelum field edit pajak
+
+        // --- START: Fitur Edit Pajak ---
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.edit_total_tax),
+                style = Typography.titleMedium
+            )
+            OutlinedTextField(
+                value = currentTaxString ?: "0",
+                onValueChange = { newValue ->
+                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                    if (filteredValue.count { it == '.' } <= 1) {
+                        callbacks.onTaxChange(filteredValue)
+                    }
+                },
+                label = { Text(stringResource(R.string.input_your_total_tax)) }, // Tambahkan string ini juga
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                leadingIcon = { Text(text = "Rp") } // Opsional: tambahkan simbol mata uang
+            )
+        }
+        // --- END: Fitur Edit Pajak ---
+
+        Spacer(modifier = Modifier.weight(1f)) // Spacer ini mendorong tombol ke bawah
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
@@ -418,7 +466,9 @@ fun TransactionFormPage(
                 },
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
-                modifier = Modifier.weight(1f).padding(end = 8.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
                 enabled = isEditButtonEnabled
             ) {
                 Text("Edit", color = AppColor.PrimaryForeground)
@@ -426,12 +476,12 @@ fun TransactionFormPage(
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        isLoading = true
+                        setLoading(true) // Menggunakan setLoading
                         savedTransactionIds.clear()
                         var allSuccess = true
                         items?.forEach { item ->
-
-                            val taxDouble = originalTaxString?.toDoubleOrNull() ?: 0.0
+                            // Menggunakan currentTaxString yang sudah bisa diupdate
+                            val taxDouble = currentTaxString?.toDoubleOrNull() ?: 0.0
                             val itemsCount = items?.size ?: 0
                             val taxPerItemValue = if (itemsCount > 0) taxDouble / itemsCount else 0.0
 
@@ -447,20 +497,22 @@ fun TransactionFormPage(
                                 println("Failed to save transaction for item: ${item.itemName} in EditResultScreen")
                             }
                         }
-                        isLoading = false
+                        setLoading(false) // Menggunakan setLoading
                         if (allSuccess && savedTransactionIds.isNotEmpty()) {
                             allItemsProcessed = true
                         } else if (!allSuccess) {
                             println("Some items failed to save or were skipped.")
                             if (savedTransactionIds.isNotEmpty()) {
-                                allItemsProcessed = true
+                                allItemsProcessed = true // Tetap navigasi jika ada yang berhasil
                             }
                         }
                     }
                 },
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
-                modifier = Modifier.weight(1f).padding(start = 8.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
                 enabled = isEditButtonEnabled
             ) {
                 Icon(
@@ -475,4 +527,5 @@ fun TransactionFormPage(
     }
 }
 
-private var isLoading = false
+// Hapus isLoading global karena sekarang dikelola di dalam SummaryResultScreen
+// private var isLoading = false

@@ -188,6 +188,8 @@ class ScanViewModel @Inject constructor(
                 _scanFormState.value.copy(description = description)
         }, onTransactionAtChange = {
             _scanFormState.value = _scanFormState.value.copy(transactionAt = it)
+        }, onTaxChange = { new_tax ->
+            _tax.value = new_tax
         })
 
     fun loadTransaction(transactionId: String) {
@@ -279,6 +281,7 @@ class ScanViewModel @Inject constructor(
         val onAccountChange: (AccountUi) -> Unit,
         val onKakeiboChange: (KakeiboCategoryType) -> Unit,
         val onAmountChange: (Long?) -> Unit,
-        val onDescriptionChange: (String) -> Unit
+        val onDescriptionChange: (String) -> Unit,
+        val onTaxChange: (String) -> Unit
     )
 }

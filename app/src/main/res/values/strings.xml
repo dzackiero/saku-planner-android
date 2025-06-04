@@ -193,4 +193,6 @@
     <string name="you_don_t_have_any_reflection_yet">You don\'t have any reflection yet</string>
     <string name="collapse">collapse</string>
     <string name="expand">expand</string>
+    <string name="edit_total_tax">Edit Total Tax</string>
+    <string name="input_your_total_tax">Input your total tax</string>
 </resources>
