@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType // Ditambahkan
@@ -34,7 +35,6 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.CustomPagerIndicator
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.scan.viewmodels.ScanViewModel
@@ -93,7 +93,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
     val taxString by scanViewModel.tax.collectAsStateWithLifecycle() 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
 
-    val totalPrice = totalPriceString?.tLongOrNull() ?: 0
+    val totalPrice = totalPriceString?.toLongOrNull() ?: 0
     val tax = taxString?.toLongOrNull() ?: 0
 
     Column(
@@ -285,25 +285,19 @@ fun TransactionFormPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 16.dp),
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      
-      Spacer(modifier = Modifier.height(24.dp))
-      
+
         Text(
             text = stringResource(R.string.choose_details),
             modifier = Modifier.padding(vertical = 16.dp),
             style = Typography.displaySmall,
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
         
         // Category Selection using BottomSheetField
         BottomSheetField(
-            modifier = Modifier.padding(horizontal = 8.dp),
             options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
             label = { Text(stringResource(R.string.category)) },
             selectedItem = formState.selectedCategory,
@@ -322,8 +316,27 @@ fun TransactionFormPage(
             },
             itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
         )
-        
-        Spacer(modifier = Modifier.height(20.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = currentTaxString ?: "0",
+                onValueChange = { newValue ->
+                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                    if (filteredValue.count { it == '.' } <= 1) {
+                        callbacks.onTaxChange(filteredValue)
+                    }
+                },
+                label = { Text(stringResource(R.string.total_tax)) },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                leadingIcon = { Text(text = "Rp") }
+            )
+        }
 
         // Account Chips Selection
         Column(
@@ -423,36 +436,6 @@ fun TransactionFormPage(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp)) 
-        
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.edit_total_tax),
-                style = Typography.titleMedium
-            )
-            OutlinedTextField(
-                value = currentTaxString ?: "0",
-                onValueChange = { newValue ->
-                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                    if (filteredValue.count { it == '.' } <= 1) {
-                        callbacks.onTaxChange(filteredValue)
-                    }
-                },
-                label = { Text(stringResource(R.string.input_your_total_tax)) }, 
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                leadingIcon = { Text(text = "Rp") }
-            )
-        }
-       
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Row(
             modifier = Modifier
@@ -473,14 +456,13 @@ fun TransactionFormPage(
                 enabled = isEditButtonEnabled
             ) { Text(stringResource(R.string.edit)) }
 
-            PrimaryButton(
+            Button(
                 onClick = {
                     coroutineScope.launch {
-                        setLoading(true) // Menggunakan setLoading
+                        setLoading(true)
                         savedTransactionIds.clear()
                         var allSuccess = true
                         items?.forEach { item ->
-                            // Menggunakan currentTaxString yang sudah bisa diupdate
                             val taxDouble = currentTaxString?.toDoubleOrNull() ?: 0.0
                             val itemsCount = items?.size ?: 0
                             val taxPerItemValue =
@@ -498,13 +480,13 @@ fun TransactionFormPage(
                                 println("Failed to save transaction for item: ${item.itemName} in EditResultScreen")
                             }
                         }
-                        setLoading(false) // Menggunakan setLoading
+                        setLoading(false)
                         if (allSuccess && savedTransactionIds.isNotEmpty()) {
                             allItemsProcessed = true
                         } else if (!allSuccess) {
                             println("Some items failed to save or were skipped.")
                             if (savedTransactionIds.isNotEmpty()) {
-                                allItemsProcessed = true // Tetap navigasi jika ada yang berhasil
+                                allItemsProcessed = true
                             }
                         }
                     }
