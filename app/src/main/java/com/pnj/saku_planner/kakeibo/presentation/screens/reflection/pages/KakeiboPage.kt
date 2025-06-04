@@ -138,6 +138,10 @@ fun KakeiboPage(
             ClickableTextField(
                 value = currentRegret?.description ?: "",
                 label = { Text(stringResource(R.string.i_regret_spending_on)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                ),
                 onClick = {
                     currentDialogType.value = DialogContentType.REGRET_TRANSACTION
                     showDialog.value = true

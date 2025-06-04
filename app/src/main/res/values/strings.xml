@@ -90,8 +90,8 @@
     <string name="across_accounts">Across %1$s accounts</string>
     <string name="app_settings_title">App Settings</string>
     <string name="app_settings_subtitle">Manage your app preferences and data</string>
-    <string name="reset_app_data">Reset App Data</string>
-    <string name="reset_app_data_description">Remove all data on local system</string>
+    <string name="reset_app_data">Reset &amp; Seed App Data</string>
+    <string name="reset_app_data_description">Remove all data on local system and insert categories and account for testing</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="enter_your_credentials_to_sign_in_to_your_account">Enter your credentials to sign in to your account</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -202,4 +202,9 @@
     <string name="transaction_details">Transaction Details</string>
     <string name="no_transaction_details_found_or_failed_to_load_all">No transaction details found or failed to load all.</string>
     <string name="back_to_home">Back to Home</string>
+    <string name="skip">Skip</string>
+    <string name="create_your_first_account">Create Your First Account</string>
+    <string name="manage_your_categories">Manage your categories</string>
+    <string name="your_transaction_categories">Your Transaction Categories</string>
+    <string name="create_your_budget_for_your_category">Create Your Budget For Your Category</string>
 </resources>

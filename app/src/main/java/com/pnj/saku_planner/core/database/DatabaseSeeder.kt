@@ -2,7 +2,9 @@ package com.pnj.saku_planner.core.database
 
 import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.CategoryEntity
+import com.pnj.saku_planner.core.database.entity.TargetEntity
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
 import javax.inject.Inject
 
 class DatabaseSeeder @Inject constructor(
@@ -66,7 +68,19 @@ class DatabaseSeeder @Inject constructor(
             AccountEntity(name = "Cash", balance = 50_000)
         )
         appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Account B", balance = 12_000_000)
+            AccountEntity(name = "Bank", balance = 12_000_000)
+        )
+        val targetId = randomUuid()
+        appDatabase.targetDao().saveTarget(
+            TargetEntity(
+                id = targetId,
+                duration = 3,
+                targetAmount = 2_000_000,
+                startDate = System.currentTimeMillis(),
+            )
+        )
+        appDatabase.accountDao().saveAccount(
+            AccountEntity(name = "Saving", balance = 500_000, targetId = targetId)
         )
 
 //        val transactions = listOf(

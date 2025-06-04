@@ -57,7 +57,7 @@ class ReflectionViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch {
             loadTransactions()
             loadSavings()

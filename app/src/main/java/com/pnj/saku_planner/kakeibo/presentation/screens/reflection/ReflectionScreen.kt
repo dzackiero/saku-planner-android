@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pnj.saku_planner.R
+import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
@@ -50,14 +51,14 @@ fun ReflectionScreen(
 ) {
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val steps = listOf(
-        FormStep("Start") { StartPage(state) },
-        FormStep("Overview") { OverviewPage(state) },
-        FormStep("Category") { CategoryPage(state) },
-        FormStep("Kakeibo") { KakeiboPage(state, callbacks) },
-        FormStep("Budget") { BudgetPage(state, navigateToBudgetDetail) },
-        FormStep("Saving") { SavingPage(state, callbacks, navigateToSavingDetail) },
-        FormStep("Reflection") { ReflectionPage(state, callbacks) },
-        FormStep("Finish") { FinishPage() }
+        ScreenStep("Start") { StartPage(state) },
+        ScreenStep("Overview") { OverviewPage(state) },
+        ScreenStep("Category") { CategoryPage(state) },
+        ScreenStep("Kakeibo") { KakeiboPage(state, callbacks) },
+        ScreenStep("Budget") { BudgetPage(state, navigateToBudgetDetail) },
+        ScreenStep("Saving") { SavingPage(state, callbacks, navigateToSavingDetail) },
+        ScreenStep("Reflection") { ReflectionPage(state, callbacks) },
+        ScreenStep("Finish") { FinishPage() }
     )
 
     fun addStep() {
@@ -126,6 +127,7 @@ fun ReflectionScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             LinearProgressIndicator(
+                trackColor = AppColor.Muted,
                 progress = { animatedProgress }, modifier = Modifier
                     .padding(bottom = 16.dp)
                     .height(12.dp)
@@ -175,7 +177,7 @@ fun ReflectionScreen(
     }
 }
 
-data class FormStep(
+data class ScreenStep(
     val name: String,
     val content: @Composable () -> Unit
 )
