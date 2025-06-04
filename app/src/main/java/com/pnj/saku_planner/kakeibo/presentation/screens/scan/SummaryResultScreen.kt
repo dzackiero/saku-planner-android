@@ -9,6 +9,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions // Ditambahkan
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType // Ditambahkan
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,9 @@ fun SummaryResultScreen(
     val transactionCallbacks = scanViewModel.callbacks
     val transactionState by scanViewModel.scanFormState.collectAsStateWithLifecycle()
 
+    var isLoading by remember { mutableStateOf(false) }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +71,8 @@ fun SummaryResultScreen(
                     callbacks = transactionCallbacks,
                     scanViewModel = scanViewModel,
                     navigateToDetail = navigateToDetail,
-                    navigateToEdit = navigateToEdit
+                    navigateToEdit = navigateToEdit,
+                    setLoading = { isLoading = it } 
                 )
             }
         }
@@ -84,11 +90,11 @@ fun SummaryResultScreen(
 @Composable
 fun SummaryPage(scanViewModel: ScanViewModel) {
     val totalPriceString by scanViewModel.totalPrice.collectAsStateWithLifecycle()
-    val taxString by scanViewModel.tax.collectAsStateWithLifecycle()
+    val taxString by scanViewModel.tax.collectAsStateWithLifecycle() 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
 
-    val totalPrice = totalPriceString?.toDoubleOrNull() ?: 0.0
-    val tax = taxString?.toDoubleOrNull() ?: 0.0
+    val totalPrice = totalPriceString?.tLongOrNull() ?: 0
+    val tax = taxString?.toLongOrNull() ?: 0
 
     Column(
         modifier = Modifier
@@ -114,11 +120,11 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    ) {
+
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)) {
+                      
                         Text(
                             text = "Item",
                             style = MaterialTheme.typography.titleSmall,
@@ -148,7 +154,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                             )
                             Text(
                                 text = formatToCurrency(
-                                    item.price.toString().toDoubleOrNull() ?: 0.0
+                                    item.price.toString().toLongOrNull() ?: 0
                                 ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = AppColor.CardForeground,
@@ -163,7 +169,6 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Menampilkan Subtotal
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -205,10 +210,9 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 textAlign = TextAlign.End
             )
         }
+        
         Spacer(modifier = Modifier.height(4.dp))
-
-
-
+        
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -221,7 +225,7 @@ fun SummaryPage(scanViewModel: ScanViewModel) {
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = formatToCurrency(totalPrice + tax),
+                text = formatToCurrency(totalPrice + tax), // Akan menggunakan pajak yang sudah diedit
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 color = AppColor.Wants,
                 modifier = Modifier.wrapContentWidth(Alignment.End),
@@ -248,14 +252,15 @@ fun TransactionFormPage(
     callbacks: ScanViewModel.ScanFormCallbacks,
     scanViewModel: ScanViewModel,
     navigateToDetail: (List<String>) -> Unit = {},
-    navigateToEdit: () -> Unit
+    navigateToEdit: () -> Unit,
+    setLoading: (Boolean) -> Unit
 ) {
     LaunchedEffect(Unit) {
         scanViewModel.loadProperties()
     }
 
     val items by scanViewModel.items.collectAsStateWithLifecycle()
-    val originalTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
+    val currentTaxString by scanViewModel.tax.collectAsStateWithLifecycle()
     val categories = scanViewModel.categories.collectAsState()
     val accounts = scanViewModel.accounts.collectAsState()
 
@@ -285,16 +290,21 @@ fun TransactionFormPage(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+      
+      Spacer(modifier = Modifier.height(24.dp))
+      
         Text(
             text = stringResource(R.string.choose_details),
             modifier = Modifier.padding(vertical = 16.dp),
             style = Typography.displaySmall,
         )
 
-        // category selection
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Category Selection using BottomSheetField
         BottomSheetField(
             modifier = Modifier.padding(horizontal = 8.dp),
-            options = categories.value.filter { it.categoryType == TransactionType.EXPENSE },
+            options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
             label = { Text(stringResource(R.string.category)) },
             selectedItem = formState.selectedCategory,
             onItemSelected = { callbacks.onCategoryChange(it) },
@@ -312,6 +322,8 @@ fun TransactionFormPage(
             },
             itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
         )
+        
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Account Chips Selection
         Column(
@@ -411,6 +423,35 @@ fun TransactionFormPage(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(20.dp)) 
+        
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.edit_total_tax),
+                style = Typography.titleMedium
+            )
+            OutlinedTextField(
+                value = currentTaxString ?: "0",
+                onValueChange = { newValue ->
+                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                    if (filteredValue.count { it == '.' } <= 1) {
+                        callbacks.onTaxChange(filteredValue)
+                    }
+                },
+                label = { Text(stringResource(R.string.input_your_total_tax)) }, 
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                leadingIcon = { Text(text = "Rp") }
+            )
+        }
+       
+
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
@@ -419,8 +460,13 @@ fun TransactionFormPage(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            PrimaryButton(
-                onClick = navigateToEdit,
+          
+            Button(
+                onClick = {
+                    navigateToEdit()
+                },
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -430,12 +476,12 @@ fun TransactionFormPage(
             PrimaryButton(
                 onClick = {
                     coroutineScope.launch {
-                        isLoading = true
+                        setLoading(true) // Menggunakan setLoading
                         savedTransactionIds.clear()
                         var allSuccess = true
                         items?.forEach { item ->
-
-                            val taxDouble = originalTaxString?.toDoubleOrNull() ?: 0.0
+                            // Menggunakan currentTaxString yang sudah bisa diupdate
+                            val taxDouble = currentTaxString?.toDoubleOrNull() ?: 0.0
                             val itemsCount = items?.size ?: 0
                             val taxPerItemValue =
                                 if (itemsCount > 0) taxDouble / itemsCount else 0.0
@@ -452,17 +498,19 @@ fun TransactionFormPage(
                                 println("Failed to save transaction for item: ${item.itemName} in EditResultScreen")
                             }
                         }
-                        isLoading = false
+                        setLoading(false) // Menggunakan setLoading
                         if (allSuccess && savedTransactionIds.isNotEmpty()) {
                             allItemsProcessed = true
                         } else if (!allSuccess) {
                             println("Some items failed to save or were skipped.")
                             if (savedTransactionIds.isNotEmpty()) {
-                                allItemsProcessed = true
+                                allItemsProcessed = true // Tetap navigasi jika ada yang berhasil
                             }
                         }
                     }
                 },
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = AppColor.Primary),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp),
@@ -480,4 +528,4 @@ fun TransactionFormPage(
     }
 }
 
-private var isLoading = false
+// private var isLoading = false
