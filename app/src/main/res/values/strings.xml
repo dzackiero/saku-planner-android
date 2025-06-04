@@ -207,6 +207,5 @@
     <string name="manage_your_categories">Manage your categories</string>
     <string name="your_transaction_categories">Your Transaction Categories</string>
     <string name="create_your_budget_for_your_category">Create Your Budget For Your Category</string>
-    <string name="edit_total_tax">Edit Total Tax</string>
-    <string name="input_your_total_tax">Input your total tax</string>
+    <string name="total_tax">Total Tax</string>
 </resources>

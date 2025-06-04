@@ -285,25 +285,19 @@ fun TransactionFormPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 16.dp),
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      
-      Spacer(modifier = Modifier.height(24.dp))
-      
+
         Text(
             text = stringResource(R.string.choose_details),
             modifier = Modifier.padding(vertical = 16.dp),
             style = Typography.displaySmall,
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
         
         // Category Selection using BottomSheetField
         BottomSheetField(
-            modifier = Modifier.padding(horizontal = 8.dp),
             options = categories.value.filter { it.categoryType == TransactionType.EXPENSE }, // Filter untuk EXPENSE
             label = { Text(stringResource(R.string.category)) },
             selectedItem = formState.selectedCategory,
@@ -322,8 +316,27 @@ fun TransactionFormPage(
             },
             itemLabel = { category -> "${category.icon ?: ""} ${category.name}" }
         )
-        
-        Spacer(modifier = Modifier.height(20.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = currentTaxString ?: "0",
+                onValueChange = { newValue ->
+                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
+                    if (filteredValue.count { it == '.' } <= 1) {
+                        callbacks.onTaxChange(filteredValue)
+                    }
+                },
+                label = { Text(stringResource(R.string.total_tax)) },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                leadingIcon = { Text(text = "Rp") }
+            )
+        }
 
         // Account Chips Selection
         Column(
@@ -423,36 +436,6 @@ fun TransactionFormPage(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp)) 
-        
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.edit_total_tax),
-                style = Typography.titleMedium
-            )
-            OutlinedTextField(
-                value = currentTaxString ?: "0",
-                onValueChange = { newValue ->
-                    val filteredValue = newValue.filter { it.isDigit() || it == '.' }
-                    if (filteredValue.count { it == '.' } <= 1) {
-                        callbacks.onTaxChange(filteredValue)
-                    }
-                },
-                label = { Text(stringResource(R.string.input_your_total_tax)) }, 
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                leadingIcon = { Text(text = "Rp") }
-            )
-        }
-       
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Row(
             modifier = Modifier
