@@ -183,7 +183,8 @@ object AppModule {
         categoryDao: CategoryDao,
         monthBudgetDao: MonthBudgetDao,
         targetDao: TargetDao,
-        transactionDao: TransactionDao
+        transactionDao: TransactionDao,
+        appDatabase: AppDatabase,
     ): DataRepository {
         return DataRepositoryImpl(
             appApi,
@@ -192,7 +193,8 @@ object AppModule {
             categoryDao,
             monthBudgetDao,
             targetDao,
-            transactionDao
+            transactionDao,
+            appDatabase, 
         )
     }
 }

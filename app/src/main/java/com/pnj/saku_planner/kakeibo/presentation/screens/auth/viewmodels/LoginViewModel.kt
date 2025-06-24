@@ -9,6 +9,7 @@ import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
 import com.pnj.saku_planner.kakeibo.data.local.UserPreferencesKeys
 import com.pnj.saku_planner.kakeibo.data.remote.dto.AuthResponse
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
+import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,9 +46,7 @@ class LoginViewModel @Inject constructor(
                 when (resource) {
                     is Resource.Success -> {
                         _state.update { it.copy(isLoading = false, user = resource.data) }
-                        // Assuming resource.data != null means successful login and token is saved by AuthRepository
                         if (resource.data != null) {
-                            // Schedule the daily sync
                             val syncTimePair = settingsDataStore.syncTimeFlow.firstOrNull() ?: Pair(
                                 UserPreferencesKeys.DEFAULT_SYNC_HOUR,
                                 UserPreferencesKeys.DEFAULT_SYNC_MINUTE
@@ -90,3 +89,4 @@ data class LoginCallback(
     val onEmailChange: (String) -> Unit = {},
     val onPasswordChange: (String) -> Unit = {},
 )
+

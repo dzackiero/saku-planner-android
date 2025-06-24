@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
@@ -39,14 +40,17 @@ import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.SettingsUiState
 
 @Composable
 fun SettingsScreen(
+    uiState: SettingsUiState = SettingsUiState(),
     workInfo: WorkInfo? = null,
     navigateToCategories: () -> Unit = {},
     navigateToSchedule: () -> Unit = {},
     navigateToProfile: () -> Unit = {},
     onManualSyncing: () -> Unit = {},
+    onLoadCloudData: () -> Unit = {},
     onResetAppData: () -> Unit = {},
     onLogout: () -> Unit = {},
 ) {
@@ -110,6 +114,15 @@ fun SettingsScreen(
                     }
 
                     else -> {}
+                }
+                SettingCard(
+                    title = stringResource(R.string.load_cloud_data),
+                    description = stringResource(R.string.load_all_your_synced_data_from_the_cloud),
+                    icon = Icons.Outlined.CloudDownload,
+                    onClick = onLoadCloudData,
+                )
+                if (uiState.isLoading) {
+                    LinearProgressIndicator(Modifier.fillMaxWidth())
                 }
             }
         }

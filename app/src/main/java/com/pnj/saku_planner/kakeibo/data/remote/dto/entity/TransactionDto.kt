@@ -63,3 +63,25 @@ fun TransactionEntity.toDto(): TransactionDto {
         deletedAt = isoDeletedAt
     )
 }
+
+fun TransactionDto.toEntity(): TransactionEntity {
+    val epochCreatedAt = Instant.parse(this.createdAt).toEpochMilli()
+    val epochUpdatedAt = Instant.parse(this.updatedAt).toEpochMilli()
+    val epochTransactionAt = Instant.parse(this.transactionAt).toEpochMilli()
+
+
+    return TransactionEntity(
+        id = this.id,
+        accountId = this.accountId,
+        toAccountId = this.toAccountId,
+        categoryId = this.categoryId,
+        type = this.type,
+        kakeiboCategory = this.kakeiboCategory,
+        amount = this.amount,
+        description = this.description,
+        transactionAt = epochTransactionAt,
+        createdAt = epochCreatedAt,
+        updatedAt = epochUpdatedAt,
+        isDeleted = this.deletedAt != null
+    )
+}

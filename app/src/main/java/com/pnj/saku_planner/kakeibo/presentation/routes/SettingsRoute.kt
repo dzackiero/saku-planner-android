@@ -14,13 +14,16 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.Set
 @Composable
 fun SettingsRoute(navController: NavController) {
     val viewModel = hiltViewModel<SettingsViewModel>()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val workInfo by viewModel.manualSyncWorkInfoState.collectAsStateWithLifecycle()
     SettingsScreen(
+        uiState = uiState,
         workInfo = workInfo,
         navigateToCategories = { navController.navigate(Category) },
         navigateToSchedule = { navController.navigate(Schedule) },
         navigateToProfile = { navController.navigate(Profile) },
         onManualSyncing = { viewModel.onSyncNowClicked() },
+        onLoadCloudData = { viewModel.loadSyncData() },
         onResetAppData = { viewModel.resetDatabase() },
         onLogout = { viewModel.logout() },
     )

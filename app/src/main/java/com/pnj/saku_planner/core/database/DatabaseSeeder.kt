@@ -10,7 +10,12 @@ import javax.inject.Inject
 class DatabaseSeeder @Inject constructor(
     private val appDatabase: AppDatabase
 ) {
-    suspend fun resetDatabase() {
+
+    fun clearDatabase() {
+        appDatabase.clearAllTables()
+    }
+
+    suspend fun resetAndSeedDatabase() {
         appDatabase.clearAllTables()
         seed()
     }

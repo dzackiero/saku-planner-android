@@ -9,16 +9,18 @@ import androidx.work.WorkManager
 import com.pnj.saku_planner.core.database.DatabaseSeeder
 import com.pnj.saku_planner.core.sync.AlarmSchedulerUtil
 import com.pnj.saku_planner.core.sync.SyncScheduler
+import com.pnj.saku_planner.core.util.Resource
 import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
+import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +28,11 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val settingsDataStore: SettingsDataStore,
     private val databaseSeeder: DatabaseSeeder,
+    private val dataRepository: DataRepository,
 ) : ViewModel() {
+
+    private val _state = MutableStateFlow(SettingsUiState())
+    val state: StateFlow<SettingsUiState> = _state
 
     private val workManager = WorkManager.getInstance(appContext)
     val manualSyncWorkInfoState: StateFlow<WorkInfo?> =
@@ -42,12 +48,42 @@ class SettingsViewModel @Inject constructor(
             )
 
     fun onSyncNowClicked() {
-        Timber.d("SettingsViewModel: Sync Now button clicked.")
         SyncScheduler.triggerManualSync(appContext)
     }
 
+    fun loadSyncData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataRepository.loadDataFromServer().collect { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true,
+                            errorMessage = null
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
     fun logout() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseSeeder.clearDatabase()
             AlarmSchedulerUtil.cancelDailySync(appContext)
             settingsDataStore.clearUserSession()
         }
@@ -55,7 +91,12 @@ class SettingsViewModel @Inject constructor(
 
     fun resetDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            databaseSeeder.resetDatabase()
+            databaseSeeder.resetAndSeedDatabase()
         }
     }
 }
+
+data class SettingsUiState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+)

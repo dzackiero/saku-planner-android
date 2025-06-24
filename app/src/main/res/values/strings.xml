@@ -208,4 +208,6 @@
     <string name="your_transaction_categories">Your Transaction Categories</string>
     <string name="create_your_budget_for_your_category">Create Your Budget For Your Category</string>
     <string name="total_tax">Total Tax</string>
+    <string name="load_cloud_data">Load Cloud Data</string>
+    <string name="load_all_your_synced_data_from_the_cloud">Load all your synced data from the cloud</string>
 </resources>

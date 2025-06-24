@@ -1,5 +1,6 @@
 package com.pnj.saku_planner.kakeibo.data.repository
 
+import com.pnj.saku_planner.core.database.AppDatabase
 import com.pnj.saku_planner.core.database.dao.*
 import com.pnj.saku_planner.core.database.entity.*
 import com.pnj.saku_planner.core.util.Resource
@@ -23,7 +24,8 @@ class DataRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
     private val monthBudgetDao: MonthBudgetDao,
     private val targetDao: TargetDao,
-    private val transactionDao: TransactionDao
+    private val transactionDao: TransactionDao,
+    private val appDatabase: AppDatabase,
 ) : DataRepository {
 
     override suspend fun saveAccount(account: AccountEntity) {
@@ -68,6 +70,39 @@ class DataRepositoryImpl @Inject constructor(
 
     override suspend fun saveTransaction(transaction: TransactionEntity) {
         transactionDao.saveTransaction(transaction)
+    }
+
+    override suspend fun loadDataFromServer(): Flow<Resource<String>> = flow {
+        try {
+            emit(Resource.Loading())
+            appDatabase.clearAllTables()
+            val response = appApi.getSyncedData()
+            response.data?.let { res ->
+                res.budgets.forEach {
+                    budgetDao.saveBudget(it.toEntity())
+                }
+                res.accounts.forEach {
+                    accountDao.saveAccount(it.toEntity())
+                }
+                res.categories.forEach {
+                    categoryDao.saveCategory(it.toEntity())
+                }
+                res.monthBudgets.forEach {
+                    monthBudgetDao.saveMonthBudget(it.toEntity())
+                }
+                res.targets.forEach {
+                    targetDao.saveTarget(it.toEntity())
+                }
+                res.transactions.forEach {
+                    transactionDao.saveTransaction(it.toEntity())
+                }
+            }
+
+        } catch (e: HttpException) {
+            emit(Resource.Error(e.extractApiMessage() ?: "An unexpected error occurred"))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        }
     }
 
     override suspend fun uploadDataToServer(): Flow<Resource<String>> = flow {

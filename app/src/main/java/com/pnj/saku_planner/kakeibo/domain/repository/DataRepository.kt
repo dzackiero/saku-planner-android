@@ -22,4 +22,5 @@ interface DataRepository {
 
     // --- Core Sync methods ---
     suspend fun uploadDataToServer(): Flow<Resource<String>>
+    suspend fun loadDataFromServer(): Flow<Resource<String>>
 }

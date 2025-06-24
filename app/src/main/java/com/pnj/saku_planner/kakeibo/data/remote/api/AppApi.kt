@@ -5,8 +5,10 @@ import com.pnj.saku_planner.kakeibo.data.remote.dto.LoginRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.RegisterRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.Response
 import com.pnj.saku_planner.kakeibo.data.remote.dto.SyncRequest
+import com.pnj.saku_planner.kakeibo.data.remote.dto.SyncResponse
 import com.pnj.saku_planner.kakeibo.data.remote.dto.UpdateRequest
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AppApi {
@@ -29,4 +31,7 @@ interface AppApi {
 
     @POST("sync")
     suspend fun sync(@Body request: SyncRequest): Response<Unit>
+
+    @GET("sync")
+    suspend fun getSyncedData(): Response<SyncResponse>
 }

@@ -4,12 +4,6 @@ import com.google.gson.annotations.SerializedName
 import com.pnj.saku_planner.core.database.entity.CategoryEntity // Assuming this is the correct path
 import java.time.Instant
 
-/**
- * Data Transfer Object for CategoryEntity, formatted for a Laravel-style API.
- * - Uses snake_case for JSON field names via @SerializedName.
- * - Timestamps (createdAt, updatedAt, deletedAt) are ISO 8601 strings.
- * - Soft deletion is represented by a nullable 'deleted_at' timestamp.
- */
 data class CategoryDto(
     @SerializedName("id")
     val id: String,
@@ -24,13 +18,13 @@ data class CategoryDto(
     val categoryType: String,
 
     @SerializedName("created_at")
-    val createdAt: String, // ISO 8601 String
+    val createdAt: String,
 
     @SerializedName("updated_at")
-    val updatedAt: String, // ISO 8601 String
+    val updatedAt: String,
 
     @SerializedName("deleted_at")
-    val deletedAt: String? // ISO 8601 String, Nullable
+    val deletedAt: String?
 )
 
 fun CategoryEntity.toDto(): CategoryDto {
@@ -51,5 +45,20 @@ fun CategoryEntity.toDto(): CategoryDto {
         createdAt = isoCreatedAt,
         updatedAt = isoUpdatedAt,
         deletedAt = isoDeletedAt
+    )
+}
+
+fun CategoryDto.toEntity(): CategoryEntity {
+    val epochCreatedAt = Instant.parse(this.createdAt).toEpochMilli()
+    val epochUpdatedAt = Instant.parse(this.updatedAt).toEpochMilli()
+
+    return CategoryEntity(
+        id = this.id,
+        name = this.name,
+        icon = this.icon,
+        categoryType = this.categoryType,
+        createdAt = epochCreatedAt,
+        updatedAt = epochUpdatedAt,
+        isDeleted = this.deletedAt != null
     )
 }
