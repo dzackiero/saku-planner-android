@@ -6,6 +6,7 @@ accompanistPermissions = "0.18.0"
 cameraCamera2 = "1.4.2"
 cameraLifecycle = "1.4.2"
 cameraView = "1.4.2"
+coilCompose = "2.4.0"
 composeCharts = "0.1.7"
 composeEmojiPicker = "1.0.0-alpha16"
 converterGson = "2.9.0"
@@ -47,6 +48,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 compose-emoji-picker = { module = "com.github.Abhimanyu14:compose-emoji-picker", version.ref = "composeEmojiPicker" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }

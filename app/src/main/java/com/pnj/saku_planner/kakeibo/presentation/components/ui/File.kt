@@ -17,6 +17,7 @@ import android.provider.MediaStore
 import java.io.FileInputStream
 import java.io.OutputStream
 import android.widget.Toast
+import androidx.core.graphics.scale
 
 private const val TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss"
 private val timeStamp: String = SimpleDateFormat(TIMESTAMP_FORMAT, Locale.US).format(Date())
@@ -41,27 +42,31 @@ fun deleteTempFile(file: File): Boolean {
 fun compressImageFile(file: File): File {
     val bitmap = BitmapFactory.decodeFile(file.path)
     val compressedFile = File(file.parent, "compressed_${file.name}")
-
-    var quality = 100
+    var quality: Int
     var stream: ByteArrayOutputStream
     var byteArray: ByteArray
 
-    do {
-        stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        byteArray = stream.toByteArray()
-        quality -= 5
-    } while (byteArray.size > 1000 * 1024 && quality > 10)
+    fun compressLoop(inputBitmap: Bitmap): ByteArray {
+        quality = 90
+        do {
+            stream = ByteArrayOutputStream()
+            inputBitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+            byteArray = stream.toByteArray()
+            quality -= 5
+        } while (byteArray.size > 1000 * 1024 && quality > 80)
+        return byteArray
+    }
 
-    val out = FileOutputStream(compressedFile)
-    out.write(byteArray)
-    out.flush()
-    out.close()
+    byteArray = compressLoop(bitmap)
+
+    if (byteArray.size > 1000 * 1024) {
+        val resizedBitmap = bitmap.scale((bitmap.width * 0.80).toInt(), (bitmap.height * 0.80).toInt())
+        byteArray = compressLoop(resizedBitmap)
+    }
+    compressedFile.outputStream().use { it.write(byteArray) }
 
     return compressedFile
 }
-
-
 
 fun uriToFile(context: Context, uri: Uri): File? {
     return try {
@@ -94,7 +99,6 @@ fun saveImageToGallery(context: Context, imageFile: File, appName: String = "You
         put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
         put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Menyimpan ke dalam folder Pictures/NamaAplikasiAnda di galeri
             put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/$appName")
             put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
@@ -136,7 +140,6 @@ fun saveImageToGallery(context: Context, imageFile: File, appName: String = "You
         } catch (e: Exception) {
             Timber.e(e, "Failed to save image to gallery")
             Toast.makeText(context, "Gagal menyimpan foto ke galeri.", Toast.LENGTH_SHORT).show()
-            // Jika gagal, hapus entry yang mungkin sudah dibuat (opsional)
             resolver.delete(imageUriInGallery, null, null)
         }
     } else {

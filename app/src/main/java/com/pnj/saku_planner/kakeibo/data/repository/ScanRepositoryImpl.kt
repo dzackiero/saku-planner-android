@@ -29,11 +29,13 @@ class ScanRepositoryImpl @Inject constructor(
             emit(Resource.Loading())
 
             compressedImageFile = compressImageFile(image)
+            val fileSizeKB = compressedImageFile.length() / 1024
+            Timber.d("Ukuran file terkompresi: $fileSizeKB KB")
 
             val requestFile = compressedImageFile.asRequestBody("image/*".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("image", compressedImageFile.name, requestFile)
 
-            val response = api.predict(body) // Panggil API
+            val response = api.predict(body)
             Timber.d("API Response: $response")
 
             if (response.status == "success") {
