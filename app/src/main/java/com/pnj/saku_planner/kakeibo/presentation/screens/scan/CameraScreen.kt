@@ -21,6 +21,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -54,12 +55,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
 import com.pnj.saku_planner.R
 import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.Permission
@@ -103,8 +106,13 @@ fun CameraScreen(
     val shouldNavigateToSummary by scanViewModel.navigateToSummaryEvent.collectAsStateWithLifecycle()
     var showInvalidImageDialog by remember { mutableStateOf(false) }
     var showErrorMessage by remember { mutableStateOf(false) }
+    var showCameraPreview by remember { mutableStateOf(true) }
 
     val errorMsg by scanViewModel.errorMsg.collectAsState()
+
+    LaunchedEffect(imageUri) {
+        showCameraPreview = imageUri == emptyImageUri
+    }
 
     LaunchedEffect(errorMsg) {
         if (errorMsg != "") {
@@ -126,8 +134,10 @@ fun CameraScreen(
     { uri: Uri? ->
         if (uri != null) {
             Timber.tag("Uri: ").d(uri.toString())
+            imageUri = uri
             val file = uriToFile(context, uri)
             if (file != null) {
+                showCameraPreview = false
                 scanViewModel.loadItems(file)
             }
         } else {
@@ -166,6 +176,7 @@ fun CameraScreen(
     ) {
 
         Box(modifier = modifier) {
+            if (showCameraPreview) {
             CameraPreview(
                 modifier = Modifier.fillMaxSize(),
                 onUseCase = {
@@ -267,9 +278,6 @@ fun CameraScreen(
                                             Timber.w("File foto temporer tidak ditemukan untuk disimpan ke galeri.")
                                         }
 
-                                        // Logika asli Anda
-//                                        val fileForViewModel = uriToFile(context, imageUri)
-//                                        if (fileForViewModel != null) {
                                         if (photoFile.exists()) {
                                             scanViewModel.loadItems(photoFile)
                                         } else {
@@ -310,6 +318,14 @@ fun CameraScreen(
                     }
                 ) {
                 }
+            }
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = "Captured Image",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit
+                )
             }
 
             LaunchedEffect(previewUseCase) {

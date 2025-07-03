@@ -93,6 +93,9 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.accompanist.permissions)
 
+    //photo
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.foundation)
 
     ksp(libs.androidx.hilt.compiler)
