@@ -210,4 +210,10 @@
     <string name="total_tax">Total Tax</string>
     <string name="load_cloud_data">Load Cloud Data</string>
     <string name="load_all_your_synced_data_from_the_cloud">Load all your synced data from the cloud</string>
+    <string name="kakeibo_explanation">Kakeibo explanation</string>
+    <string name="kakeibo_categories">Kakeibo Categories</string>
+    <string name="needs_explain">Essential expenses for living. Examples: rent/mortgage, groceries, utilities, essential transport, insurance.</string>
+    <string name="wants_explain">Non-essential, \'nice-to-have\' items and activities. Examples: dining out, hobbies, shopping for pleasure, subscriptions.</string>
+    <string name="culture_explain">Expenses that enrich your life and mind. Examples: books, museum tickets, concerts, courses, gym memberships.</string>
+    <string name="unexpected_explain">Unforeseen, one-off expenses. Examples: emergency medical bills, urgent home/car repairs, unplanned gifts.</string>
 </resources>

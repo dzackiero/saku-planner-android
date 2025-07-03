@@ -2,6 +2,7 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.home
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -12,10 +13,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,24 +36,25 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.pnj.saku_planner.R
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
-import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
-import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
-import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.DateTimePickerField
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
+import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
+import com.pnj.saku_planner.kakeibo.presentation.components.KakeiboCard
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.BalanceTextField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.BottomSheetField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Confirmable
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.DateTimePickerField
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Field
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.kakeibo.presentation.components.ui.states.rememberDateTimePickerState
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.home.viewmodels.TransactionFormCallbacks
@@ -66,6 +71,8 @@ fun TransactionFormScreen(
     onNavigateBack: () -> Unit = {},
     onDelete: () -> Unit = {},
 ) {
+    var showKakeiboInfoDialog by remember { mutableStateOf(false) }
+
     val dateTimePickerState = rememberDateTimePickerState(formState.transactionAt)
     val transactionTypes = listOf(
         TransactionType.EXPENSE,
@@ -320,11 +327,24 @@ fun TransactionFormScreen(
                             .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            text = stringResource(R.string.kakeibo_category),
-                            style = Typography.titleMedium,
-                            color = if (formState.selectedKakeiboError != null) AppColor.Destructive else Color.Unspecified
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = stringResource(R.string.kakeibo_category),
+                                style = Typography.titleMedium,
+                                color = if (formState.selectedKakeiboError != null) AppColor.Destructive else Color.Unspecified
+                            )
+                            IconButton(onClick = { showKakeiboInfoDialog = true }) {
+                                Icon(
+                                    Icons.Outlined.Info,
+                                    contentDescription = "Kakeibo category information",
+                                    tint = AppColor.MutedForeground
+                                )
+                            }
+                        }
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -361,6 +381,74 @@ fun TransactionFormScreen(
                 }
             }
         }
+
+        if (showKakeiboInfoDialog) {
+            Dialog(onDismissRequest = { showKakeiboInfoDialog = false }) {
+                Surface(
+                    shape = MaterialTheme.shapes.large,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.kakeibo_categories),
+                            style = Typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        KakeiboCategoryType.entries.forEach { category ->
+                            val style = category.getStyle()
+                            val explanation = when (category) {
+                                KakeiboCategoryType.NEEDS -> stringResource(R.string.needs_explain)
+                                KakeiboCategoryType.WANTS -> stringResource(R.string.wants_explain)
+                                KakeiboCategoryType.CULTURE -> stringResource(R.string.culture_explain)
+                                KakeiboCategoryType.UNEXPECTED -> stringResource(R.string.unexpected_explain)
+                            }
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    verticalAlignment = Alignment.Top,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = style.icon,
+                                        contentDescription = null,
+                                        tint = style.color
+                                    )
+                                    Column {
+                                        Text(
+                                            text = "${style.text} (${style.subtext})",
+                                            style = Typography.titleMedium,
+                                            color = style.color
+                                        )
+                                        Text(
+                                            text = explanation,
+                                            style = Typography.bodyMedium
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+
+                        PrimaryButton(
+                            onClick = { showKakeiboInfoDialog = false },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ) {
+                            Text("Got it!")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -368,7 +456,7 @@ fun TransactionFormScreen(
 @Composable
 fun PreviewNewTransactionForm() {
     KakeiboTheme {
-        var state by remember { mutableStateOf(TransactionFormState()) }
+        var state by remember { mutableStateOf(TransactionFormState(transactionType = TransactionType.EXPENSE)) }
 
         val callbacks = TransactionFormCallbacks(
             onTransactionTypeChange = {
@@ -390,10 +478,10 @@ fun PreviewNewTransactionForm() {
             CategoryUi(randomUuid(), "Entertainment", TransactionType.INCOME),
         )
 
-        val accounts = listOf<AccountUi>(
-//            AccountUi(1, "Wallet", 100_000.0),
-//            AccountUi(2, "Bank", 500_000.0),
-//            AccountUi(3, "Cash", 200_000.0),
+        val accounts = listOf(
+            AccountUi("1", "Wallet", 100_000),
+            AccountUi("2", "Bank", 500_000),
+            AccountUi("3", "Cash", 200_000),
         )
 
 

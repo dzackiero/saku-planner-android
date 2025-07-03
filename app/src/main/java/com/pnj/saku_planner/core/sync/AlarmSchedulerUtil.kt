@@ -16,7 +16,7 @@ object AlarmSchedulerUtil {
     fun scheduleDailySync(context: Context, hour: Int, minute: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context.applicationContext, SyncAlarmReceiver::class.java).apply {
-            action = "com.pnj.saku_planner.action.DAILY_SYNC_ALARM" // Unique action for clarity
+            action = "com.pnj.saku_planner.action.DAILY_SYNC_ALARM"
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
