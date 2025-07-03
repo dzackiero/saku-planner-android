@@ -38,6 +38,12 @@ fun yearMonthToString(
     } ${yearMonth.year}"
 }
 
+fun Number.toCurrency(
+    locale: Locale = Locale("id", "ID")
+): String {
+    return formatToCurrency(this, locale)
+}
+
 fun formatToCurrency(
     amount: Number,
     locale: Locale = Locale("id", "ID")

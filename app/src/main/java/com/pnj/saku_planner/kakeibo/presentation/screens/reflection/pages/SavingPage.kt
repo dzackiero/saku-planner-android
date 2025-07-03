@@ -74,6 +74,12 @@ fun SavingPage(
         fullPercentage * 100
     )
 
+    val savingsFeedback = if (fullPercentage >= 1) {
+        "Congratulations! You've hit your savings goal for this month!"
+    } else {
+        "You're on your way to hitting your savings goal. Keep it up!"
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -150,6 +156,13 @@ fun SavingPage(
                 }
             }
         }
+
+        Text(
+            text = savingsFeedback,
+            style = Typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
 
         // Reflection Form Section (Visible when showReflectionForm is true)
         AnimatedVisibility(

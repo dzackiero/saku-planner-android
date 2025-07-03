@@ -216,4 +216,6 @@
     <string name="wants_explain">Non-essential, \'nice-to-have\' items and activities. Examples: dining out, hobbies, shopping for pleasure, subscriptions.</string>
     <string name="culture_explain">Expenses that enrich your life and mind. Examples: books, museum tickets, concerts, courses, gym memberships.</string>
     <string name="unexpected_explain">Unforeseen, one-off expenses. Examples: emergency medical bills, urgent home/car repairs, unplanned gifts.</string>
+    <string name="net_savings">Net Savings</string>
+    <string name="savings_ratio">Savings Ratio</string>
 </resources>

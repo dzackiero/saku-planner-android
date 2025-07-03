@@ -124,7 +124,70 @@ class ReflectionViewModel @Inject constructor(
                 startDate = startDate,
                 endDate = endDate,
             ).map { it.toUi() }
-            _state.value = _state.value.copy(transactions = transactions)
+
+            val lastMonth = _state.value.yearMonth.minusMonths(1)
+            val lastMonthStartDate = lastMonth
+                .atDay(1)
+                .atStartOfDay(zoneId)
+                .toInstant()
+                .toEpochMilli()
+            val lastMonthEndDate = lastMonth
+                .atEndOfMonth()
+                .atTime(23, 59, 59, 999_000_000)
+                .atZone(zoneId)
+                .toInstant()
+                .toEpochMilli()
+
+            val lastMonthTransactions = transactionRepository.getAllTransactionsByRange(
+                startDate = lastMonthStartDate,
+                endDate = lastMonthEndDate
+            ).map { it.toUi() }
+
+            val lastMonthIncomes = lastMonthTransactions
+                .filter { it.type == TransactionType.INCOME }
+                .sumOf { it.amount }
+            val lastMonthExpenses = lastMonthTransactions
+                .filter { it.type == TransactionType.EXPENSE }
+                .sumOf { it.amount }
+
+            // --- Comparison Logic ---
+            val currentIncomes = transactions
+                .filter { it.type == TransactionType.INCOME }
+                .sumOf { it.amount }
+            val currentExpenses = transactions
+                .filter { it.type == TransactionType.EXPENSE }
+                .sumOf { it.amount }
+
+            val incomeComparison = if (lastMonthIncomes > 0) {
+                ((currentIncomes - lastMonthIncomes).toFloat() / lastMonthIncomes) * 100
+            } else if (currentIncomes > 0) {
+                100f
+            } else {
+                0f
+            }
+            val expenseComparison = if (lastMonthExpenses > 0) {
+                ((currentExpenses - lastMonthExpenses).toFloat() / lastMonthExpenses) * 100
+            } else if (currentExpenses > 0) {
+                100f
+            } else {
+                0f
+            }
+            val savings = currentIncomes - currentExpenses
+            val savingsRatio = if (currentIncomes > 0) {
+                (savings.toFloat() / currentIncomes) * 100
+            } else {
+                0f
+            }
+
+
+            _state.value = _state.value.copy(
+                transactions = transactions,
+                lastMonthIncomes = lastMonthIncomes,
+                lastMonthExpenses = lastMonthExpenses,
+                incomeComparison = incomeComparison,
+                expenseComparison = expenseComparison,
+                savingsRatio = savingsRatio,
+            )
 
             val kakeiboTransactions =
                 transactionRepository.getKakeiboSummary(startDate, endDate)
@@ -170,6 +233,14 @@ data class ReflectionState(
     val savings: List<AccountUi> = emptyList(),
 
     val transactions: List<TransactionUi> = emptyList(),
+
+    val lastMonthIncomes: Long = 0,
+    val lastMonthExpenses: Long = 0,
+    val incomeComparison: Float = 0f,
+    val expenseComparison: Float = 0f,
+    val savingsRatio: Float = 0f,
+
+
     val kakeiboTransactions: List<SummaryData> = emptyList(),
     val categoryTransactions: List<SummaryData> = emptyList(),
 
