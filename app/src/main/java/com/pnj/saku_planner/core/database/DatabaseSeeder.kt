@@ -3,9 +3,13 @@ package com.pnj.saku_planner.core.database
 import com.pnj.saku_planner.core.database.entity.AccountEntity
 import com.pnj.saku_planner.core.database.entity.CategoryEntity
 import com.pnj.saku_planner.core.database.entity.TargetEntity
+import com.pnj.saku_planner.core.database.entity.TransactionEntity
+import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import java.util.Calendar
 import javax.inject.Inject
+import kotlin.random.Random
 
 class DatabaseSeeder @Inject constructor(
     private val appDatabase: AppDatabase
@@ -61,20 +65,17 @@ class DatabaseSeeder @Inject constructor(
             ),
         )
 
-        // Insert income categories
         incomeCategories.forEach { appDatabase.categoryDao().saveCategory(it) }
+        expenseCategories.forEach { appDatabase.categoryDao().saveCategory(it) }
 
-        // Insert expense categories and store returned IDs
-        expenseCategories.associateWith {
-            appDatabase.categoryDao().saveCategory(it)
-        }
+        val cashAccount = AccountEntity(name = "Cash", balance = 50_000)
+        val bankAccount = AccountEntity(name = "Bank", balance = 12_000_000)
+        val savingAccount = AccountEntity(name = "Saving", balance = 500_000)
 
-        appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Cash", balance = 50_000)
-        )
-        appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Bank", balance = 12_000_000)
-        )
+        appDatabase.accountDao().saveAccount(cashAccount)
+        appDatabase.accountDao().saveAccount(bankAccount)
+        appDatabase.accountDao().saveAccount(savingAccount)
+
         val targetId = randomUuid()
         appDatabase.targetDao().saveTarget(
             TargetEntity(
@@ -85,101 +86,73 @@ class DatabaseSeeder @Inject constructor(
             )
         )
         appDatabase.accountDao().saveAccount(
-            AccountEntity(name = "Saving", balance = 500_000, targetId = targetId)
+            savingAccount.copy(targetId = targetId)
         )
 
-//        val transactions = listOf(
-//            // INCOME
-//            TransactionEntity(
-//                accountId = accountBank,
-//                type = "income",
-//                amount = 1_000_000,
-//                description = "Salary",
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                type = "income",
-//                amount = 250_000,
-//                description = "Gift from Aunt",
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountBank.toInt(),
-//                type = "income",
-//                amount = 150_000,
-//                description = "Allowance",
-//                transactionAt = monthsAgo(0),
-//            ),
-//
-//            // EXPENSE
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                type = "expense",
-//                amount = 120_000,
-//                description = "Groceries",
-//                categoryId = expenseCategoryIds.entries.first { it.key.name == "Foods" }.value.toInt(),
-//                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                type = "expense",
-//                amount = 300_000,
-//                description = "School Supplies",
-//                categoryId = expenseCategoryIds.entries.first { it.key.name == "School" }.value.toInt(),
-//                kakeiboCategory = KakeiboCategoryType.CULTURE.name.lowercase(),
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                type = "expense",
-//                amount = 90_000,
-//                description = "Internet Bill",
-//                categoryId = expenseCategoryIds.entries.first { it.key.name == "Internet" }.value.toInt(),
-//                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                type = "expense",
-//                amount = 55_000,
-//                description = "Bus fare",
-//                categoryId = expenseCategoryIds.entries.first { it.key.name == "Transport" }.value.toInt(),
-//                kakeiboCategory = KakeiboCategoryType.NEEDS.name.lowercase(),
-//                transactionAt = monthsAgo(0)
-//            ),
-//
-//            // TRANSFER
-//            TransactionEntity(
-//                accountId = accountBank.toInt(),
-//                toAccountId = accountCash.toInt(),
-//                type = "transfer",
-//                amount = 500_000,
-//                description = "Monthly cash withdrawal",
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountCash.toInt(),
-//                toAccountId = accountBank.toInt(),
-//                type = "transfer",
-//                amount = 100_000,
-//                description = "Saving to bank",
-//                transactionAt = monthsAgo(0)
-//            ),
-//            TransactionEntity(
-//                accountId = accountBank.toInt(),
-//                toAccountId = accountCash.toInt(),
-//                type = "transfer",
-//                amount = 300_000,
-//                description = "Backup fund",
-//                transactionAt = monthsAgo(0)
-//            ),
-//        )
-//
-//        transactions.forEach {
-//            appDatabase.transactionDao().insertTransaction(it)
-//        }
-//    }
+        seedTransactions()
+    }
+
+    private suspend fun seedTransactions() {
+        val calendar = Calendar.getInstance()
+        val accounts = appDatabase.accountDao().getAllAccounts().map { it.account }
+        val expenseCategories = appDatabase.categoryDao().getAllCategories()
+            .filter { it.categoryType == TransactionType.EXPENSE.name.lowercase() }
+        val incomeCategories = appDatabase.categoryDao().getAllCategories()
+            .filter { it.categoryType == TransactionType.INCOME.name.lowercase() }
+
+        for (i in 0..5) {
+            calendar.timeInMillis = System.currentTimeMillis()
+            calendar.add(Calendar.MONTH, -i)
+
+            // Seed Income
+            for (j in 0..2) {
+                val randomIncomeCategory = incomeCategories.random()
+                val randomAccount = accounts.random()
+                appDatabase.transactionDao().saveTransaction(
+                    TransactionEntity(
+                        accountId = randomAccount.id,
+                        categoryId = randomIncomeCategory.id,
+                        type = TransactionType.INCOME.name.lowercase(),
+                        amount = Random.nextLong(500_000, 2_000_000),
+                        description = "Monthly ${randomIncomeCategory.name}",
+                        transactionAt = calendar.timeInMillis - Random.nextLong(86400000) // subtract a random number of milliseconds up to 1 day
+                    )
+                )
+            }
+
+            // Seed Expenses
+            for (j in 0..10) {
+                val randomExpenseCategory = expenseCategories.random()
+                val randomAccount = accounts.random()
+                appDatabase.transactionDao().saveTransaction(
+                    TransactionEntity(
+                        accountId = randomAccount.id,
+                        categoryId = randomExpenseCategory.id,
+                        type = TransactionType.EXPENSE.name.lowercase(),
+                        amount = Random.nextLong(10_000, 200_000),
+                        description = "Expense for ${randomExpenseCategory.name}",
+                        kakeiboCategory = KakeiboCategoryType.entries.toTypedArray().random().name.lowercase(),
+                        transactionAt = calendar.timeInMillis - Random.nextLong(86400000) // subtract a random number of milliseconds up to 1 day
+                    )
+                )
+            }
+
+            // Seed Transfers
+            val fromAccount = accounts.random()
+            var toAccount = accounts.random()
+            while (fromAccount.id == toAccount.id) {
+                toAccount = accounts.random()
+            }
+            appDatabase.transactionDao().saveTransaction(
+                TransactionEntity(
+                    accountId = fromAccount.id,
+                    toAccountId = toAccount.id,
+                    type = TransactionType.TRANSFER.name.lowercase(),
+                    amount = Random.nextLong(50_000, 500_000),
+                    description = "Transfer from ${fromAccount.name} to ${toAccount.name}",
+                    transactionAt = calendar.timeInMillis - Random.nextLong(86400000) // subtract a random number of milliseconds up to 1 day
+                )
+            )
+        }
     }
 }
