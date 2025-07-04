@@ -28,6 +28,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.TailwindColor
 import com.pnj.saku_planner.core.theme.Typography
+import com.pnj.saku_planner.core.util.toCurrency
 import com.pnj.saku_planner.kakeibo.presentation.models.MonthlySummary
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import ir.ehsannarmani.compose_charts.ColumnChart
@@ -37,11 +38,14 @@ import ir.ehsannarmani.compose_charts.models.BarProperties
 import ir.ehsannarmani.compose_charts.models.Bars
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
+import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.ceil
+import kotlin.math.max
 
 @Composable
 fun StatisticsPage(
@@ -72,10 +76,30 @@ fun StatisticsPage(
             )
         }
 
+        val maxIncomeOrExpense = remember(state.monthlySummaries) {
+            state.monthlySummaries.maxOfOrNull { max(it.income, it.expense) } ?: 0.0
+        }
+        val roundedMax = remember(maxIncomeOrExpense) {
+            ceil(maxIncomeOrExpense / 1000) * 1000
+        }
+        val indicators = remember(roundedMax) {
+            if (roundedMax == 0.0) {
+                listOf(0.0, 25.0, 50.0, 75.0, 100.0)
+            } else {
+                (0..4).map {
+                    (roundedMax / 4.0 * it)
+                }
+            }
+        }
+
         ColumnChart(
             modifier = Modifier
                 .height(240.dp)
                 .padding(horizontal = 32.dp),
+            indicatorProperties = HorizontalIndicatorProperties(
+                indicators = indicators.asReversed(),
+                contentBuilder = { it.toCurrency() }
+            ),
             data = remember(state.monthlySummaries) {
                 state.monthlySummaries.map {
                     Bars(
@@ -113,6 +137,10 @@ fun StatisticsPage(
             modifier = Modifier
                 .height(240.dp)
                 .padding(horizontal = 32.dp, vertical = 8.dp),
+            indicatorProperties = HorizontalIndicatorProperties(
+                indicators = indicators.asReversed(),
+                contentBuilder = { it.toCurrency() }
+            ),
             data = remember(state.monthlySummaries) {
                 listOf(
                     Line(

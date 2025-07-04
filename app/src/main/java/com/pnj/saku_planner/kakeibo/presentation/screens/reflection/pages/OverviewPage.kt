@@ -155,38 +155,6 @@ fun OverallFeedbackText(state: ReflectionState) {
 
     val feedbackText = when {
         // Best case: Income up, expenses down
-        incomeIncreased && !expenseIncreased && state.lastMonthIncomes > 0 && state.lastMonthExpenses > 0 ->
-            "Fantastic work! You've increased your income while cutting back on expenses. This resulted in a great savings ratio of ${
-                String.format(
-                    "%.1f%%",
-                    state.savingsRatio
-                )
-            }. This is the perfect recipe for financial success."
-        // Good case: Income up
-        incomeIncreased && state.lastMonthIncomes > 0 ->
-            "Great job on increasing your income! With a savings ratio of ${
-                String.format(
-                    "%.1f%%",
-                    state.savingsRatio
-                )
-            }, you're making solid progress. Keep an eye on expenses to maximize your results."
-        // Good case: Expenses down
-        !expenseIncreased && state.lastMonthExpenses > 0 ->
-            "Well done on reducing your expenses! This discipline led to a savings ratio of ${
-                String.format(
-                    "%.1f%%",
-                    state.savingsRatio
-                )
-            }. Every bit you save is a step towards your financial goals."
-        // Warning case: Expenses up
-        expenseIncreased && (!incomeIncreased || state.incomeComparison < state.expenseComparison) ->
-            "Your expenses have increased this month. Let's review your spending to see where we can improve and boost that ${
-                String.format(
-                    "%.1f%%",
-                    state.savingsRatio
-                )
-            } savings ratio next month."
-        // Savings Ratio specific feedback
         state.savingsRatio >= 20f ->
             "Excellent! You're saving ${
                 String.format(
@@ -202,6 +170,38 @@ fun OverallFeedbackText(state: ReflectionState) {
                     state.savingsRatio
                 )
             } ratio towards the 20% goal."
+
+        expenseIncreased && (!incomeIncreased || state.incomeComparison < state.expenseComparison) ->
+            "Your expenses have increased this month. Let's review your spending to see where we can improve and boost that ${
+                String.format(
+                    "%.1f%%",
+                    state.savingsRatio
+                )
+            } savings ratio next month."
+
+        incomeIncreased && !expenseIncreased && state.lastMonthIncomes > 0 && state.lastMonthExpenses > 0 ->
+            "Fantastic work! You've increased your income while cutting back on expenses. This resulted in a great savings ratio of ${
+                String.format(
+                    "%.1f%%",
+                    state.savingsRatio
+                )
+            }. This is the perfect recipe for financial success."
+
+        incomeIncreased && state.lastMonthIncomes > 0 ->
+            "Great job on increasing your income! With a savings ratio of ${
+                String.format(
+                    "%.1f%%",
+                    state.savingsRatio
+                )
+            }, you're making solid progress. Keep an eye on expenses to maximize your results."
+
+        !expenseIncreased && state.lastMonthExpenses > 0 ->
+            "Well done on reducing your expenses! This discipline led to a savings ratio of ${
+                String.format(
+                    "%.1f%%",
+                    state.savingsRatio
+                )
+            }. Every bit you save is a step towards your financial goals."
 
         else ->
             "It looks like you spent more than you earned this month. Let's aim to create a positive savings balance next month."
