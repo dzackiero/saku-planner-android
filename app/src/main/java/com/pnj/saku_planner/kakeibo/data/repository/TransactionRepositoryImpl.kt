@@ -6,7 +6,7 @@ import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.colorWheel
+import com.pnj.saku_planner.core.util.colorWheel
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryData
 import javax.inject.Inject
 

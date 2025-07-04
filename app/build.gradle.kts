@@ -93,6 +93,8 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.accompanist.permissions)
 
+    implementation (libs.compose.charts)
+
     //photo
     implementation(libs.coil.compose)
 

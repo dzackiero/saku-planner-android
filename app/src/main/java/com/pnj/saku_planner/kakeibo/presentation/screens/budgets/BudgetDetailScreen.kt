@@ -33,8 +33,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.LoadingScreen
 import com.pnj.saku_planner.kakeibo.presentation.components.YearSelector
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.DefaultForm
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.formatToCurrency
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.screens.budgets.viewmodels.BudgetDetailState
 import java.time.Year
 import java.time.YearMonth

@@ -39,8 +39,8 @@ import com.pnj.saku_planner.kakeibo.presentation.components.AccountCard
 import com.pnj.saku_planner.kakeibo.presentation.components.AccountWithTargetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PrimaryButton
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.formatToCurrency
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.accounts.viewmodels.AccountCallbacks
 

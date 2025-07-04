@@ -41,7 +41,7 @@ import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.TransactionListItem
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SelectChip
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import java.time.DayOfWeek
 import java.time.LocalDate

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
+import com.pnj.saku_planner.core.util.yearMonthToString
 import java.time.YearMonth
 
 @Composable

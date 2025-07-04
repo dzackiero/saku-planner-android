@@ -11,7 +11,7 @@ import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.ScanRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import com.pnj.saku_planner.kakeibo.presentation.models.ScanUi

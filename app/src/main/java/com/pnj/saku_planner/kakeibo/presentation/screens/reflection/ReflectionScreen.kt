@@ -37,6 +37,7 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.Overvi
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.ReflectionPage
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.SavingPage
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.StartPage
+import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages.StatisticsPage
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 
@@ -57,6 +58,7 @@ fun ReflectionScreen(
         ScreenStep("Kakeibo") { KakeiboPage(state, callbacks) },
         ScreenStep("Budget") { BudgetPage(state, navigateToBudgetDetail) },
         ScreenStep("Saving") { SavingPage(state, callbacks, navigateToSavingDetail) },
+        ScreenStep("Statistics") { StatisticsPage(state) },
         ScreenStep("Reflection") { ReflectionPage(state, callbacks) },
         ScreenStep("Finish") { FinishPage() }
     )

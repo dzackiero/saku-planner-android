@@ -19,7 +19,7 @@ import com.pnj.saku_planner.R
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
+import com.pnj.saku_planner.core.util.yearMonthToString
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import java.time.format.TextStyle
 

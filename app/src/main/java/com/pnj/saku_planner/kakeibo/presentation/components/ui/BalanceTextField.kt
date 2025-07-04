@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
+import com.pnj.saku_planner.core.util.formatToCurrency
 import java.util.Locale
 
 @Composable

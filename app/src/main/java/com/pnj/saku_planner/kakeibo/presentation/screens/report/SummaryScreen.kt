@@ -48,7 +48,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.YearSelector
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PieChartWithText
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.util.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels.SummaryCallback
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.viewmodels.SummaryState
 import java.time.LocalDate

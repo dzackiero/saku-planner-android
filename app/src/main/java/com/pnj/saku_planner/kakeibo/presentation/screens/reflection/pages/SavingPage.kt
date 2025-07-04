@@ -40,8 +40,8 @@ import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
+import com.pnj.saku_planner.core.util.formatToCurrency
+import com.pnj.saku_planner.core.util.yearMonthToString
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import timber.log.Timber

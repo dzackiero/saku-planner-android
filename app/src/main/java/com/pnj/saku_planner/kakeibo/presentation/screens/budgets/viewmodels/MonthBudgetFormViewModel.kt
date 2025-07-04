@@ -6,7 +6,7 @@ import com.pnj.saku_planner.core.database.entity.MonthBudgetEntity
 import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.CategoryRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

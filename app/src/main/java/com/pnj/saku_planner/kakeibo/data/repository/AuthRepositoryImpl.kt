@@ -8,7 +8,7 @@ import com.pnj.saku_planner.kakeibo.data.remote.dto.LoginRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.RegisterRequest
 import com.pnj.saku_planner.kakeibo.data.remote.dto.UpdateRequest
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.extractApiMessage
+import com.pnj.saku_planner.core.util.extractApiMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException

@@ -3,7 +3,7 @@ package com.pnj.saku_planner.core.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 
 @Entity(
     tableName = "transactions",

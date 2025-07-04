@@ -16,7 +16,7 @@ import com.pnj.saku_planner.core.database.entity.BudgetUi
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.core.theme.AppColor
 import com.pnj.saku_planner.core.theme.Typography
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.util.formatToCurrency
 import java.util.Locale
 
 @Composable

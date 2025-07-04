@@ -10,8 +10,9 @@ import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.BudgetRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.ReflectionRepository
 import com.pnj.saku_planner.kakeibo.domain.repository.TransactionRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import com.pnj.saku_planner.kakeibo.presentation.models.AccountUi
+import com.pnj.saku_planner.kakeibo.presentation.models.MonthlySummary
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.SummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,9 +60,10 @@ class ReflectionViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            loadTransactions()
             loadSavings()
             loadBudgets()
+            loadTransactions()
+            load6MonthsTransactions()
         }
     }
 
@@ -203,6 +205,49 @@ class ReflectionViewModel @Inject constructor(
         }
     }
 
+    private fun load6MonthsTransactions() {
+        viewModelScope.launch {
+            val end = YearMonth.now()
+            val start = end.minusMonths(5)
+            val zoneId = ZoneId.systemDefault()
+
+            val startDate = start.atDay(1).atStartOfDay(zoneId).toInstant().toEpochMilli()
+            val endDate =
+                end.atEndOfMonth().atTime(23, 59, 59, 999_000_000).atZone(zoneId).toInstant()
+                    .toEpochMilli()
+
+            val transactions = transactionRepository.getAllTransactionsByRange(
+                startDate = startDate,
+                endDate = endDate,
+            ).map { it.toUi() }
+
+            val monthlySummaries = (0..5).map { i ->
+                val month = start.plusMonths(i.toLong())
+                val monthlyTransactions = transactions
+                    .filter { it.date.year == month.year && it.date.month == month.month }
+
+                val income = monthlyTransactions
+                    .filter { it.type == TransactionType.INCOME }
+                    .sumOf { it.amount }.toDouble()
+
+                val expense = monthlyTransactions
+                    .filter { it.type == TransactionType.EXPENSE }
+                    .sumOf { it.amount }.toDouble()
+
+                val savingsRatio = if (income > 0) {
+                    ((income - expense) / income * 100).toFloat()
+                } else {
+                    0f
+                }
+                MonthlySummary(month, income, expense, savingsRatio)
+            }.filter { it.income > 0 || it.expense > 0 }
+
+            _state.value = _state.value.copy(
+                monthlySummaries = monthlySummaries
+            )
+        }
+    }
+
     fun submitReflection() {
         viewModelScope.launch {
             val stateValue = _state.value
@@ -239,7 +284,7 @@ data class ReflectionState(
     val incomeComparison: Float = 0f,
     val expenseComparison: Float = 0f,
     val savingsRatio: Float = 0f,
-
+    val monthlySummaries: List<MonthlySummary> = emptyList(),
 
     val kakeiboTransactions: List<SummaryData> = emptyList(),
     val categoryTransactions: List<SummaryData> = emptyList(),

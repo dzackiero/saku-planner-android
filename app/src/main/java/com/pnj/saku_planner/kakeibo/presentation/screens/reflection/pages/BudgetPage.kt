@@ -44,7 +44,7 @@ import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.BudgetCard
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.SecondaryButton
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.util.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import java.util.Locale
 
@@ -70,6 +70,25 @@ fun BudgetPage(
     val percentageTextColor =
         if (isOverBudget) AppColor.Destructive else Color.Unspecified
 
+    val overBudgetItems = state.budgets.filter { it.amount < it.currentAmount }
+    val feedback = when {
+        actualProgress > 1.0 -> {
+            "You over budget in ${overBudgetItems.count()} category. It might be a good idea to review your spending or adjust your budget in these areas."
+        }
+
+        actualProgress > 0.8 -> {
+            "You're close to reaching your budget limit. Keep an eye on your spending for the rest of the period."
+        }
+
+        actualProgress > 0.0 -> {
+            "You are on the right track. Keep up the good work!"
+        }
+
+        else -> {
+            "You haven't spent anything yet. Start tracking your expenses to see how you're doing against your budget."
+        }
+    }
+
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -86,8 +105,8 @@ fun BudgetPage(
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = stringResource(R.string.budget_desc),
-                style = Typography.titleMedium,
+                text = feedback,
+                style = Typography.titleSmall,
                 color = AppColor.MutedForeground,
                 textAlign = TextAlign.Center,
             )
@@ -273,6 +292,8 @@ fun BudgetPage(
                 }
             }
         }
+
+
     }
 }
 
@@ -306,4 +327,3 @@ fun BudgetPagePreview() {
         )
     }
 }
-

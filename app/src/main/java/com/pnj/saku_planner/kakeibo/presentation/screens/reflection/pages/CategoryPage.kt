@@ -26,8 +26,8 @@ import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PieChartWithText
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.yearMonthToString
+import com.pnj.saku_planner.core.util.formatToCurrency
+import com.pnj.saku_planner.core.util.yearMonthToString
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import java.time.format.TextStyle
 import java.util.Locale
@@ -78,6 +78,7 @@ fun CategoryPage(
                 style = Typography.titleMedium,
                 color = AppColor.MutedForeground
             )
+            ComparisonText(state.expenseComparison, false)
         }
         Box(
             contentAlignment = Alignment.Center,

@@ -6,7 +6,7 @@ import com.pnj.saku_planner.core.database.entity.TargetEntity
 import com.pnj.saku_planner.core.database.entity.TransactionEntity
 import com.pnj.saku_planner.kakeibo.domain.enum.KakeiboCategoryType
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.random.Random

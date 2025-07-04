@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 
 @Entity(
     tableName = "budgets",

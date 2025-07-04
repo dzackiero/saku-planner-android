@@ -8,7 +8,7 @@ import com.pnj.saku_planner.core.database.entity.toUi
 import com.pnj.saku_planner.core.util.validateRequired
 import com.pnj.saku_planner.kakeibo.domain.enum.AccountType
 import com.pnj.saku_planner.kakeibo.domain.repository.AccountRepository
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.randomUuid
+import com.pnj.saku_planner.core.util.randomUuid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

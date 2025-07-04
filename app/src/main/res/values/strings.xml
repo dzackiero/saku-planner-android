@@ -218,4 +218,6 @@
     <string name="unexpected_explain">Unforeseen, one-off expenses. Examples: emergency medical bills, urgent home/car repairs, unplanned gifts.</string>
     <string name="net_savings">Net Savings</string>
     <string name="savings_ratio">Savings Ratio</string>
+    <string name="your_statistics">Your Statistics</string>
+    <string name="your_financial_statistics_compared_to_the_previous_months">Your financial statistics compared to the previous months</string>
 </resources>

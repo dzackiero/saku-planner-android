@@ -1,4 +1,4 @@
-package com.pnj.saku_planner.kakeibo.presentation.components.ui
+package com.pnj.saku_planner.core.util
 
 import android.icu.text.NumberFormat
 import androidx.compose.ui.graphics.Color
@@ -54,8 +54,8 @@ fun formatToCurrency(
     return formatter.format(amount)
 }
 
-fun colorWheel(size: Int): Color {
-    if (size < 0) {
+fun colorWheel(seed: Int): Color {
+    if (seed < 0) {
         throw IllegalArgumentException("Size must be a non-negative integer")
     }
 
@@ -68,7 +68,7 @@ fun colorWheel(size: Int): Color {
         TailwindColor.Yellow400,
         TailwindColor.Pink400,
     )
-    return colors[size % colors.size]
+    return colors[seed % colors.size]
 }
 
 fun HttpException.extractApiMessage(): String? {

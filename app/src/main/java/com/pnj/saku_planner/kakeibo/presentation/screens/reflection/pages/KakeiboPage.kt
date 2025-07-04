@@ -33,7 +33,7 @@ import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ChartData
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.ClickableTextField
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.PieChartWithText
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.formatToCurrency
+import com.pnj.saku_planner.core.util.formatToCurrency
 import com.pnj.saku_planner.kakeibo.presentation.models.TransactionUi
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionCallbacks
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
@@ -66,6 +66,38 @@ fun KakeiboPage(
     }
     val currentDialogType =
         remember { mutableStateOf(DialogContentType.FAVORITE_TRANSACTION) }
+
+    val wants = state.kakeiboTransactions.find { it.name == "wants" }?.amount ?: 0
+    val needs = state.kakeiboTransactions.find { it.name == "needs" }?.amount ?: 0
+    val culture = state.kakeiboTransactions.find { it.name == "culture" }?.amount ?: 0
+    val unexpected = state.kakeiboTransactions.find { it.name == "unexpected" }?.amount ?: 0
+
+    val totalSpending = wants + needs + culture + unexpected
+    val feedback = if (totalSpending > 0) {
+        val wantsPercentage = (wants.toDouble() / totalSpending * 100).toInt()
+        val needsPercentage = (needs.toDouble() / totalSpending * 100).toInt()
+        val culturePercentage = (culture.toDouble() / totalSpending * 100).toInt()
+        val unexpectedPercentage = (unexpected.toDouble() / totalSpending * 100).toInt()
+
+        buildString {
+            if (wantsPercentage >= needsPercentage) {
+                append("Your wants is bigger than needs. Reconsider your wants to ensure you're prioritizing essential expenses.")
+            } else if (wantsPercentage > 40) {
+                append("Your spending on wants is a bit high. Remember to balance enjoyment with your financial goals. ")
+            }
+
+            if (culturePercentage < 10 && culture == 0L) {
+                append("Investing in yourself is important too! Consider setting aside a small budget for books, courses, or hobbies. ")
+            }
+
+            if (unexpectedPercentage > 20) {
+                append("Unexpected expenses can happen. This is a good opportunity to review your emergency fund. ")
+            }
+        }
+    } else {
+        "You're doing a great job balancing your spending. Keep it up!"
+    }
+
 
     Column(
         modifier = Modifier
@@ -101,6 +133,15 @@ fun KakeiboPage(
                     totalFormatter = { formatToCurrency(it) },
                 )
             }
+        }
+
+        Column {
+            Text(
+                text = feedback,
+                style = Typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         // Happiest Purchase Section

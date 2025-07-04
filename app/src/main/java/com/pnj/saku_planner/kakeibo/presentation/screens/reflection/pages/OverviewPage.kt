@@ -27,7 +27,7 @@ import com.pnj.saku_planner.core.theme.KakeiboTheme
 import com.pnj.saku_planner.core.theme.Typography
 import com.pnj.saku_planner.kakeibo.domain.enum.TransactionType
 import com.pnj.saku_planner.kakeibo.presentation.components.ui.Card
-import com.pnj.saku_planner.kakeibo.presentation.components.ui.toCurrency
+import com.pnj.saku_planner.core.util.toCurrency
 import com.pnj.saku_planner.kakeibo.presentation.screens.reflection.viewmodels.ReflectionState
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -217,7 +217,10 @@ fun OverallFeedbackText(state: ReflectionState) {
 }
 
 @Composable
-fun ComparisonText(comparisonPercentage: Float, isIncome: Boolean) {
+fun ComparisonText(
+    comparisonPercentage: Float,
+    isIncome: Boolean,
+) {
     val isIncrease = comparisonPercentage > 0
     val color = if (isIncome) {
         if (isIncrease) AppColor.Success else AppColor.Destructive
