@@ -40,6 +40,7 @@ import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.GridProperties
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.Line
+import ir.ehsannarmani.compose_charts.models.PopupProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -53,6 +54,7 @@ fun StatisticsPage(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -94,12 +96,18 @@ fun StatisticsPage(
 
         ColumnChart(
             modifier = Modifier
+                .fillMaxWidth()
                 .height(240.dp)
                 .padding(horizontal = 32.dp),
             indicatorProperties = HorizontalIndicatorProperties(
                 indicators = indicators.asReversed(),
                 contentBuilder = { it.toCurrency() }
             ),
+            popupProperties = PopupProperties(
+                textStyle = Typography.labelSmall.copy(color = AppColor.PrimaryForeground),
+                contentBuilder = { _, _, value -> value.toCurrency() }
+            ),
+
             data = remember(state.monthlySummaries) {
                 state.monthlySummaries.map {
                     Bars(
@@ -140,6 +148,10 @@ fun StatisticsPage(
             indicatorProperties = HorizontalIndicatorProperties(
                 indicators = indicators.asReversed(),
                 contentBuilder = { it.toCurrency() }
+            ),
+            popupProperties = PopupProperties(
+                textStyle = Typography.labelSmall.copy(color = AppColor.PrimaryForeground),
+                contentBuilder = { _, _, value -> value.toCurrency() }
             ),
             data = remember(state.monthlySummaries) {
                 listOf(
@@ -188,26 +200,25 @@ fun StatisticsPage(
 @Composable
 fun FinancialFeedback(state: ReflectionState) {
     val monthlySummaries = state.monthlySummaries
-    if (monthlySummaries.size < 2) {
+    if (monthlySummaries.size < 3) { // Require at least 3 months for a meaningful trend
         return
     }
 
-    val currentMonth = monthlySummaries.last()
-    val previousMonth = monthlySummaries[monthlySummaries.size - 2]
-
-    val incomeChange = currentMonth.income - previousMonth.income
-    val expenseChange = currentMonth.expense - previousMonth.expense
+    val avgIncomeChange =
+        monthlySummaries.map { it.income }.zipWithNext { a, b -> b - a }.average()
+    val avgExpenseChange =
+        monthlySummaries.map { it.expense }.zipWithNext { a, b -> b - a }.average()
 
     val feedbackMessage = when {
-        incomeChange > 0 && expenseChange < 0 -> "Excellent work! You've increased your income while also reducing your expenses. This is the perfect recipe for financial success. Keep it up!"
-        incomeChange > 0 && expenseChange > 0 -> "Your income is growing, which is great! However, your expenses are also on the rise. Be mindful of lifestyle inflation and make sure your spending doesn't outpace your earnings."
-        incomeChange < 0 && expenseChange < 0 -> "Although your income has decreased, you've done a great job of cutting back on your expenses. This is a crucial skill for managing your finances through ups and downs."
-        incomeChange < 0 && expenseChange > 0 -> "It looks like your income has decreased while your expenses have gone up. This is a risky combination. It's time to take a close look at your budget and find ways to get back on track."
-        incomeChange == 0.0 && expenseChange < 0 -> "Great job on cutting your expenses! This discipline will help you reach your financial goals faster."
-        incomeChange == 0.0 && expenseChange > 0 -> "Your expenses have increased this month. Take a moment to review your spending and see if it aligns with your financial goals."
-        incomeChange > 0 -> "Your income has increased, and you've kept your expenses stable. That's a great way to boost your savings!"
-        incomeChange < 0 -> "Your income has decreased this month. Since your expenses have remained stable, this has impacted your savings. Let's work on getting your income back up!"
-        else -> "Your income and expenses have remained stable. Consistency is good, but always look for opportunities to grow your savings."
+        avgIncomeChange > 0 && avgExpenseChange < 0 -> "Looking at your long-term trend, you're on a fantastic path of growing your income while consistently reducing expenses. This is the key to building wealth!"
+        avgIncomeChange > 0 && avgExpenseChange > 0 -> "Overall, both your income and expenses are trending upwards. It's great that your income is growing, but make sure to keep your spending in check to maximize your savings."
+        avgIncomeChange < 0 && avgExpenseChange < 0 -> "Over the last few months, while your income has been decreasing, you've shown great discipline in managing and lowering your expenses. This resilience is a valuable financial skill."
+        avgIncomeChange < 0 && avgExpenseChange > 0 -> "Your expenses have been increasing while your income has been decreasing. This is a critical situation that needs your attention. Let's create a plan to reverse this trend."
+        avgIncomeChange > 0 -> "Your income is trending upwards while expenses are stable. This is a great position to be in!"
+        avgIncomeChange < 0 -> "Your income is trending downwards while expenses are stable. It's time to focus on boosting your income streams."
+        avgExpenseChange < 0 -> "You've successfully kept your income stable while reducing expenses. Excellent work!"
+        avgExpenseChange > 0 -> "Your expenses are trending up, while your income is stable. Let's focus on managing your spending."
+        else -> "Your long-term financial trends are relatively stable. Consistency is good, but let's look for opportunities to boost your income or reduce expenses to accelerate your savings."
     }
 
     Card(
@@ -230,6 +241,7 @@ fun FinancialFeedback(state: ReflectionState) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
