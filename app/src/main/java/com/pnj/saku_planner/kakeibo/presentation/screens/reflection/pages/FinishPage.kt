@@ -2,7 +2,10 @@ package com.pnj.saku_planner.kakeibo.presentation.screens.reflection.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Icon
@@ -21,6 +24,9 @@ import com.pnj.saku_planner.core.theme.Typography
 @Composable
 fun FinishPage() {
     Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

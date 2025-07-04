@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,10 +69,11 @@ fun KakeiboPage(
     val currentDialogType =
         remember { mutableStateOf(DialogContentType.FAVORITE_TRANSACTION) }
 
-    val wants = state.kakeiboTransactions.find { it.name == "wants" }?.amount ?: 0
-    val needs = state.kakeiboTransactions.find { it.name == "needs" }?.amount ?: 0
-    val culture = state.kakeiboTransactions.find { it.name == "culture" }?.amount ?: 0
-    val unexpected = state.kakeiboTransactions.find { it.name == "unexpected" }?.amount ?: 0
+    val wants = state.kakeiboTransactions.find { it.name.lowercase() == "wants" }?.amount ?: 0
+    val needs = state.kakeiboTransactions.find { it.name.lowercase() == "needs" }?.amount ?: 0
+    val culture = state.kakeiboTransactions.find { it.name.lowercase() == "culture" }?.amount ?: 0
+    val unexpected =
+        state.kakeiboTransactions.find { it.name.lowercase() == "unexpected" }?.amount ?: 0
 
     val totalSpending = wants + needs + culture + unexpected
     val feedback = if (totalSpending > 0) {
@@ -101,7 +104,9 @@ fun KakeiboPage(
 
     Column(
         modifier = Modifier
-            .padding(16.dp),
+            .fillMaxWidth()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
