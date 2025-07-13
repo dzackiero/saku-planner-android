@@ -1,4 +1,4 @@
-    package com.pnj.saku_planner.kakeibo.data.local // Assuming this is the correct package
+package com.pnj.saku_planner.kakeibo.data.local // Assuming this is the correct package
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -13,8 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first // To get initial value for cachedToken if needed
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,6 +46,13 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
         cachedToken = token
     }
 
+    val session: Flow<UserSession> = appDataStore.data.map { preferences ->
+        UserSession(
+            name = preferences[UserPreferencesKeys.NAME],
+            email = preferences[UserPreferencesKeys.EMAIL]
+        )
+    }
+
     suspend fun updateUserProfile(name: String, email: String) {
         appDataStore.edit { settings ->
             settings[UserPreferencesKeys.NAME] = name
@@ -64,11 +70,15 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
         preferences[UserPreferencesKeys.EMAIL]
     }
 
-    val session: Flow<UserSession> = appDataStore.data.map { preferences ->
-        UserSession(
-            name = preferences[UserPreferencesKeys.NAME],
-            email = preferences[UserPreferencesKeys.EMAIL]
-        )
+    // --- Offline Mode ---
+    val isOfflineModeFlow: Flow<Boolean> = appDataStore.data.map { preferences ->
+        preferences[UserPreferencesKeys.OFFLINE_MODE] ?: false
+    }
+
+    suspend fun setOfflineMode(enabled: Boolean) {
+        appDataStore.edit { preferences ->
+            preferences[UserPreferencesKeys.OFFLINE_MODE] = enabled
+        }
     }
 
     val settings: Flow<UserSettings> = appDataStore.data.map { preferences ->
@@ -77,6 +87,7 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
             monthReflectionDate = preferences[UserPreferencesKeys.MONTH_REFLECTION_DATE] ?: 1,
             isMonthlyReflectNotification =
                 preferences[UserPreferencesKeys.MONTH_REFLECTION_NOTIFICATION] ?: false,
+            isOfflineMode = preferences[UserPreferencesKeys.OFFLINE_MODE] ?: false,
         )
     }
 
@@ -98,11 +109,6 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
         }
     }
 
-
-    val isLoggedInFlow: Flow<Boolean> = token.map { it != null }
-    suspend fun isLoggedInBlocking(): Boolean {
-        return token.firstOrNull() != null
-    }
 
     suspend fun clearUserSession() {
         appDataStore.edit { settings ->
@@ -130,12 +136,6 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
             Pair(hour, minute)
         }
 
-    suspend fun saveSyncTime(hour: Int, minute: Int) {
-        appDataStore.edit { settings ->
-            settings[UserPreferencesKeys.SYNC_HOUR] = hour
-            settings[UserPreferencesKeys.SYNC_MINUTE] = minute
-        }
-    }
 }
 
 object UserPreferencesKeys {
@@ -143,6 +143,7 @@ object UserPreferencesKeys {
     val TOKEN = stringPreferencesKey("user_token")
     val NAME = stringPreferencesKey("user_name")
     val EMAIL = stringPreferencesKey("user_email")
+    val OFFLINE_MODE = booleanPreferencesKey("offline_mode")
 
     // Settings Keys
     val DAILY_SYNC = booleanPreferencesKey("daily_sync")
@@ -167,5 +168,6 @@ data class UserSettings(
     val isDailySync: Boolean = false,
     val monthReflectionDate: Int = 1,
     val isMonthlyReflectNotification: Boolean = true,
+    val isOfflineMode: Boolean = false
 )
 

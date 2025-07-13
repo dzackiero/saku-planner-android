@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -69,14 +70,16 @@ import com.pnj.saku_planner.kakeibo.presentation.routes.RegisterRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanDetailRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanEditRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanRoute
-import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.ScanSummaryRoute
+import com.pnj.saku_planner.kakeibo.presentation.routes.SettingsRoute
 import com.pnj.saku_planner.kakeibo.presentation.routes.TransactionFormRoute
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.WelcomeScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.AuthViewModel
 import com.pnj.saku_planner.kakeibo.presentation.screens.auth.viewmodels.UserState
 import com.pnj.saku_planner.kakeibo.presentation.screens.report.ReportPagerScreen
 import com.pnj.saku_planner.kakeibo.presentation.screens.settings.ScheduleSettingsScreen
+import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.SettingsViewModel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import timber.log.Timber
 
@@ -102,6 +105,9 @@ fun KakeiboApp(authViewModel: AuthViewModel = hiltViewModel()) {
 @Composable
 fun AuthNavigation() {
     val navController = rememberNavController()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold { innerPadding ->
         NavHost(
             navController = navController,
@@ -112,6 +118,13 @@ fun AuthNavigation() {
                 WelcomeScreen(
                     onLoginClicked = { navController.navigate(Login) },
                     onRegisterClicked = { navController.navigate(Register) },
+                    onUseOfflineClicked = {
+                        coroutineScope.launch {
+                            // Just enable offline mode - the AuthViewModel will detect this
+                            // and automatically switch to MainAppNavigation
+                            settingsViewModel.settingsDataStore.setOfflineMode(true)
+                        }
+                    }
                 )
             }
             composable<Login> {
@@ -119,6 +132,9 @@ fun AuthNavigation() {
             }
             composable<Register> {
                 RegisterRoute(navController)
+            }
+            composable<Home> { backStackEntry ->
+                HomeTabRoute(navController, backStackEntry)
             }
         }
     }

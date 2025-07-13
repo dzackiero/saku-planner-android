@@ -9,7 +9,6 @@ import com.pnj.saku_planner.kakeibo.data.local.SettingsDataStore
 import com.pnj.saku_planner.kakeibo.data.local.UserPreferencesKeys
 import com.pnj.saku_planner.kakeibo.data.remote.dto.AuthResponse
 import com.pnj.saku_planner.kakeibo.domain.repository.AuthRepository
-import com.pnj.saku_planner.kakeibo.domain.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

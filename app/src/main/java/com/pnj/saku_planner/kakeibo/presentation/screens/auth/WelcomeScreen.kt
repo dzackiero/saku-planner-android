@@ -67,6 +67,7 @@ fun getScaleAnimationSpec(
 fun WelcomeScreen(
     onLoginClicked: () -> Unit = {},
     onRegisterClicked: () -> Unit = {},
+    onUseOfflineClicked: () -> Unit = {},
 ) {
     // State to track if animations should be skipped
     var animationsSkipped by remember { mutableStateOf(false) }
@@ -229,6 +230,12 @@ fun WelcomeScreen(
                     onClick = onLoginClicked
                 ) {
                     Text(stringResource(R.string.login))
+                }
+                SecondaryButton(
+                    Modifier.fillMaxWidth(),
+                    onClick = onUseOfflineClicked
+                ) {
+                    Text(stringResource(R.string.continue_without_account))
                 }
             }
         }

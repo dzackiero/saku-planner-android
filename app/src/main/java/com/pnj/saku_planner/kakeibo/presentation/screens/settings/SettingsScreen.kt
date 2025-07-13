@@ -46,9 +46,12 @@ import com.pnj.saku_planner.kakeibo.presentation.screens.settings.viewmodels.Set
 fun SettingsScreen(
     uiState: SettingsUiState = SettingsUiState(),
     workInfo: WorkInfo? = null,
+    isOfflineMode: Boolean = false,
     navigateToCategories: () -> Unit = {},
     navigateToSchedule: () -> Unit = {},
     navigateToProfile: () -> Unit = {},
+    navigateToLogin: () -> Unit = {},
+    navigateToRegister: () -> Unit = {},
     onManualSyncing: () -> Unit = {},
     onLoadCloudData: () -> Unit = {},
     onResetAppData: () -> Unit = {},
@@ -95,37 +98,42 @@ fun SettingsScreen(
                 }
             }
         }
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text = stringResource(R.string.data_management),
-                style = Typography.headlineMedium,
-                color = AppColor.MutedForeground,
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SettingCard(
-                    title = stringResource(R.string.manual_sync),
-                    description = stringResource(R.string.manual_sync_desc),
-                    icon = Icons.Outlined.CloudUpload,
-                    onClick = onManualSyncing
+
+        // Only show data management section when not in offline mode
+        if (!isOfflineMode) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.data_management),
+                    style = Typography.headlineMedium,
+                    color = AppColor.MutedForeground,
                 )
-                when (workInfo?.state) {
-                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    SettingCard(
+                        title = stringResource(R.string.manual_sync),
+                        description = stringResource(R.string.manual_sync_desc),
+                        icon = Icons.Outlined.CloudUpload,
+                        onClick = onManualSyncing
+                    )
+                    when (workInfo?.state) {
+                        WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                            LinearProgressIndicator(Modifier.fillMaxWidth())
+                        }
+
+                        else -> {}
+                    }
+                    SettingCard(
+                        title = stringResource(R.string.load_cloud_data),
+                        description = stringResource(R.string.load_all_your_synced_data_from_the_cloud),
+                        icon = Icons.Outlined.CloudDownload,
+                        onClick = onLoadCloudData,
+                    )
+                    if (uiState.isLoading) {
                         LinearProgressIndicator(Modifier.fillMaxWidth())
                     }
-
-                    else -> {}
-                }
-                SettingCard(
-                    title = stringResource(R.string.load_cloud_data),
-                    description = stringResource(R.string.load_all_your_synced_data_from_the_cloud),
-                    icon = Icons.Outlined.CloudDownload,
-                    onClick = onLoadCloudData,
-                )
-                if (uiState.isLoading) {
-                    LinearProgressIndicator(Modifier.fillMaxWidth())
                 }
             }
         }
+
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 text = stringResource(R.string.account_settings),
@@ -133,25 +141,49 @@ fun SettingsScreen(
                 color = AppColor.MutedForeground,
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SettingCard(
-                    title = stringResource(R.string.profile),
-                    description = stringResource(R.string.profile_desc),
-                    icon = Icons.Outlined.AccountCircle,
-                    onClick = navigateToProfile
-                )
+                // Show account options based on offline mode
+                if (isOfflineMode) {
+                    // Show login and register options when in offline mode
+                    SettingCard(
+                        title = stringResource(R.string.login_account),
+                        description = stringResource(R.string.login_account_desc),
+                        icon = Icons.Outlined.AccountCircle,
+                        onClick = navigateToLogin
+                    )
+
+                    SettingCard(
+                        title = stringResource(R.string.create_account),
+                        description = stringResource(R.string.create_account_desc),
+                        icon = Icons.Outlined.AccountCircle,
+                        onClick = navigateToRegister
+                    )
+                } else {
+                    // Show profile settings when logged in
+                    SettingCard(
+                        title = stringResource(R.string.profile),
+                        description = stringResource(R.string.profile_desc),
+                        icon = Icons.Outlined.AccountCircle,
+                        onClick = navigateToProfile
+                    )
+                }
+
                 SettingCard(
                     title = stringResource(R.string.schedule),
                     description = stringResource(R.string.notification_desc),
                     icon = Icons.Outlined.Settings,
                     onClick = navigateToSchedule
                 )
-                Confirmable(onConfirmed = onLogout) {
-                    SettingCard(
-                        title = stringResource(R.string.sign_out),
-                        description = stringResource(R.string.sign_out_of_your_account),
-                        icon = Icons.AutoMirrored.Outlined.Logout,
-                        onClick = it
-                    )
+
+                // Only show sign out when not in offline mode
+                if (!isOfflineMode) {
+                    Confirmable(onConfirmed = onLogout) {
+                        SettingCard(
+                            title = stringResource(R.string.sign_out),
+                            description = stringResource(R.string.sign_out_of_your_account),
+                            icon = Icons.AutoMirrored.Outlined.Logout,
+                            onClick = it
+                        )
+                    }
                 }
             }
         }

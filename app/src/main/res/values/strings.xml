@@ -98,6 +98,7 @@
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="create_new_account">Create New Account</string>
     <string name="login">Login</string>
+    <string name="continue_without_account">Continue Without an Account</string>
     <string name="onboarding_description">Kakeibo is a Japanese method for mindful spending. By tracking expenses and reflecting on purchases, you gain insights into your financial habits.</string>
     <string name="onboarding_subtitle">Track your expenses with intention and mindfulness.</string>
     <string name="onboarding_title">Welcome to Kakeibo</string>
@@ -114,6 +115,10 @@
     <string name="danger_zone">Danger Zone</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_out_of_your_account">Sign out of your account</string>
+    <string name="login_account">Log in to account</string>
+    <string name="login_account_desc">Sign in to an existing account to sync your data</string>
+    <string name="create_account">Create account</string>
+    <string name="create_account_desc">Register a new account to sync your data</string>
     <string name="notification_desc">Configure alerts and reminders settings</string>
     <string name="notifications">Notifications</string>
     <string name="profile_desc">Manage your profile information</string>

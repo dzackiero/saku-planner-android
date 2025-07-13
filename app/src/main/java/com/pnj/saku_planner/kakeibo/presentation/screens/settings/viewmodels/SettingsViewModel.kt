@@ -26,13 +26,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    private val settingsDataStore: SettingsDataStore,
+    val settingsDataStore: SettingsDataStore,
     private val databaseSeeder: DatabaseSeeder,
     private val dataRepository: DataRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsUiState())
     val state: StateFlow<SettingsUiState> = _state
+    val isOfflineModeFlow = settingsDataStore.isOfflineModeFlow
 
     private val workManager = WorkManager.getInstance(appContext)
     val manualSyncWorkInfoState: StateFlow<WorkInfo?> =
@@ -80,6 +81,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun disableOfflineMode() {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsDataStore.setOfflineMode(false)
+        }
+    }
 
     fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
