@@ -1,79 +1,68 @@
-# Kakeibo Financial Manager
+# Saku Planner
 
-This is a simple Kakeibo App built with Kotlin and Jetpack Compose.
-Kakeibo is a Japanese budgeting method that helps you track your spending and savings. The app
-allows you to create accounts, set budgets, and track your expenses and income. it will help you to
-reflect on your spending habits and make better financial decisions.
+Saku Planner is a personal financial management application based on the Kakeibo method, a traditional Japanese budgeting system. The app helps you take control of your finances by:
 
-# Development Todos
+- Tracking your expenses and income
+- Managing multiple financial accounts
+- Setting and monitoring budgets
+- Creating savings targets
+- Reflecting on your spending habits
 
-## BACKEND TODOS
+Built with modern Android technologies including Kotlin, Jetpack Compose, Room Database, and Dagger Hilt.
 
-- [x] Create Backend API
-- [x] Implement Room Database Setup
-- [x] Implement Dagger Hilt for Dependency Injection
+## Features
 
-## UI TODOS
+- **Transaction Tracking**: Record and categorize your daily expenses and income
+- **Account Management**: Manage multiple financial accounts in one place
+- **Budget Planning**: Set monthly budgets and monitor your spending
+- **Savings Targets**: Create and track progress towards financial goals
+- **Kakeibo Reflection**: Reflect on your spending patterns to make better financial decisions
+- **Offline Support**: Full functionality without an internet connection
 
-- [x] Implement Navigation
-- [ ] Implement Validation
+## Development Status
 
-### Home (Transaction)
+This application is currently under active development. Check the [Development Progress](#development-progress) section for details.
 
-- [x] Home Screen
-- [x] Create Transaction Form
-- [x] Detail/Edit Transaction Form
-- [x] Add ViewModel and UI Model
-- [x] Implement Repository and Entity
-- [x] Finished Offline Implementation
+## Development Progress
 
-### Account
+### Completed Features
+- Basic app architecture and navigation
+- Transaction management
+- Account management
+- Budget planning and tracking
+- Savings targets
+- Expense/Income categories
+- Settings foundation
 
-- [x] Account Screen
-- [x] Add Account Form
-- [x] Detail/Edit Account Form
-- [x] Add ViewModel and UI Model
-- [x] Implement Repository and Entity
-- [x] Finished Offline Implementation
+### In Progress
+- Reporting and analytics dashboard
+- Reflection feature implementation
+- Data synchronization with backend
+- User preference storage
+- Input validation
 
-### Budget
+## License
 
-- [x] Budget Screen
-- [x] Create Budget Form
-- [x] Detail/Edit Budget Form
-- [x] Add ViewModel and UI Model
-- [x] Implement Repository and Entity
-- [x] Finished Offline Implementation
+```
+MIT License
 
-### Target
+Copyright (c) 2025 Saku Planner
 
-- [x] Target Screen
-- [x] Implement Target Builder
-- [x] Saving Target Form
-- [x] Detail/Edit Target Form
-- [x] Add ViewModel and UI Model
-- [x] Implement Repository and Entity
-- [x] Finished Offline Implementation
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-### Report
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-- [ ] Report Financial Screen (Dashboard and Charts)
-- [ ] Report Transaction Screen (List and Filters)
-- [x] Reflection Screen (Kakeibo Reflection)
-- [ ] Reflection Creation Form
-- [ ] Add ViewModel and UI Model
-- [ ] Implement Repository and Entity
-
-### Settings
-
-- [x] Settings Screen
-- [x] Categories Screen
-- [x] Create Expense/Income Category Form
-- [x] Implement Repository and Entity
-- [x] Finished Offline Implementation
-- [ ] Implement DataStore for User Preferences
-
-## OTHERS TODOS
-
-- [ ] Create Syncing Logic for data to Backend
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
