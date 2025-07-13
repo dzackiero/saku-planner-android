@@ -13,11 +13,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Analytics
-import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Wallet
@@ -28,7 +26,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -503,28 +500,28 @@ fun FAB(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.End,
         ) {
-            AnimatedVisibility(
-                visible = showSecondary,
-                enter = slideInVertically(
-                    initialOffsetY = { it },
-                    animationSpec = tween(durationMillis = 250, easing = EaseOut)
-                ) + fadeIn(animationSpec = tween(durationMillis = 150)),
-                exit = slideOutVertically(
-                    targetOffsetY = { it },
-                    animationSpec = tween(durationMillis = 250, easing = EaseIn)
-                ) + fadeOut(animationSpec = tween(durationMillis = 150))
-            ) {
-                SmallFloatingActionButton(
-                    containerColor = AppColor.Muted,
-                    onClick = secondaryOnClick ?: {},
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Camera,
-                        contentDescription = "camera",
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
+//            AnimatedVisibility(
+//                visible = showSecondary,
+//                enter = slideInVertically(
+//                    initialOffsetY = { it },
+//                    animationSpec = tween(durationMillis = 250, easing = EaseOut)
+//                ) + fadeIn(animationSpec = tween(durationMillis = 150)),
+//                exit = slideOutVertically(
+//                    targetOffsetY = { it },
+//                    animationSpec = tween(durationMillis = 250, easing = EaseIn)
+//                ) + fadeOut(animationSpec = tween(durationMillis = 150))
+//            ) {
+//                SmallFloatingActionButton(
+//                    containerColor = AppColor.Muted,
+//                    onClick = secondaryOnClick ?: {},
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Outlined.Camera,
+//                        contentDescription = "camera",
+//                        modifier = Modifier.size(20.dp)
+//                    )
+//                }
+//            }
 
             FloatingActionButton(
                 containerColor = AppColor.Muted,
