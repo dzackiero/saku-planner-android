@@ -13,7 +13,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.first // To get initial value for cachedToken if needed
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -109,6 +110,10 @@ class SettingsDataStore @Inject constructor(@ApplicationContext context: Context
         }
     }
 
+
+    suspend fun isLoggedInBlocking(): Boolean {
+        return token.firstOrNull() != null
+    }
 
     suspend fun clearUserSession() {
         appDataStore.edit { settings ->
